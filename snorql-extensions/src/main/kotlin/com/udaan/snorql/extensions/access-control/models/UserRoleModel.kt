@@ -17,15 +17,22 @@
  * under the License.
  */
 
-package com.udaan.snorql.extensions
+package com.udaan.snorql.extensions.`access-control`.models
 
-import com.udaan.snorql.extensions.`access-control`.metrics.UserRoleMetric
-import com.udaan.snorql.extensions.performance.metrics.ActiveQueriesMetric
-import com.udaan.snorql.framework.metric.SqlMetricManager
+import com.udaan.snorql.extensions.SQLMetricTypes
+import com.udaan.snorql.framework.models.IMetricResult
+import com.udaan.snorql.framework.models.MetricInput
+import com.udaan.snorql.framework.models.MetricPeriod
 
-object SQLCommonMetrics {
-    fun initialize() {
-        SqlMetricManager.addMetric(SQLMetricTypes.ACTIVE_QUERIES.metricId, ActiveQueriesMetric())
-        SqlMetricManager.addMetric(SQLMetricTypes.USER_ROLE.metricId, UserRoleMetric())
-    }
-}
+data class UserRoleDTO (
+        val name: String,
+        val role: String
+)
+
+
+data class UserRoleInput(
+        override val metricId: String = SQLMetricTypes.USER_ROLE.metricId,
+        override val metricPeriod: MetricPeriod, override val databaseName: String
+) : MetricInput()
+
+data class UserRoleResult(val queryList: List<UserRoleDTO>) : IMetricResult()
