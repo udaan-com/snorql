@@ -19,7 +19,7 @@
 
 package com.udaan.snorql.extensions
 
-import com.udaan.snorql.extensions.`access-control`.metrics.UserRoleMetric
+import com.udaan.snorql.extensions.accesscontrol.metrics.UserRoleMetric
 import com.udaan.snorql.extensions.performance.metrics.ActiveQueriesMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
 

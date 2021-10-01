@@ -17,14 +17,14 @@
  * under the License.
  */
 
-package com.udaan.snorql.extensions.`access-control`.metrics
+package com.udaan.snorql.extensions.accesscontrol.metrics
 
 
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.*
-import com.udaan.snorql.extensions.`access-control`.models.*
+import com.udaan.snorql.extensions.accesscontrol.models.*
 
 class UserRoleMetric :
     IMetric<UserRoleInput, UserRoleResult, IMetricRecommendation> {

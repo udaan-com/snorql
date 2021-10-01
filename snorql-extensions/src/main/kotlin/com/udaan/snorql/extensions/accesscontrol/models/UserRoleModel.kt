@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.udaan.snorql.extensions.`access-control`.models
+package com.udaan.snorql.extensions.accesscontrol.models
 
 import com.udaan.snorql.extensions.SQLMetricTypes
 import com.udaan.snorql.framework.models.IMetricResult
