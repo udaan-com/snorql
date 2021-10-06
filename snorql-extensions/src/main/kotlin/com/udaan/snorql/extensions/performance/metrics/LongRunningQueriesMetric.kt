@@ -17,35 +17,34 @@
  * under the License.
  */
 
-package com.udaan.snorql.extensions.accesscontrol.metrics
+package com.udaan.snorql.extensions.performance.metrics
 
-
+import com.udaan.snorql.extensions.performance.models.*
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.*
-import com.udaan.snorql.extensions.accesscontrol.models.*
 
-class UserRoleMetric :
-    IMetric<UserRoleInput, UserRoleResult, IMetricRecommendation> {
+class LongRunningQueriesMetric :
+    IMetric<LongRunningInput, LongRunningResult, IMetricRecommendation> {
 
     override fun getMetricResult(
-        metricInput: UserRoleInput,
+        metricInput: LongRunningInput,
         metricConfig: MetricConfig
-    ): UserRoleResult {
+    ): LongRunningResult {
         // check the metricConfig.supportedHistory before getting the query
         val query =
             metricConfig.queries["main"]
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
-        val result = SqlMetricManager.queryExecutor.execute<UserRoleDTO>(metricInput.databaseName, query)
+        val result = SqlMetricManager.queryExecutor.execute<LongRunningQueryDTO>(metricInput.databaseName, query, mutableMapOf("elapsedTimeParam" to metricInput.elapsedTimeParam))
 
 
-        return UserRoleResult(result)
+        return LongRunningResult(result)
     }
 
     override fun getMetricResponseMetadata(
-        metricInput: UserRoleInput,
-        metricOutput: MetricOutput<UserRoleResult, IMetricRecommendation>
+        metricInput: LongRunningInput,
+        metricOutput: MetricOutput<LongRunningResult, IMetricRecommendation>
     ): Map<String, Any>? {
         val responseMetadata = mutableMapOf<String, Any>()
         val query =

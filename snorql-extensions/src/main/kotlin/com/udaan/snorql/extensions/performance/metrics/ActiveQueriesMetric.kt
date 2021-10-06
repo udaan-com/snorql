@@ -31,7 +31,7 @@ class ActiveQueriesMetric :
     IMetric<ActiveQueryInput, ActiveQueryResult, IMetricRecommendation> {
 
     override fun getMetricResult(
-        metricInput: MetricInput,
+        metricInput: ActiveQueryInput,
         metricConfig: MetricConfig
     ): ActiveQueryResult {
         // check the metricConfig.supportedHistory before getting the query
