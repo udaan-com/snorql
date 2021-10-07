@@ -22,5 +22,6 @@ package com.udaan.snorql.extensions
 
 enum class SQLMetricTypes(val metricId: String) {
     ACTIVE_QUERIES("activeQueries"),
+    LONG_RUNNING_QUERIES("longRunningQueries"),
     USER_ROLE("userRole"),
 }
