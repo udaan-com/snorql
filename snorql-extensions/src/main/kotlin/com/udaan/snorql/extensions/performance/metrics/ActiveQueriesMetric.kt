@@ -19,12 +19,12 @@
 
 package com.udaan.snorql.extensions.performance.metrics
 
+import com.udaan.snorql.extensions.MetricQueryExecutor
 import com.udaan.snorql.extensions.performance.models.ActiveQueryDTO
 import com.udaan.snorql.extensions.performance.models.ActiveQueryInput
 import com.udaan.snorql.extensions.performance.models.ActiveQueryResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.IMetric
-import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.*
 
 class ActiveQueriesMetric :
@@ -38,10 +38,9 @@ class ActiveQueriesMetric :
         val query =
             metricConfig.queries["main"]
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
-        val result = SqlMetricManager.queryExecutor.execute<ActiveQueryDTO>(metricInput.databaseName, query)
 
-
-        return ActiveQueryResult(result)
+            val result = MetricQueryExecutor.metricQueryExecutor<ActiveQueryDTO>(metricInput,query, metricConfig)
+            return ActiveQueryResult(result)
     }
 
     override fun getMetricResponseMetadata(
