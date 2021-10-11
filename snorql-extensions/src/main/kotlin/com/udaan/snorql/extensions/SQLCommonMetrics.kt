@@ -21,6 +21,7 @@ package com.udaan.snorql.extensions
 
 import com.udaan.snorql.extensions.accesscontrol.metrics.UserRoleMetric
 import com.udaan.snorql.extensions.performance.metrics.ActiveQueriesMetric
+import com.udaan.snorql.extensions.performance.metrics.BlockedQueriesMetric
 import com.udaan.snorql.extensions.performance.metrics.LongRunningQueriesMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
 
@@ -28,6 +29,7 @@ object SQLCommonMetrics {
     fun initialize() {
         SqlMetricManager.addMetric(SQLMetricTypes.ACTIVE_QUERIES.metricId, ActiveQueriesMetric())
         SqlMetricManager.addMetric(SQLMetricTypes.LONG_RUNNING_QUERIES.metricId, LongRunningQueriesMetric())
+        SqlMetricManager.addMetric(SQLMetricTypes.BLOCKED_QUERIES.metricId, BlockedQueriesMetric())
         SqlMetricManager.addMetric(SQLMetricTypes.USER_ROLE.metricId, UserRoleMetric())
     }
 }

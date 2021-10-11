@@ -19,34 +19,30 @@
 
 package com.udaan.snorql.extensions.performance.metrics
 
-import com.udaan.snorql.extensions.performance.models.ActiveQueryDTO
-import com.udaan.snorql.extensions.performance.models.ActiveQueryInput
-import com.udaan.snorql.extensions.performance.models.ActiveQueryResult
+import com.udaan.snorql.extensions.performance.models.*
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.*
 
-class ActiveQueriesMetric :
-    IMetric<ActiveQueryInput, ActiveQueryResult, IMetricRecommendation> {
+class BlockedQueriesMetric :
+    IMetric<BlockedQueriesInput, BlockedQueriesResult, IMetricRecommendation> {
 
     override fun getMetricResult(
-        metricInput: ActiveQueryInput,
+        metricInput: BlockedQueriesInput,
         metricConfig: MetricConfig
-    ): ActiveQueryResult {
+    ): BlockedQueriesResult {
         // check the metricConfig.supportedHistory before getting the query
         val query =
             metricConfig.queries["main"]
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
-        val result = SqlMetricManager.queryExecutor.execute<ActiveQueryDTO>(metricInput.databaseName, query)
-
-
-        return ActiveQueryResult(result)
+        val result = SqlMetricManager.queryExecutor.execute<BlockedQueriesDTO>(metricInput.databaseName, query)
+        return BlockedQueriesResult(result)
     }
 
     override fun getMetricResponseMetadata(
-        metricInput: ActiveQueryInput,
-        metricOutput: MetricOutput<ActiveQueryResult, IMetricRecommendation>
+        metricInput: BlockedQueriesInput,
+        metricOutput: MetricOutput<BlockedQueriesResult, IMetricRecommendation>
     ): Map<String, Any>? {
         val responseMetadata = mutableMapOf<String, Any>()
         val query =
@@ -54,7 +50,6 @@ class ActiveQueriesMetric :
         responseMetadata["underlyingQueries"] = listOf(query)
         return responseMetadata
     }
-
 
     override fun saveMetricResult(metricInput: MetricInput, result: IMetricResult) {
         TODO("Not yet implemented")

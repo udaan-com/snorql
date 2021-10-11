@@ -25,7 +25,7 @@ import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 
-class LongRunningQueryModel {
+class BlockedQueryMetric {
 }
 /**
  * Data class for Data transfer object of azure_databases_mapping
@@ -51,7 +51,7 @@ class LongRunningQueryModel {
  * @param [loginTime]
  * @param [openTransactionCount]
  */
-data class LongRunningQueryDTO(
+data class BlockedQueriesDTO(
     val sessionId: Int,
     val status: String,
     val blockedBy: Int,
@@ -75,10 +75,10 @@ data class LongRunningQueryDTO(
     val openTransactionCount: Int
 )
 
-data class LongRunningInput(
-    override val metricId: String = SQLMetricTypes.LONG_RUNNING_QUERIES.metricId,
-    override val metricPeriod: MetricPeriod, override val databaseName: String,
-    val elapsedTimeParam: String
+data class BlockedQueriesInput(
+    override val metricId: String = SQLMetricTypes.BLOCKED_QUERIES.metricId,
+    override val metricPeriod: MetricPeriod, override val databaseName: String
+
 ) : MetricInput()
 
-data class LongRunningResult(val queryList: List<LongRunningQueryDTO>) : IMetricResult()
+data class BlockedQueriesResult(val queryList: List<BlockedQueriesDTO>) : IMetricResult()
