@@ -29,6 +29,7 @@ abstract class MetricInput {
     val from: Timestamp? = null
     val to: Timestamp? = null
     val recommendationRequired: Boolean = false
+    val metricParameters: Map<String, *> = emptyMap<String,Any>()
 }
 
 data class MetricConfig(val queries: Map<String, String>,
