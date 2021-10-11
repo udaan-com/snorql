@@ -19,10 +19,10 @@
 
 package com.udaan.snorql.extensions.performance.metrics
 
+import com.udaan.snorql.extensions.MetricQueryExecutor
 import com.udaan.snorql.extensions.performance.models.*
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.IMetric
-import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.*
 
 class BlockedQueriesMetric :
@@ -36,7 +36,7 @@ class BlockedQueriesMetric :
         val query =
             metricConfig.queries["main"]
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
-        val result = SqlMetricManager.queryExecutor.execute<BlockedQueriesDTO>(metricInput.databaseName, query)
+        val result = MetricQueryExecutor.metricQueryExecutor<BlockedQueriesDTO>(metricInput,query, metricConfig)
         return BlockedQueriesResult(result)
     }
 
