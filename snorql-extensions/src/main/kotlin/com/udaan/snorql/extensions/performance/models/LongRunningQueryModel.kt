@@ -77,7 +77,8 @@ data class LongRunningQueryDTO(
 
 data class LongRunningInput(
     override val metricId: String = SQLMetricTypes.LONG_RUNNING_QUERIES.metricId,
-    override val metricPeriod: MetricPeriod, override val databaseName: String
+    override val metricPeriod: MetricPeriod, override val databaseName: String,
+    val elapsedTime: Long
 ) : MetricInput()
 
 data class LongRunningResult(val queryList: List<LongRunningQueryDTO>) : IMetricResult()
