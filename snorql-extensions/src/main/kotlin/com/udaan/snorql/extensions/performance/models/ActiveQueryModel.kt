@@ -76,7 +76,7 @@ data class ActiveQueryDTO(
 )
 
 data class ActiveQueryInput(
-    override val metricId: String = PerformanceEnums.ACTIVE_QUERIES.getEnum(),
+    override val metricId: String = PerformanceEnums.ACTIVE_QUERIES.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String
 ) : MetricInput()
 

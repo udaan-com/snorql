@@ -76,7 +76,7 @@ data class LongRunningQueryDTO(
 )
 
 data class LongRunningInput(
-    override val metricId: String = PerformanceEnums.LONG_RUNNING_QUERIES.getEnum(),
+    override val metricId: String = PerformanceEnums.LONG_RUNNING_QUERIES.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String,
     val elapsedTime: String
 ) : MetricInput()

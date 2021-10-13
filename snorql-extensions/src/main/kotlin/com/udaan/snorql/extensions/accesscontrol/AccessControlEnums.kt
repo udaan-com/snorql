@@ -19,13 +19,13 @@
 
 package com.udaan.snorql.extensions.accesscontrol
 
-import com.udaan.snorql.framework.IEnums
+import com.udaan.snorql.framework.IMtericId
 
-enum class AccessControlEnums(private val metricId:String):IEnums {
+enum class AccessControlEnums(private val metricId:String):IMtericId {
 
     USER_ROLE("userRole");
 
-    override fun getEnum(): String {
+    override fun getId(): String {
         return "accessControl_" + this.metricId
     }
 

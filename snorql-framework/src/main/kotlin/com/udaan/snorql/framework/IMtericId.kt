@@ -19,6 +19,6 @@
 
 package com.udaan.snorql.framework
 
-interface IEnums {
-    fun getEnum(): String
+interface IMtericId {
+    fun getId(): String
 }

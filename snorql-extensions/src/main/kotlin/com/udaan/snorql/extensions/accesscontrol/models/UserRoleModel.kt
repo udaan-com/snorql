@@ -31,7 +31,7 @@ data class UserRoleDTO (
 
 
 data class UserRoleInput(
-        override val metricId: String = AccessControlEnums.USER_ROLE.getEnum(),
+        override val metricId: String = AccessControlEnums.USER_ROLE.getId(),
         override val metricPeriod: MetricPeriod, override val databaseName: String
 ) : MetricInput()
 

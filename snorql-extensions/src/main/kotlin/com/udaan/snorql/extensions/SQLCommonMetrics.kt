@@ -28,8 +28,8 @@ import com.udaan.snorql.framework.metric.SqlMetricManager
 
 object SQLCommonMetrics {
     fun initialize() {
-        SqlMetricManager.addMetric(PerformanceEnums.ACTIVE_QUERIES.getEnum(), ActiveQueriesMetric())
-        SqlMetricManager.addMetric(PerformanceEnums.LONG_RUNNING_QUERIES.getEnum(), LongRunningQueriesMetric())
-        SqlMetricManager.addMetric(AccessControlEnums.USER_ROLE.getEnum(), UserRoleMetric())
+        SqlMetricManager.addMetric(PerformanceEnums.ACTIVE_QUERIES.getId(), ActiveQueriesMetric())
+        SqlMetricManager.addMetric(PerformanceEnums.LONG_RUNNING_QUERIES.getId(), LongRunningQueriesMetric())
+        SqlMetricManager.addMetric(AccessControlEnums.USER_ROLE.getId(), UserRoleMetric())
     }
 }

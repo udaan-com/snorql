@@ -19,14 +19,14 @@
 
 package com.udaan.snorql.extensions.performance
 
-import com.udaan.snorql.framework.IEnums
+import com.udaan.snorql.framework.IMtericId
 
-enum class PerformanceEnums(private val metricId:String):IEnums {
+enum class PerformanceEnums(private val metricId:String):IMtericId {
 
     ACTIVE_QUERIES("activeQueries"),
     LONG_RUNNING_QUERIES("longRunningQueries");
 
-    override fun getEnum(): String {
+    override fun getId(): String {
         return "performance_" + this.metricId
     }
 }
