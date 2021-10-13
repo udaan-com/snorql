@@ -52,6 +52,7 @@ class BlockedQueryMetric {
  * @param [openTransactionCount]
  */
 data class BlockedQueriesDTO(
+    val groupId:Int,
     val sessionId: Int,
     val status: String,
     val blockedBy: Int,
