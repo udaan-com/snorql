@@ -17,22 +17,16 @@
  * under the License.
  */
 
-package com.udaan.snorql.extensions.accesscontrol.models
+package com.udaan.snorql.extensions.performance
 
-import com.udaan.snorql.extensions.accesscontrol.AccessControlEnums
-import com.udaan.snorql.framework.models.IMetricResult
-import com.udaan.snorql.framework.models.MetricInput
-import com.udaan.snorql.framework.models.MetricPeriod
+import com.udaan.snorql.framework.IEnums
 
-data class UserRoleDTO (
-        val name: String,
-        val role: String
-)
+enum class PerformanceEnums(private val metricId:String):IEnums {
 
+    ACTIVE_QUERIES("activeQueries"),
+    LONG_RUNNING_QUERIES("longRunningQueries");
 
-data class UserRoleInput(
-        override val metricId: String = AccessControlEnums.USER_ROLE.getEnum(),
-        override val metricPeriod: MetricPeriod, override val databaseName: String
-) : MetricInput()
-
-data class UserRoleResult(val queryList: List<UserRoleDTO>) : IMetricResult()
+    override fun getEnum(): String {
+        return "performance_" + this.metricId
+    }
+}
