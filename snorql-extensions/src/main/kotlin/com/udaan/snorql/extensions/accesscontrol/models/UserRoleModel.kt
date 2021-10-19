@@ -19,7 +19,7 @@
 
 package com.udaan.snorql.extensions.accesscontrol.models
 
-import com.udaan.snorql.extensions.SQLMetricTypes
+import com.udaan.snorql.extensions.accesscontrol.AccessControlEnums
 import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
@@ -31,7 +31,7 @@ data class UserRoleDTO (
 
 
 data class UserRoleInput(
-        override val metricId: String = SQLMetricTypes.USER_ROLE.metricId,
+        override val metricId: String = AccessControlEnums.USER_ROLE.getId(),
         override val metricPeriod: MetricPeriod, override val databaseName: String
 ) : MetricInput()
 

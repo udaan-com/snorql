@@ -17,11 +17,16 @@
  * under the License.
  */
 
+package com.udaan.snorql.extensions.accesscontrol
 
-package com.udaan.snorql.extensions
+import com.udaan.snorql.framework.IMtericId
 
-enum class SQLMetricTypes(val metricId: String) {
-    ACTIVE_QUERIES("activeQueries"),
-    LONG_RUNNING_QUERIES("longRunningQueries"),
-    USER_ROLE("userRole"),
+enum class AccessControlEnums(private val metricId:String):IMtericId {
+
+    USER_ROLE("userRole");
+
+    override fun getId(): String {
+        return "accessControl_" + this.metricId
+    }
+
 }

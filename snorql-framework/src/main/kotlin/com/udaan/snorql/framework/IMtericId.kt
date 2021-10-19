@@ -17,19 +17,8 @@
  * under the License.
  */
 
-package com.udaan.snorql.extensions
+package com.udaan.snorql.framework
 
-import com.udaan.snorql.extensions.accesscontrol.AccessControlEnums
-import com.udaan.snorql.extensions.accesscontrol.metrics.UserRoleMetric
-import com.udaan.snorql.extensions.performance.PerformanceEnums
-import com.udaan.snorql.extensions.performance.metrics.ActiveQueriesMetric
-import com.udaan.snorql.extensions.performance.metrics.LongRunningQueriesMetric
-import com.udaan.snorql.framework.metric.SqlMetricManager
-
-object SQLCommonMetrics {
-    fun initialize() {
-        SqlMetricManager.addMetric(PerformanceEnums.ACTIVE_QUERIES.getId(), ActiveQueriesMetric())
-        SqlMetricManager.addMetric(PerformanceEnums.LONG_RUNNING_QUERIES.getId(), LongRunningQueriesMetric())
-        SqlMetricManager.addMetric(AccessControlEnums.USER_ROLE.getId(), UserRoleMetric())
-    }
+interface IMtericId {
+    fun getId(): String
 }
