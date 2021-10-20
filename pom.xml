@@ -10,6 +10,63 @@
     <packaging>pom</packaging>
 
     <name>snorql</name>
+    <description>
+        Snorql is a SQL monitoring framework developed at Udaan.
+    </description>
+    <url>https://github.com/udaan-com/snorql</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Lakshmi Ramakrishnan</name>
+            <email>lakshmi.rk@udaan.com</email>
+            <organization>Udaan</organization>
+            <organizationUrl>https://www.udaan.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Prince Bansal</name>
+            <email>prince.b@udaan.com</email>
+            <organization>Udaan</organization>
+            <organizationUrl>https://www.udaan.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Anish Tiwari</name>
+            <email>anish.tiwari@udaan.com</email>
+            <organization>Udaan</organization>
+            <organizationUrl>https://www.udaan.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Lokesh Devnani</name>
+            <email>lokesh.devnani@udaan.com</email>
+            <organization>Udaan</organization>
+            <organizationUrl>https://www.udaan.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/udaan-com/snorql.git</connection>
+        <developerConnection>scm:git:https://github.com/udaan-com/snorql.git</developerConnection>
+        <url>https://github.com/udaan-com/snorql/tree/master</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
     <modules>
         <module>snorql-framework</module>
         <module>snorql-extensions</module>
@@ -46,6 +103,59 @@
                 <artifactId>maven-source-plugin</artifactId>
             </plugin>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
+                    <goals>deploy</goals>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- GPG Signature on release -->
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
