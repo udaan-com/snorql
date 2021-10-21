@@ -20,12 +20,14 @@
 
 package com.udaan.snorql.extensions.performance.models
 
-import com.udaan.snorql.extensions.SQLMetricTypes
+import com.udaan.snorql.extensions.performance.PerformanceEnums
 import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 
-class BlockedQueryMetric {
+
+class BlockedQueryModel{
+
 }
 /**
  * Data class for Data transfer object of azure_databases_mapping
@@ -52,10 +54,13 @@ class BlockedQueryMetric {
  * @param [openTransactionCount]
  */
 data class BlockedQueriesDTO(
-    val groupId:Int,
     val sessionId: Int,
+    val blockedBy: Int?,
+    val blockingThese: String?,
+    val batchText:String?,
+    val inputBuffer:String?,
+    val loginName: String?,
     val status: String,
-    val blockedBy: Int,
     val waitType: String?,
     val waitResource: String?,
     val waitTime: String?,
@@ -63,21 +68,21 @@ data class BlockedQueriesDTO(
     val logicalReads: Int?,
     val reads: Int?,
     val writes: Int?,
-    val elapsedTime: String,
-    val queryText: String,
-    val storedProc: String,
-    val command: String,
-    val loginName: String,
-    val hostName: String,
-    val programName: String,
+    val hostName: String?,
+    val programName: String?,
     val hostProcessId: Int,
-    val lastRequestEndTime: String,
     val loginTime: String,
-    val openTransactionCount: Int
+    var blockingTree: MutableList<BlockedQueriesDTO?> = mutableListOf(),
+    val lastRequestEndTime: String?,
+    val openTransactionCount: Int,
+    val command: String?,
+    val elapsedTime: String?,
+    val queryText: String?,
+    val storedProc: String?
 )
 
 data class BlockedQueriesInput(
-    override val metricId: String = SQLMetricTypes.BLOCKED_QUERIES.metricId,
+    override val metricId: String = PerformanceEnums.BLOCKED_QUERIES.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String
 
 ) : MetricInput()

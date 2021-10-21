@@ -32,12 +32,18 @@ class BlockedQueriesMetric :
         metricInput: BlockedQueriesInput,
         metricConfig: MetricConfig
     ): BlockedQueriesResult {
-        // check the metricConfig.supportedHistory before getting the query
         val query =
             metricConfig.queries["main"]
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
-        val result = SqlMetricManager.queryExecutor.execute<BlockedQueriesDTO>(metricInput.databaseName, query)
-        return BlockedQueriesResult(result)
+        val results = SqlMetricManager.queryExecutor.execute<BlockedQueriesDTO>(metricInput.databaseName, query)
+
+        for(result in results) {
+            if(result.blockedBy != 0){
+                generateBlockingTree(result, results)
+            }
+        }
+        val treeResults = results.filter { it.blockedBy == 0 }
+        return BlockedQueriesResult(treeResults)
     }
 
     override fun getMetricResponseMetadata(
@@ -49,6 +55,17 @@ class BlockedQueriesMetric :
             getMetricConfig(metricInput.metricId).queries["main"]
         responseMetadata["underlyingQueries"] = listOf(query)
         return responseMetadata
+    }
+
+    private fun generateBlockingTree(result:BlockedQueriesDTO, results:List<BlockedQueriesDTO>): BlockedQueriesDTO?{
+        if (result.blockedBy != 0){
+            if (!results.single { it.sessionId == result.blockedBy }.blockingTree.any{ it?.sessionId == result.sessionId})
+            {
+                results.single { it.sessionId == result.blockedBy }.blockingTree.add(result)
+            }
+            generateBlockingTree(results.single { it.sessionId == result.blockedBy }, results)
+        }
+        return result
     }
 
     override fun saveMetricResult(metricInput: MetricInput, result: IMetricResult) {

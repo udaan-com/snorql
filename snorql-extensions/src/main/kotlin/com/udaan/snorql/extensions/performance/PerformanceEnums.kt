@@ -17,12 +17,17 @@
  * under the License.
  */
 
+package com.udaan.snorql.extensions.performance
 
-package com.udaan.snorql.extensions
+import com.udaan.snorql.framework.IMtericId
 
-enum class SQLMetricTypes(val metricId: String) {
+enum class PerformanceEnums(private val metricId:String):IMtericId {
+
     ACTIVE_QUERIES("activeQueries"),
     LONG_RUNNING_QUERIES("longRunningQueries"),
-    BLOCKED_QUERIES("blockedQueries"),
-    USER_ROLE("userRole"),
+    BLOCKED_QUERIES("blockedQueries");
+
+    override fun getId(): String {
+        return "performance_" + this.metricId
+    }
 }

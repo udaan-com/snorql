@@ -17,22 +17,16 @@
  * under the License.
  */
 
-package com.udaan.snorql.extensions.accesscontrol.models
+package com.udaan.snorql.extensions.accesscontrol
 
-import com.udaan.snorql.extensions.accesscontrol.AccessControlEnums
-import com.udaan.snorql.framework.models.IMetricResult
-import com.udaan.snorql.framework.models.MetricInput
-import com.udaan.snorql.framework.models.MetricPeriod
+import com.udaan.snorql.framework.IMtericId
 
-data class UserRoleDTO (
-        val name: String,
-        val role: String
-)
+enum class AccessControlEnums(private val metricId:String):IMtericId {
 
+    USER_ROLE("userRole");
 
-data class UserRoleInput(
-        override val metricId: String = AccessControlEnums.USER_ROLE.getId(),
-        override val metricPeriod: MetricPeriod, override val databaseName: String
-) : MetricInput()
+    override fun getId(): String {
+        return "accessControl_" + this.metricId
+    }
 
-data class UserRoleResult(val queryList: List<UserRoleDTO>) : IMetricResult()
+}

@@ -20,7 +20,7 @@
 
 package com.udaan.snorql.extensions.performance.models
 
-import com.udaan.snorql.extensions.SQLMetricTypes
+import com.udaan.snorql.extensions.performance.PerformanceEnums
 import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
@@ -76,7 +76,7 @@ data class LongRunningQueryDTO(
 )
 
 data class LongRunningInput(
-    override val metricId: String = SQLMetricTypes.LONG_RUNNING_QUERIES.metricId,
+    override val metricId: String = PerformanceEnums.LONG_RUNNING_QUERIES.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String,
     val elapsedTime: String
 ) : MetricInput()
