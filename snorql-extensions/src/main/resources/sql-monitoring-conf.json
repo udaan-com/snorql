@@ -15,6 +15,14 @@
     "supportsRealTime": true,
     "isParameterized": true
   },
+  "performance_blockedQueries": {
+    "queries": {
+      "main": "WITH ctebl (session_id, blocking_these)\nAS (SELECT s.session_id,\nblocking_these = x.blocking_these\nFROM   sys.dm_exec_sessions s\nCROSS apply (SELECT Isnull(CONVERT(VARCHAR(6),\ner.session_id), '')\n+ ', '\nFROM   sys.dm_exec_requests AS er\nWHERE  er.blocking_session_id =\nIsnull(s.session_id, 0)\nAND er.blocking_session_id <> 0\nFOR xml path('')) AS x (blocking_these))\nSELECT s.session_id,\nblocked_by = r.blocking_session_id,\nbl.blocking_these,\nbatch_text = t.text,\ninput_buffer = ib.event_info,\ns.login_name,\nr.status,\nr.wait_type,\nr.wait_resource,\nCONVERT(VARCHAR, Dateadd(ms, r.wait_time, 0), 8)            AS\n'wait_time',\ns.cpu_time,\ns.logical_reads,\ns.reads,\ns.writes,\ns.host_name,\ns.program_name,\ns.host_process_id,\ns.login_time,\ns.last_request_end_time,\ns.open_transaction_count,\nr.command,\nCONVERT(VARCHAR, (r.total_elapsed_time/1000 / 86400))\n+ 'd '\n+ CONVERT(VARCHAR, Dateadd(ms, r.total_elapsed_time, 0), 8) AS\n'elapsed_time'\n,CAST((\n'<?query --  ' + CHAR(13) + CHAR(13) + Substring(t.TEXT, (r.statement_start_offset / 2) + 1, (\n(\nCASE r.statement_end_offset\nWHEN - 1\nTHEN Datalength(t.TEXT)\nELSE r.statement_end_offset\nEND - r.statement_start_offset\n) / 2\n) + 1) + CHAR(13) + CHAR(13) + '--?>'\n) AS XML) AS 'query_text',\n\nCOALESCE(Quotename(Db_name(t.dbid)) + N'.'\n+ Quotename(Object_schema_name(t.objectid, t.dbid))\n+ N'.'\n+ Quotename(Object_name(t.objectid, t.dbid)), '')  AS\n'stored_proc'\nFROM   sys.dm_exec_sessions s\nLEFT OUTER JOIN sys.dm_exec_requests r\nON r.session_id = s.session_id\nINNER JOIN ctebl AS bl\nON s.session_id = bl.session_id\nOUTER apply sys.Dm_exec_sql_text (r.sql_handle) t\nOUTER apply sys.Dm_exec_input_buffer(s.session_id, NULL) AS ib\nWHERE  blocking_these IS NOT NULL\nOR r.blocking_session_id > 0\nAND r.wait_type NOT LIKE 'SP_SERVER_DIAGNOSTICS%'\nAND r.session_id != @@SPID\nORDER  BY Len(bl.blocking_these) DESC,\nr.blocking_session_id DESC,\nr.session_id; "
+    },
+    "supportsHistorical": true,
+    "supportsRealTime": true,
+    "isParameterized": false
+  },
   "accessControl_userRole": {
     "queries": {
       "main": "select dp1.name, string_agg(dp2.name,', ') as role from sys.database_role_members drm join sys.database_principals dp1 on dp1.principal_id=drm.member_principal_id join sys.database_principals dp2 on dp2.principal_id=drm.role_principal_id group by dp1.name"

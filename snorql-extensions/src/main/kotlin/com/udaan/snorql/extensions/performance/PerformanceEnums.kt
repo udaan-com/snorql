@@ -24,7 +24,8 @@ import com.udaan.snorql.framework.IMtericId
 enum class PerformanceEnums(private val metricId:String):IMtericId {
 
     ACTIVE_QUERIES("activeQueries"),
-    LONG_RUNNING_QUERIES("longRunningQueries");
+    LONG_RUNNING_QUERIES("longRunningQueries"),
+    BLOCKED_QUERIES("blockedQueries");
 
     override fun getId(): String {
         return "performance_" + this.metricId
