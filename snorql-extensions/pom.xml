@@ -4,7 +4,7 @@
     <parent>
         <artifactId>snorql</artifactId>
         <groupId>com.udaan.snorql</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.1</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -14,7 +14,7 @@
     <name>snorql-extensions</name>
 
     <properties>
-        <versions.snorql-framework>1.0-SNAPSHOT</versions.snorql-framework>
+        <versions.snorql-framework>0.1</versions.snorql-framework>
     </properties>
     <dependencies>
 
