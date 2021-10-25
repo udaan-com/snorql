@@ -47,5 +47,13 @@
     "supportsHistorical": false,
     "supportsRealTime": true,
     "isParameterized": false
+  },
+  "storage_db": {
+    "queries": {
+      "main": "sp_spaceused  @oneresultset = 1"
+    },
+    "supportsHistorical": false,
+    "supportsRealTime": true,
+    "isParameterized": false
   }
 }

@@ -23,6 +23,8 @@ import com.udaan.snorql.extensions.accesscontrol.AccessControlEnums
 import com.udaan.snorql.extensions.accesscontrol.metrics.UserRoleMetric
 import com.udaan.snorql.extensions.performance.PerformanceEnums
 import com.udaan.snorql.extensions.performance.metrics.*
+import com.udaan.snorql.extensions.storage.StorageEnums
+import com.udaan.snorql.extensions.storage.metrics.DbMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
 
 object SQLCommonMetrics {
@@ -37,5 +39,8 @@ object SQLCommonMetrics {
 
         // register access-control related metric here
         SqlMetricManager.addMetric(AccessControlEnums.USER_ROLE.getId(), UserRoleMetric())
+
+        // register storage related metric here
+        SqlMetricManager.addMetric(StorageEnums.DB.getId(), DbMetric())
     }
 }
