@@ -26,7 +26,8 @@ enum class PerformanceEnums(private val metricId:String):IMtericId {
     ACTIVE_QUERIES("activeQueries"),
     LONG_RUNNING_QUERIES("longRunningQueries"),
     BLOCKED_QUERIES("blockedQueries"),
-    INDEX_STATS("indexStats");
+    INDEX_STATS("indexStats"),
+    ACTIVE_DDL("activeDDL");
 
     override fun getId(): String {
         return "performance_" + this.metricId

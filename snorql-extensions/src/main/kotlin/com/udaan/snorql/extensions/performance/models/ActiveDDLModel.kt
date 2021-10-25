@@ -25,40 +25,33 @@ import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 
-class IndexStatModel {
+class ActiveDDLModel {
 }
 /**
  * Data class for Data transfer object of index stats
- * @param [name]
- * @param [updated]
- * @param [rows]
- * @param [rowsSampled]
- * @param [steps]
- * @param [density]
- * @param [averageKeyLength]
- * @param [stringIndex]
- * @param [filterExpression]
- * @param [unfilteredRows]
- * @param [persistedSamplePercent]
+ * @param [currentStep]
+ * @param [totalRows]
+ * @param [rowsProcessed]
+ * @param [rowsLeft]
+ * @param [percentComplete]
+ * @param [elapsedSeconds]
+ * @param [estimatedCompletionTime]
+ * @param [estimatedSecondsLeft]
  */
-data class IndexStatDTO(
-    val name: String?,
-    val updated: String?,
-    val rows: Int?,
-    val rowsSampled: Int?,
-    val steps: Int?,
-    val density: Int?,
-    val averagekeylength: Float?,
-    val stringIndex: String?,
-    val filterExpression: String?,
-    val unfilteredRows: Int?,
-    val persistedSamplePercent: Int?
+data class ActiveDDLDTO(
+    val currentStep: String?,
+    val totalRows: Int?,
+    val rowsProcessed: Int?,
+    val rowsLeft: Int?,
+    val percentComplete: Float?,
+    val elapsedSeconds: Int?,
+    val estimatedSecondsLeft: Int?,
+    val estimatedCompletionTime: String?
 )
 
-data class IndexStatInput(
-    override val metricId: String = PerformanceEnums.INDEX_STATS.getId(),
+data class ActiveDDLInput(
+    override val metricId: String = PerformanceEnums.ACTIVE_DDL.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String,
-    val tableName:String, val indexName:String
 ) : MetricInput()
 
-data class IndexStatResult(val queryList: List<IndexStatDTO>) : IMetricResult()
+data class ActiveDDLResult(val queryList: List<ActiveDDLDTO>) : IMetricResult()
