@@ -23,6 +23,14 @@
     "supportsRealTime": true,
     "isParameterized": false
   },
+  "performance_indexStats": {
+    "queries": {
+      "main": "dbcc show_statistics [:tableName,:indexName)"
+    },
+    "supportsHistorical": true,
+    "supportsRealTime": true,
+    "isParameterized": true
+  },
   "accessControl_userRole": {
     "queries": {
       "main": "select dp1.name, string_agg(dp2.name,', ') as role from sys.database_role_members drm join sys.database_principals dp1 on dp1.principal_id=drm.member_principal_id join sys.database_principals dp2 on dp2.principal_id=drm.role_principal_id group by dp1.name"
