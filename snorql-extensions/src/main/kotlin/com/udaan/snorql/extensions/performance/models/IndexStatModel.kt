@@ -24,6 +24,7 @@ import com.udaan.snorql.extensions.performance.PerformanceEnums
 import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
+import org.jdbi.v3.core.mapper.reflect.ColumnName
 
 class IndexStatModel {
 }
@@ -41,17 +42,31 @@ class IndexStatModel {
  * @param [unfilteredRows]
  * @param [persistedSamplePercent]
  */
+
 data class IndexStatDTO(
     val name: String?,
     val updated: String?,
     val rows: Int?,
+
+    @ColumnName("Rows Sampled")
     val rowsSampled: Int?,
+
     val steps: Int?,
     val density: Int?,
-    val averagekeylength: Float?,
+
+    @ColumnName("Average key length")
+    val averageKeyLength: Float?,
+
+    @ColumnName("String Index")
     val stringIndex: String?,
+
+    @ColumnName("Filter Expression")
     val filterExpression: String?,
+
+    @ColumnName("Unfiltered Rows")
     val unfilteredRows: Int?,
+
+    @ColumnName("Persisted Sample Percent")
     val persistedSamplePercent: Int?
 )
 
