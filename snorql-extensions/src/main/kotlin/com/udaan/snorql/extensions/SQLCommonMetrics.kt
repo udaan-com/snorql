@@ -22,16 +22,20 @@ package com.udaan.snorql.extensions
 import com.udaan.snorql.extensions.accesscontrol.AccessControlEnums
 import com.udaan.snorql.extensions.accesscontrol.metrics.UserRoleMetric
 import com.udaan.snorql.extensions.performance.PerformanceEnums
-import com.udaan.snorql.extensions.performance.metrics.ActiveQueriesMetric
-import com.udaan.snorql.extensions.performance.metrics.BlockedQueriesMetric
-import com.udaan.snorql.extensions.performance.metrics.LongRunningQueriesMetric
+import com.udaan.snorql.extensions.performance.metrics.*
 import com.udaan.snorql.framework.metric.SqlMetricManager
 
 object SQLCommonMetrics {
     fun initialize() {
+
+        // register performance related metric here
         SqlMetricManager.addMetric(PerformanceEnums.BLOCKED_QUERIES.getId(), BlockedQueriesMetric())
         SqlMetricManager.addMetric(PerformanceEnums.ACTIVE_QUERIES.getId(), ActiveQueriesMetric())
         SqlMetricManager.addMetric(PerformanceEnums.LONG_RUNNING_QUERIES.getId(), LongRunningQueriesMetric())
+        SqlMetricManager.addMetric(PerformanceEnums.INDEX_STATS.getId(), IndexStatsMetric())
+        SqlMetricManager.addMetric(PerformanceEnums.ACTIVE_DDL.getId(), ActiveDDLMetric())
+
+        // register access-control related metric here
         SqlMetricManager.addMetric(AccessControlEnums.USER_ROLE.getId(), UserRoleMetric())
     }
 }

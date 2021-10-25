@@ -23,6 +23,23 @@
     "supportsRealTime": true,
     "isParameterized": false
   },
+  "performance_indexStats": {
+    "queries": {
+      "main": "dbcc show_statistics (:tableName, :indexName) with STAT_HEADER"
+    },
+    "supportsHistorical": true,
+    "supportsRealTime": true,
+    "isParameterized": true
+  },
+  "performance_activeDDL": {
+    "queries": {
+      "main": "WITH agg AS\n         (\n SELECT SUM(qp.[row_count]) AS [RowsProcessed],\n     SUM(qp.[estimate_row_count]) AS [TotalRows],\n            MAX(qp.last_active_time) - MIN(qp.first_active_time) AS [ElapsedMS],\n                    MAX(IIF(qp.[close_time] = 0 AND qp.[first_row_time] > 0,\n                            [physical_operator_name],\n                            N'<Transition>')) AS [CurrentStep]\n\n             FROM sys.dm_exec_query_profiles qp\n             WHERE qp.[physical_operator_name] IN (N'Table Scan', N'Clustered Index Scan',\n                                                   N'Index Scan',  N'Sort')\n               AND   qp.[session_id] IN (SELECT session_id from sys.dm_exec_requests where command IN ( 'CREATE INDEX','ALTER INDEX','ALTER TABLE', 'update statistics') )\n         ), comp AS\n         (\n             SELECT *,\n                    ([TotalRows] - [RowsProcessed]) AS [RowsLeft],\n                    ([ElapsedMS] / 1000.0) AS [ElapsedSeconds]\n             FROM   agg\n         )\nSELECT [CurrentStep],\n       [TotalRows],\n       [RowsProcessed],\n       [RowsLeft],\n       CONVERT(DECIMAL(5, 2),\n                   (([RowsProcessed] * 1.0) / [TotalRows]) * 100) AS [PercentComplete],\n       [ElapsedSeconds],\n       (([ElapsedSeconds] / [RowsProcessed]) * [RowsLeft]) AS [EstimatedSecondsLeft],\n       DATEADD(SECOND,\n               (([ElapsedSeconds] / [RowsProcessed]) * [RowsLeft]),\n               GETDATE()) AS [EstimatedCompletionTime]\nFROM   comp;"
+    },
+    "supportsHistorical": true,
+    "supportsRealTime": true,
+    "isParameterized": false
+  },
+
   "accessControl_userRole": {
     "queries": {
       "main": "select dp1.name, string_agg(dp2.name,', ') as role from sys.database_role_members drm join sys.database_principals dp1 on dp1.principal_id=drm.member_principal_id join sys.database_principals dp2 on dp2.principal_id=drm.role_principal_id group by dp1.name"
