@@ -59,4 +59,4 @@ data class DbInput(
     override val metricPeriod: MetricPeriod, override val databaseName: String,
 ) : MetricInput()
 
-data class DbSizeResult(val queryList: List<DbDTO>) : IMetricResult()
+data class DbResult(val queryList: List<DbDTO>) : IMetricResult()
