@@ -21,7 +21,7 @@ package com.udaan.snorql.extensions.storage.metrics
 
 import com.udaan.snorql.extensions.storage.models.DbDTO
 import com.udaan.snorql.extensions.storage.models.DbInput
-import com.udaan.snorql.extensions.storage.models.DbSizeResult
+import com.udaan.snorql.extensions.storage.models.DbResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
@@ -32,23 +32,23 @@ import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricOutput
 
 class DbMetric :
-    IMetric<DbInput, DbSizeResult, IMetricRecommendation> {
+    IMetric<DbInput, DbResult, IMetricRecommendation> {
 
     override fun getMetricResult(
         metricInput: DbInput,
         metricConfig: MetricConfig
-    ): DbSizeResult {
+    ): DbResult {
         val query =
             metricConfig.queries["main"]
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
 
         val result = SqlMetricManager.queryExecutor.execute<DbDTO>(metricInput.databaseName, query)
-        return DbSizeResult(result)
+        return DbResult(result)
     }
 
     override fun getMetricResponseMetadata(
         metricInput: DbInput,
-        metricOutput: MetricOutput<DbSizeResult, IMetricRecommendation>
+        metricOutput: MetricOutput<DbResult, IMetricRecommendation>
     ): Map<String, Any>? {
         val responseMetadata = mutableMapOf<String, Any>()
         val query =
