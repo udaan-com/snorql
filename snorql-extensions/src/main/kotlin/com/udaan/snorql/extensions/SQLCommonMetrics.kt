@@ -43,5 +43,6 @@ object SQLCommonMetrics {
         // register storage related metric here
         SqlMetricManager.addMetric(StorageEnums.DB.getId(), DbMetric())
         SqlMetricManager.addMetric(StorageEnums.DB_TABLES.getId(), DbTableMetric())
+        SqlMetricManager.addMetric(StorageEnums.DB_INDEX.getId(), DbIndexMetric())
     }
 }
