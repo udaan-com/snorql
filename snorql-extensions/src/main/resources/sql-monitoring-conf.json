@@ -63,5 +63,13 @@
     "supportsHistorical": true,
     "supportsRealTime": true,
     "isParameterized": false
+  },
+  "storage_dbGrowth": {
+    "queries": {
+      "main": "SELECT  start_time, end_time, storage_in_megabytes\nFROM sys.resource_stats\nWHERE database_name = :databaseName \nORDER BY end_time DESC;"
+    },
+    "supportsHistorical": true,
+    "supportsRealTime": true,
+    "isParameterized": true
   }
 }

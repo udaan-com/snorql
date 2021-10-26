@@ -24,7 +24,8 @@ import com.udaan.snorql.framework.IMtericId
 enum class StorageEnums(private val metricId:String): IMtericId {
 
     DB("db"),
-    DB_TABLES("dbTables");
+    DB_TABLES("dbTables"),
+    DB_GROWTH("dbGrowth");
 
     override fun getId(): String {
         return "storage_" + this.metricId
