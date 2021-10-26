@@ -24,7 +24,7 @@ import com.udaan.snorql.extensions.accesscontrol.metrics.UserRoleMetric
 import com.udaan.snorql.extensions.performance.PerformanceEnums
 import com.udaan.snorql.extensions.performance.metrics.*
 import com.udaan.snorql.extensions.storage.StorageEnums
-import com.udaan.snorql.extensions.storage.metrics.DbMetric
+import com.udaan.snorql.extensions.storage.metrics.*
 import com.udaan.snorql.framework.metric.SqlMetricManager
 
 object SQLCommonMetrics {
@@ -42,5 +42,6 @@ object SQLCommonMetrics {
 
         // register storage related metric here
         SqlMetricManager.addMetric(StorageEnums.DB.getId(), DbMetric())
+        SqlMetricManager.addMetric(StorageEnums.DB_TABLES.getId(), DbTableMetric())
     }
 }
