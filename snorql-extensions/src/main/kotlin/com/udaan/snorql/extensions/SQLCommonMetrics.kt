@@ -44,6 +44,7 @@ object SQLCommonMetrics {
         SqlMetricManager.addMetric(StorageEnums.DB.getId(), DbMetric())
         SqlMetricManager.addMetric(StorageEnums.DB_TABLES.getId(), DbTableMetric())
         SqlMetricManager.addMetric(StorageEnums.DB_INDEX.getId(), DbIndexMetric())
+        SqlMetricManager.addMetric(StorageEnums.DB_GROWTH.getId(), DbGrowthMetric())
         SqlMetricManager.addMetric(StorageEnums.TABLE.getId(), TableMetric())
     }
 }
