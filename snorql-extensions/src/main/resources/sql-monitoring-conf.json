@@ -87,5 +87,13 @@
     "supportsHistorical": true,
     "supportsRealTime": true,
     "isParameterized": true
+  },
+  "storage_pvs": {
+    "queries": {
+      "main": "SELECT pvss.persistent_version_store_size_kb / 1024. / 1024 AS persistent_version_store_size_gb,\n       pvss.online_index_version_store_size_kb / 1024. / 1024 AS online_index_version_store_size_gb,\n       pvss.current_aborted_transaction_count,\n       pvss.aborted_version_cleaner_start_time,\n       pvss.aborted_version_cleaner_end_time,\n       dt.database_transaction_begin_time AS oldest_transaction_begin_time,\n       asdt.session_id AS active_transaction_session_id,\n       asdt.elapsed_time_seconds AS active_transaction_elapsed_time_seconds\nFROM sys.dm_tran_persistent_version_store_stats AS pvss\n         LEFT JOIN sys.dm_tran_database_transactions AS dt\n                   ON pvss.oldest_active_transaction_id = dt.transaction_id\n                       AND\n                      pvss.database_id = dt.database_id\n         LEFT JOIN sys.dm_tran_active_snapshot_database_transactions AS asdt\n                   ON pvss.min_transaction_timestamp = asdt.transaction_sequence_num\n                       OR\n                      pvss.online_index_min_transaction_timestamp = asdt.transaction_sequence_num\nWHERE pvss.database_id = DB_ID();"
+    },
+    "supportsHistorical": false,
+    "supportsRealTime": true,
+    "isParameterized": false
   }
 }
