@@ -71,5 +71,13 @@
     "supportsHistorical": true,
     "supportsRealTime": true,
     "isParameterized": false
+  },
+  "storage_table": {
+    "queries": {
+      "main": "sp_spaceused @oneresultset = 1, @objname = :tableName;"
+    },
+    "supportsHistorical": true,
+    "supportsRealTime": true,
+    "isParameterized": true
   }
 }
