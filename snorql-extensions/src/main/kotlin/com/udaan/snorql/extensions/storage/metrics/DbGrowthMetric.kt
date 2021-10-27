@@ -19,12 +19,9 @@
 
 package com.udaan.snorql.extensions.storage.metrics
 
-import com.udaan.snorql.extensions.storage.models.DbDTO
 import com.udaan.snorql.extensions.storage.models.DbGrowthDTO
 import com.udaan.snorql.extensions.storage.models.DbGrowthInput
 import com.udaan.snorql.extensions.storage.models.DbGrowthResult
-import com.udaan.snorql.extensions.storage.models.DbInput
-import com.udaan.snorql.extensions.storage.models.DbResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
@@ -44,7 +41,7 @@ class DbGrowthMetric :
         val query =
             metricConfig.queries["main"]
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
-        val paramMap = mapOf("databaseName" to metricInput.databaseName)
+        val paramMap = mapOf("databaseName" to metricInput.dbNameForGrowth)
         val result = SqlMetricManager.queryExecutor.execute<DbGrowthDTO>(metricInput.databaseName, query, paramMap)
         return DbGrowthResult(result)
     }
@@ -52,7 +49,7 @@ class DbGrowthMetric :
     override fun getMetricResponseMetadata(
         metricInput: DbGrowthInput,
         metricOutput: MetricOutput<DbGrowthResult, IMetricRecommendation>
-    ): Map<String, Any>? {
+    ): Map<String, Any> {
         val responseMetadata = mutableMapOf<String, Any>()
         val query =
             getMetricConfig(metricInput.metricId).queries["main"]

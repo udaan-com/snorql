@@ -45,6 +45,7 @@ data class DbGrowthDTO(
 data class DbGrowthInput(
     override val metricId: String = StorageEnums.DB_GROWTH.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String,
+    val dbNameForGrowth: String
 
 ) : MetricInput()
 
