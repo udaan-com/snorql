@@ -64,6 +64,22 @@
     "supportsRealTime": true,
     "isParameterized": false
   },
+  "storage_dbIndex": {
+    "queries": {
+      "main": "SELECT\n    p.rows,\n    i.name as indexName,\n    t.name as tableName,\n    CAST(ROUND(((SUM(a.total_pages) * 8) / 1024.00), 2) AS NUMERIC(36, 2)) AS totalSpaceMB,\n    CAST(ROUND(((SUM(a.used_pages) * 8) / 1024.00), 2) AS NUMERIC(36, 2)) AS usedSpaceMB,\n    CAST(ROUND(((SUM(a.total_pages) - SUM(a.used_pages)) * 8) / 1024.00, 2) AS NUMERIC(36, 2)) AS unusedSpaceMB\nFROM\n\n    sys.indexes i\n        INNER JOIN\n    sys.tables t\n    on i.object_id = t.object_id\n        INNER JOIN\n    sys.partitions p ON i.object_id = p.OBJECT_ID AND i.index_id = p.index_id\n        INNER JOIN\n    sys.allocation_units a ON p.partition_id = a.container_id\nWHERE\n        i.OBJECT_ID > 255\nGROUP BY\n    p.Rows, i.name, t.name\nORDER BY\n    totalSpaceMB DESC, i.name, t.name;"
+    },
+    "supportsHistorical": true,
+    "supportsRealTime": true,
+    "isParameterized": false
+  },
+  "storage_table": {
+    "queries": {
+      "main": "sp_spaceused @oneresultset = 1, @objname = :tableName;"
+    },
+    "supportsHistorical": true,
+    "supportsRealTime": true,
+    "isParameterized": true
+  },
   "storage_dbGrowth": {
     "queries": {
       "main": "SELECT  start_time, end_time, storage_in_megabytes\nFROM sys.resource_stats\nWHERE database_name = :databaseName \nORDER BY end_time DESC;"
