@@ -46,6 +46,7 @@ object SQLCommonMetrics {
         SqlMetricManager.addMetric(StorageEnums.DB_INDEX.getId(), DbIndexMetric())
         SqlMetricManager.addMetric(StorageEnums.DB_GROWTH.getId(), DbGrowthMetric())
         SqlMetricManager.addMetric(StorageEnums.TABLE.getId(), TableMetric())
+        SqlMetricManager.addMetric(StorageEnums.TABLE_UNUSED_INDEX.getId(), TableUnusedIndexMetric())
         SqlMetricManager.addMetric(StorageEnums.PVS.getId(), PVSMetric())
     }
 }

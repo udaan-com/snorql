@@ -28,6 +28,7 @@ enum class StorageEnums(private val metricId:String): IMtericId {
     DB_INDEX("dbIndex"),
     DB_GROWTH("dbGrowth"),
     TABLE("table"),
+    TABLE_UNUSED_INDEX("tableUnusedIndex"),
     PVS("pvs");
 
     override fun getId(): String {

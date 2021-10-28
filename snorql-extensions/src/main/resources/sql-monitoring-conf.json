@@ -95,5 +95,13 @@
     "supportsHistorical": false,
     "supportsRealTime": true,
     "isParameterized": false
+  },
+  "storage_tableUnusedIndex": {
+    "queries": {
+      "main": "SELECT OBJECT_NAME(S.[OBJECT_ID]) AS OBJECT_NAME,\n       I.[NAME]                   AS INDEX_NAME,\n       USER_SEEKS,\n       USER_SCANS,\n       USER_LOOKUPS,\n       USER_UPDATES\nFROM SYS.DM_DB_INDEX_USAGE_STATS AS S\n         INNER JOIN SYS.INDEXES AS I\n                    ON I.[OBJECT_ID] = S.[OBJECT_ID]\n                        AND I.INDEX_ID = S.INDEX_ID\nWHERE OBJECTPROPERTY(S.[OBJECT_ID], 'IsUserTable') = 1\n  and OBJECT_NAME(S.[OBJECT_ID])=:tableName;"
+    },
+    "supportsHistorical": false,
+    "supportsRealTime": true,
+    "isParameterized": false
   }
 }
