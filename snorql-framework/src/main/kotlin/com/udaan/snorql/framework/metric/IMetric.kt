@@ -53,7 +53,7 @@ interface IMetric<in T : MetricInput, O : IMetricResult, R : IMetricRecommendati
     }
 
     fun getMetricRecommendations(
-        metricInput: MetricInput,
+        metricInput: T,
         metricResult: O
     ): R? {
         return null
