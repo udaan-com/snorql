@@ -28,7 +28,7 @@ Current extensions include:
 
 You can also add your own metrics by following the instructions below under [Build your own custom metrics using snorql](#build-your-own-custom-metrics-using-snorql).
 
-> See issues with [new-extension](https://github.com/udaan-com/snorql/labels/new-metric) label for details on newer extension planned in the roadmap.
+> See issues with [new-metric](https://github.com/udaan-com/snorql/labels/new-metric) label for details on newer extension planned in the roadmap.
 
 
 # How to integrate snorql in your project
