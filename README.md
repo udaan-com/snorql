@@ -26,9 +26,9 @@ Current extensions include:
 - Active Queries <br>
 ... [to view the complete list please click here](https://github.com/udaan-com/snorql/wiki/snorql-extensions) 
 
-You can also add your own metrics by following the instructions below under [Build your own metrics](#build-your-own-metrics-using-snorql).
+You can also add your own metrics by following the instructions below under [Build your own custom metrics using snorql](#build-your-own-custom-metrics-using-snorql).
 
-> See issues with `new-extension` label for details on newer extension planned in the roadmap.
+> See issues with [new-extension](https://github.com/udaan-com/snorql/labels/new-metric) label for details on newer extension planned in the roadmap.
 
 
 # How to integrate snorql in your project
