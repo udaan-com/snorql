@@ -1,8 +1,15 @@
-# Example Usage
+# Overview
+This is built using `snorql-framework` and acts as a repository of SQL metrics that can be consumed in your project layer.
+It exposes useful SQL metrics that can be integrated & used with your application
 
-Here we will be taking `activeQueries`   as an example metric to walk through step by step in the process of adding your first metric in `snorql-extentions` module
+## To add snorql-extensions to your project
+[Follow the steps given here](../README.md/#how-to-integrate-snorql-in-your-project)
 
-1. Create a JSON file named `**sql-monitoring-conf.json`** in the path **`snorql-extensions/src/main/resources/sql-monitoring-conf.json`** & add the following block in the same.
+## Example to build custom metric using snorql-framework
+
+Here we will be taking `activeQueries` in `snorql-extensions` as an example metric to walk through step by step in the process of adding your own metric
+
+1. Added `activeQueries` configuration in the path `snorql-extensions/src/main/resources/sql-monitoring-conf.json`.
 
 ```json
 {
@@ -21,7 +28,7 @@ Explanation:
 
 `performance_activeQueries` - This is the metric name that will be used later to refer to this metric.
 
-`queries` - This can have multiple key-value pairs. By default, it is expected to have a key 'main' with the value being the query that would be executed to get the metric data.
+`queries` - This has multiple queries which will be used to build the `<MetricResult>`. 
 
 `supportsHistorical` - Indicates whether the metric data source can come from historical storage.
 
@@ -31,9 +38,7 @@ Explanation:
 
 ---
 
-2. Create a package `performance` inside `snorql.extensions`
-
-Create a `PerformaceEnums` enum class & add the following lines
+2. Created the Metric Enum `PerformaceEnums` class & added the `ACTIVE_QUERIES` enum
 
 ```kotlin
 package com.udaan.snorql.extensions.performance
@@ -50,15 +55,11 @@ enum class PerformanceEnums(private val metricId:String):IMtericId {
 }
 ```
 
-Explanation:
-
-In this step, we categorize the metrics under the respective category. The metric name returned by the `getId()` method should be similar to the metric name given in the JSON in step 1.
+NOTE: The metric name returned by the `getId()` method should be similar to the metric name given in the JSON in step 1.
 
 ---
 
-3. Create a package `models` inside `snorql.extensions.performance`
-
-Create a `ActiveQueryDTO` data class & add the following lines
+3. Added a `ActiveQueryDTO` data class
 
 ```kotlin
 package com.udaan.snorql.extensions.performance.models
@@ -90,11 +91,11 @@ data class ActiveQueryDTO(
 
 Explanation:
 
-This `ActiveQueryDTO` corresponds to the result that would be obtained when the query specified against `performance_activeQueries` in the `**sql-monitoring-conf.json`** is executed.
+This `ActiveQueryDTO` corresponds to the result that would be obtained when the query specified against `performance_activeQueries` in the `sql-monitoring-conf.json` is executed.
 
 ---
 
-4. Create `ActiveQueryInput` data class under the package `com.udaan.snorql.extensions.performance.models` & add the following lines
+4. Added `ActiveQueryInput` data class
 
 ```kotlin
 import com.udaan.snorql.extensions.performance.PerformanceEnums
@@ -118,11 +119,11 @@ Explanation:
 
 `databaseName` - The database against which the query will be executed.
 
-Note: If this metric would have been parameterized, additional parameters required would have been specified in this `ActiveQueryInput` class.
+Note: If this metric had been parameterized, additional parameters required would have been specified in this `ActiveQueryInput` class.
 
 ---
 
-5. Create `ActiveQueryResult` data class under the package `com.udaan.snorql.extensions.performance.models` & add the following lines
+5. Created `ActiveQueryResult` data class
 
 ```kotlin
 data class ActiveQueryResult(val queryList: List<ActiveQueryDTO>) : IMetricResult()
@@ -130,14 +131,11 @@ data class ActiveQueryResult(val queryList: List<ActiveQueryDTO>) : IMetricResul
 
 Explanation:
 
-This `ActiveQueryResult` class corresponds to the model that will be received when the query will be executed.
+This `ActiveQueryResult` wrapper class encloses the output of the `<Metric>` class.
 
 ---
 
-6. Create a package `metrics` inside `com.udaan.snorql.extensions.performance`
-
-   Create a  `ActiveQueriesMetric` class & add the following lines:
-
+6. Created a  `ActiveQueriesMetric` class
 
 ```kotlin
 package com.udaan.snorql.extensions.performance.metrics
@@ -212,11 +210,11 @@ The class `ActiveQueriesMetric` implements `IMetric` with its `ActiveQueryInput`
 }
 ```
 
-`saveMetricResult()` should have the logic to save the metricResult to a given data destination. Implement this method when the metric has ability to supportHistorical data(boolean defined in json in step 1).
+`saveMetricResult()` should have the logic to save the metricResult to a persistent store.(Persistence is not supported yet. Hence, the method definition is empty)
 
 ---
 
-7. Create a file `SQLCommonMetrics.kt` in `com.udaan.snorql.extensions` & add the following lines:
+7. Registered the metric using `SqlMetricManager.addMetric()`
 
 ```kotlin
 package com.udaan.snorql.extensions
@@ -233,5 +231,3 @@ object SQLCommonMetrics {
     }
 }
 ```
-
-CONGRATS! You have successfully created your own metric.
