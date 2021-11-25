@@ -22,6 +22,7 @@ package com.udaan.snorql.extensions.storage.metrics
 import com.udaan.snorql.extensions.storage.models.DbDTO
 import com.udaan.snorql.extensions.storage.models.DbInput
 import com.udaan.snorql.extensions.storage.models.DbResult
+import com.udaan.snorql.extensions.storage.models.DbStorageSize
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
@@ -43,7 +44,15 @@ class DbMetric :
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
 
         val result = SqlMetricManager.queryExecutor.execute<DbDTO>(metricInput.databaseName, query)
-        return DbResult(result)
+        val dbSizeQuery =
+            metricConfig.queries["dbSize"]
+                ?: throw SQLMonitoringConfigException("SQL config query [dbSize] not found under config [${metricInput.metricId}]")
+
+        val paramMap = mapOf("databaseName" to metricInput.dbName)
+        val dbSizeResult = SqlMetricManager.queryExecutor.execute<Int>(metricInput.databaseName, dbSizeQuery, paramMap)
+
+        val dbResultList :List<DbStorageSize> = result.mapIndexed { index, it ->  DbStorageSize(databaseName = it.databaseName,databaseSize = it.databaseSize, unallocatedSpace = it.unallocatedSpace,reserved = it.reserved, data = it.data, indexSize = it.indexSize, unused = it.unused, dbTotalSize = dbSizeResult[index] ) }
+        return DbResult(dbResultList)
     }
 
     override fun getMetricResponseMetadata(
@@ -53,7 +62,9 @@ class DbMetric :
         val responseMetadata = mutableMapOf<String, Any>()
         val query =
             getMetricConfig(metricInput.metricId).queries["main"]
-        responseMetadata["underlyingQueries"] = listOf(query)
+        val dbSizeQuery =
+            getMetricConfig(metricInput.metricId).queries["dbSize"]
+        responseMetadata["underlyingQueries"] = listOf(query, dbSizeQuery)
         return responseMetadata
     }
 

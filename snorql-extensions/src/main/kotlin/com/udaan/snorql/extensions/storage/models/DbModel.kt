@@ -54,9 +54,31 @@ data class DbDTO(
     val unused: String
 )
 
+data class DbStorageSize(
+    val dbTotalSize: Int,
+
+    @ColumnName("database_name")
+    val databaseName: String,
+
+    @ColumnName("database_size")
+    val databaseSize: String,
+
+    @ColumnName("unallocated space")
+    val unallocatedSpace: String,
+
+    val reserved: String,
+    val data: String,
+
+    @ColumnName("index_size")
+    val indexSize: String,
+
+    val unused: String
+)
+
 data class DbInput(
     override val metricId: String = StorageEnums.DB.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String,
+    val dbName:String
 ) : MetricInput()
 
-data class DbResult(val queryList: List<DbDTO>) : IMetricResult()
+data class DbResult(val queryList: List<DbStorageSize>) : IMetricResult()
