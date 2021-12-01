@@ -67,8 +67,8 @@ class TableUnusedIndexMetric :
             val indexListToBeDropped: List<String> = metricResult.queryList
                 .filter { it.userSeeks == 0 && it.userLookups == 0 && it.userScans == 0 }
                 .map { it.indexName }
-            return if (indexListToBeDropped.isEmpty()) TableUnusedIndexRecommendation(listOf("No action required."))
-            else TableUnusedIndexRecommendation(listOf("Drop indexes: ${indexListToBeDropped.joinToString(",")} to save storage."))
+            return if (indexListToBeDropped.isEmpty()) TableUnusedIndexRecommendation(listOf())
+            else TableUnusedIndexRecommendation(indexListToBeDropped)
         }
         return null
     }
