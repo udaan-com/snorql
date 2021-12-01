@@ -63,4 +63,4 @@ data class TableUnusedIndexInput(
 
 data class TableUnusedIndexResult(val queryList: List<TableUnusedIndexDTO>) : IMetricResult()
 
-data class TableUnusedIndexRecommendation(val text: String?) : IMetricRecommendation()
+data class TableUnusedIndexRecommendation(val dropUnusedIndexes: List<String>?) : IMetricRecommendation()
