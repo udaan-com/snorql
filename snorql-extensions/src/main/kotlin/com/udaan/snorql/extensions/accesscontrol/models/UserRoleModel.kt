@@ -26,7 +26,8 @@ import com.udaan.snorql.framework.models.MetricPeriod
 
 data class UserRoleDTO (
         val name: String,
-        val role: String
+        val role: String,
+        val type: String
 )
 
 
