@@ -99,7 +99,7 @@
   },
   "storage_tableUnusedIndex": {
     "queries": {
-      "main": "SELECT OBJECT_NAME(S.[OBJECT_ID]) AS OBJECT_NAME,\n       I.[NAME]                   AS INDEX_NAME,\n       USER_SEEKS,\n       USER_SCANS,\n       USER_LOOKUPS,\n       USER_UPDATES\nFROM SYS.DM_DB_INDEX_USAGE_STATS AS S\n         INNER JOIN SYS.INDEXES AS I\n                    ON I.[OBJECT_ID] = S.[OBJECT_ID]\n                        AND I.INDEX_ID = S.INDEX_ID\nWHERE OBJECTPROPERTY(S.[OBJECT_ID], 'IsUserTable') = 1 and \t\ni.Name  is not null\n  and OBJECT_NAME(S.[OBJECT_ID])=:tableName;"
+      "main": "SELECT OBJECT_NAME(S.[OBJECT_ID]) AS OBJECT_NAME,\n       I.[NAME]                   AS INDEX_NAME,\n       USER_SEEKS,\n       USER_SCANS,\n       USER_LOOKUPS,\n       USER_UPDATES,\n       string_agg(c.name,', ') as columnName\nFROM SYS.DM_DB_INDEX_USAGE_STATS AS S\n         INNER JOIN SYS.INDEXES AS I ON I.[OBJECT_ID] = S.[OBJECT_ID] AND I.INDEX_ID = S.INDEX_ID\ninner join sys.index_columns ic on ic.index_id = i.index_id and ic.object_id=i.object_id\njoin sys.columns c on c.column_id=ic.column_id and c.object_id=i.object_id\nWHERE OBJECTPROPERTY(S.[OBJECT_ID], 'IsUserTable') = 1\n  and i.Name is not null\n  and OBJECT_NAME(S.[OBJECT_ID]) = :tableName\ngroup by OBJECT_NAME(S.[OBJECT_ID]),I.[NAME],USER_SEEKS,  USER_SCANS,USER_LOOKUPS,USER_UPDATES,ic.index_id;\n"
     },
     "supportsHistorical": false,
     "supportsRealTime": true,
