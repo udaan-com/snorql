@@ -57,6 +57,7 @@ data class ActiveQueryDTO(
     val blockedBy: Int,
     val waitType: String?,
     val waitResource: String?,
+    val percentComplete: Int,
     val waitTime: String?,
     val cpuTime: Int?,
     val logicalReads: Int?,
