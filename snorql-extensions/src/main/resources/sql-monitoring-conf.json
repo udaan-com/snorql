@@ -104,5 +104,13 @@
     "supportsHistorical": false,
     "supportsRealTime": true,
     "isParameterized": false
+  },
+  "storage_tableSchema": {
+    "queries": {
+      "main": "SELECT\n\t*\nFROM\n  \tINFORMATION_SCHEMA.COLUMNS\nWHERE\n\tTABLE_NAME = :tableName"
+    },
+    "supportsHistorical": false,
+    "supportsRealTime": true,
+    "isParameterized": false
   }
 }

@@ -48,5 +48,6 @@ object SQLCommonMetrics {
         SqlMetricManager.addMetric(StorageEnums.TABLE.getId(), TableMetric())
         SqlMetricManager.addMetric(StorageEnums.TABLE_UNUSED_INDEX.getId(), TableUnusedIndexMetric())
         SqlMetricManager.addMetric(StorageEnums.PVS.getId(), PVSMetric())
+        SqlMetricManager.addMetric(StorageEnums.TABLE_SCHEMA.getId(), TableSchemaMetric())
     }
 }
