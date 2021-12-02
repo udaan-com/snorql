@@ -52,7 +52,8 @@ data class TableUnusedIndexDTO(
     val userLookups: Int,
 
     @ColumnName("USER_UPDATES")
-    val userUpdates: Int
+    val userUpdates: Int,
+    val columnName: String
 )
 
 data class TableUnusedIndexInput(
