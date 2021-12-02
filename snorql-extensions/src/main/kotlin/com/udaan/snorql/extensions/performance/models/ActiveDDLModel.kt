@@ -40,6 +40,7 @@ class ActiveDDLModel {
  */
 data class ActiveDDLDTO(
     val currentStep: String?,
+    val queryText: String,
     val totalRows: Int?,
     val rowsProcessed: Int?,
     val rowsLeft: Int?,
