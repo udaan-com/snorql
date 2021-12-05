@@ -107,7 +107,7 @@
   },
   "storage_tableSchema": {
     "queries": {
-      "main": "SELECT\n\tCOLUMN_NAME as columnName,\n    ORDINAL_POSITION as ordinalPosition,\n    COLUMN_DEFAULT as columnDefault,\n    IS_NULLABLE as isNullable,\n    DATA_TYPE as dataType,\n    CHARACTER_MAXIMUM_LENGTH as characterMaximumLength,\n    COLLATION_NAME as collationName\nFROM\n  \tINFORMATION_SCHEMA.COLUMNS \nWHERE\n\tTABLE_NAME = :tableName"
+      "main": "SELECT\no.create_date as createdDate,\nc.is_rowguidcol as isRowGuid,\nc.is_identity as isIdentity,\nc.name AS columnName,\nCOLUMNPROPERTY(c.object_id, c.name, 'ordinal') AS ordinalPosition,\nconvert(nvarchar(4000),\nOBJECT_DEFINITION(c.default_object_id)) AS columnDefault,\nconvert(varchar(3), CASE c.is_nullable\nWHEN 1 THEN 'YES' ELSE 'NO' END) AS isNullable,\nISNULL(TYPE_NAME(c.system_type_id), t.name) AS dataType,\nCOLUMNPROPERTY(c.object_id, c.name, 'charmaxlen') AS characterMaximumLength,\nc.collation_name AS collationName\nFROM\nsys.objects o JOIN sys.columns c ON c.object_id = o.object_id\nLEFT JOIN sys.types t ON c.user_type_id = t.user_type_id\nWHERE\no.type IN ('U', 'V') and o.name = :tableName "
     },
     "supportsHistorical": false,
     "supportsRealTime": true,

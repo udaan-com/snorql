@@ -26,6 +26,9 @@ import com.udaan.snorql.framework.models.MetricPeriod
 
 data class TableSchemaDTO (
     val columnName:String,
+    val createdDate:String,
+    val isRowGuid:String,
+    val isIdentity:String,
     val ordinalPosition:Int,
     val columnDefault:String?,
     val isNullable:String,
