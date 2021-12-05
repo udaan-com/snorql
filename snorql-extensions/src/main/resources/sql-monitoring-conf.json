@@ -107,7 +107,7 @@
   },
   "storage_tableSchema": {
     "queries": {
-      "main": "SELECT\n\t*\nFROM\n  \tINFORMATION_SCHEMA.COLUMNS\nWHERE\n\tTABLE_NAME = :tableName"
+      "main": "SELECT\n\tCOLUMN_NAME as columnName,\n    ORDINAL_POSITION as ordinalPosition,\n    COLUMN_DEFAULT as columnDefault,\n    IS_NULLABLE as isNullable,\n    DATA_TYPE as dataType,\n    CHARACTER_MAXIMUM_LENGTH as characterMaximumLength,\n    COLLATION_NAME as collationName\nFROM\n  \tINFORMATION_SCHEMA.COLUMNS \nWHERE\n\tTABLE_NAME = 'config'"
     },
     "supportsHistorical": false,
     "supportsRealTime": true,
