@@ -25,6 +25,11 @@ import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.*
 
+/**
+ * Long running queries metric
+ *
+ * @constructor Create empty Long running queries metric
+ */
 class LongRunningQueriesMetric :
     IMetric<LongRunningInput, LongRunningResult, IMetricRecommendation> {
 

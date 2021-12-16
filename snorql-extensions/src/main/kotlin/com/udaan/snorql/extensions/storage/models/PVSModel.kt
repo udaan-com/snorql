@@ -26,15 +26,17 @@ import com.udaan.snorql.framework.models.MetricPeriod
 import org.jdbi.v3.core.mapper.reflect.ColumnName
 
 /**
- * Data class for Data transfer object of index stats
- * @param [persistentVersionStoreSizeGb]
- * @param [onlineIndexVersionStoreSizeGb]
- * @param [currentAbortedTransactionCount]
- * @param [abortedVersionCleanerStartTime]
- * @param [abortedVersionCleanerEndTime]
- * @param [oldestTransactionBeginTime]
- * @param [activeTransactionSessionId]
- * @param [activeTransactionElapsedTimeSeconds]
+ * P v s d t o
+ *
+ * @property persistentVersionStoreSizeGb
+ * @property onlineIndexVersionStoreSizeGb
+ * @property currentAbortedTransactionCount
+ * @property abortedVersionCleanerStartTime
+ * @property abortedVersionCleanerEndTime
+ * @property oldestTransactionBeginTime
+ * @property activeTransactionSessionId
+ * @property activeTransactionElapsedTimeSeconds
+ * @constructor Create empty P v s d t o
  */
 data class PVSDTO(
     @ColumnName("persistent_version_store_size_gb")
@@ -62,9 +64,23 @@ data class PVSDTO(
     val activeTransactionElapsedTimeSeconds: Int?
 )
 
+/**
+ * P v s input
+ *
+ * @property metricId
+ * @property metricPeriod
+ * @property databaseName
+ * @constructor Create empty P v s input
+ */
 data class PVSInput(
     override val metricId: String = StorageEnums.PVS.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String
 ) : MetricInput()
 
+/**
+ * P v s result
+ *
+ * @property queryList
+ * @constructor Create empty P v s result
+ */
 data class PVSResult(val queryList: List<PVSDTO>) : IMetricResult()

@@ -26,14 +26,16 @@ import com.udaan.snorql.framework.models.MetricPeriod
 import org.jdbi.v3.core.mapper.reflect.ColumnName
 
 /**
- * Data class for Data transfer object of index stats
- * @param [databaseName]
- * @param [databaseSize]
- * @param [unallocatedSpace]
- * @param [reserved]
- * @param [data]
- * @param [indexSize]
- * @param [unused]
+ * Db d t o
+ *
+ * @property databaseName
+ * @property databaseSize
+ * @property unallocatedSpace
+ * @property reserved
+ * @property data
+ * @property indexSize
+ * @property unused
+ * @constructor Create empty Db d t o
  */
 data class DbDTO(
     @ColumnName("database_name")
@@ -54,6 +56,19 @@ data class DbDTO(
     val unused: String
 )
 
+/**
+ * Db storage size
+ *
+ * @property dbTotalSize
+ * @property databaseName
+ * @property databaseSize
+ * @property unallocatedSpace
+ * @property reserved
+ * @property data
+ * @property indexSize
+ * @property unused
+ * @constructor Create empty Db storage size
+ */
 data class DbStorageSize(
     val dbTotalSize: Int,
 
@@ -75,10 +90,25 @@ data class DbStorageSize(
     val unused: String
 )
 
+/**
+ * Db input
+ *
+ * @property metricId
+ * @property metricPeriod
+ * @property databaseName
+ * @property dbName
+ * @constructor Create empty Db input
+ */
 data class DbInput(
     override val metricId: String = StorageEnums.DB.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String,
     val dbName:String
 ) : MetricInput()
 
+/**
+ * Db result
+ *
+ * @property queryList
+ * @constructor Create empty Db result
+ */
 data class DbResult(val queryList: List<DbStorageSize>) : IMetricResult()

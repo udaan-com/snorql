@@ -42,7 +42,12 @@ private fun <T: Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
     }
 }
 
-// return a lazy logger property delegate for enclosing class
+/**
+ * Logger
+ *
+ * @param R
+ * @return
+ */// return a lazy logger property delegate for enclosing class
 fun <R : Any> R.logger(): Lazy<Logger> {
     return lazy { logger(this.javaClass) }
 }

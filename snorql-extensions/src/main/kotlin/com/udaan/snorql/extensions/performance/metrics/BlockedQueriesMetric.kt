@@ -25,6 +25,11 @@ import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.*
 
+/**
+ * Blocked queries metric
+ *
+ * @constructor Create empty Blocked queries metric
+ */
 class BlockedQueriesMetric :
     IMetric<BlockedQueriesInput, BlockedQueriesResult, IMetricRecommendation> {
 

@@ -32,6 +32,11 @@ import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricOutput
 
+/**
+ * Table unused index metric
+ *
+ * @constructor Create empty Table unused index metric
+ */
 class TableUnusedIndexMetric :
     IMetric<TableUnusedIndexInput, TableUnusedIndexResult, IMetricRecommendation> {
 

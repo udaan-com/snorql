@@ -19,12 +19,35 @@
 
 package com.udaan.snorql.framework.metric
 
+/**
+ * Connection
+ *
+ * @constructor Create empty Connection
+ */
 interface Connection {
+    /**
+     * Run
+     *
+     * @param T
+     * @param databaseName
+     * @param query
+     * @param mapClass
+     * @param params
+     * @return
+     */
     fun <T> run(databaseName:String, query: String,
-            mapClass: Class<T>,
-            params: Map<String, *> = emptyMap<String, String>()): List<T>
+                mapClass: Class<T>,
+                params: Map<String, *> = emptyMap<String, String>()): List<T>
 
+    /**
+     * Store data
+     *
+     * @param databaseName
+     * @param tableName
+     * @param columns
+     * @param rows
+     */
     fun storeData(databaseName:String, tableName: String,
-            columns: List<String>,
-            rows: List<List<Any>>)
+                  columns: List<String>,
+                  rows: List<List<Any>>)
 }

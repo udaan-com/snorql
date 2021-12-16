@@ -25,31 +25,32 @@ import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 
-class ActiveQueryModel {
-}
 /**
- * Data class for Data transfer object of azure_databases_mapping
- * @param [sessionId]
- * @param [status]
- * @param [blockedBy]
- * @param [waitType]
- * @param [waitResource]
- * @param [waitTime]
- * @param [cpuTime]
- * @param [logicalReads]
- * @param [reads]
- * @param [writes]
- * @param [elapsedTime]
- * @param [queryText]
- * @param [storedProc]
- * @param [command]
- * @param [loginName]
- * @param [hostName]
- * @param [programName]
- * @param [hostProcessId]
- * @param [lastRequestEndTime]
- * @param [loginTime]
- * @param [openTransactionCount]
+ * Active query d t o
+ *
+ * @property sessionId
+ * @property status
+ * @property blockedBy
+ * @property waitType
+ * @property waitResource
+ * @property percentComplete
+ * @property waitTime
+ * @property cpuTime
+ * @property logicalReads
+ * @property reads
+ * @property writes
+ * @property elapsedTime
+ * @property queryText
+ * @property storedProc
+ * @property command
+ * @property loginName
+ * @property hostName
+ * @property programName
+ * @property hostProcessId
+ * @property lastRequestEndTime
+ * @property loginTime
+ * @property openTransactionCount
+ * @constructor Create empty Active query d t o
  */
 data class ActiveQueryDTO(
     val sessionId: Int,
@@ -76,9 +77,23 @@ data class ActiveQueryDTO(
     val openTransactionCount: Int
 )
 
+/**
+ * Active query input
+ *
+ * @property metricId
+ * @property metricPeriod
+ * @property databaseName
+ * @constructor Create empty Active query input
+ */
 data class ActiveQueryInput(
     override val metricId: String = PerformanceEnums.ACTIVE_QUERIES.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String
 ) : MetricInput()
 
+/**
+ * Active query result
+ *
+ * @property queryList
+ * @constructor Create empty Active query result
+ */
 data class ActiveQueryResult(val queryList: List<ActiveQueryDTO>) : IMetricResult()

@@ -25,6 +25,11 @@ import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.*
 
+/**
+ * Active d d l metric
+ *
+ * @constructor Create empty Active d d l metric
+ */
 class ActiveDDLMetric :
     IMetric<ActiveDDLInput, ActiveDDLResult, IMetricRecommendation> {
 

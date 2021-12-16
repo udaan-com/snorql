@@ -25,18 +25,19 @@ import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 
-class ActiveDDLModel {
-}
 /**
- * Data class for Data transfer object of index stats
- * @param [currentStep]
- * @param [totalRows]
- * @param [rowsProcessed]
- * @param [rowsLeft]
- * @param [percentComplete]
- * @param [elapsedSeconds]
- * @param [estimatedCompletionTime]
- * @param [estimatedSecondsLeft]
+ * Active d d l d t o
+ *
+ * @property currentStep
+ * @property queryText
+ * @property totalRows
+ * @property rowsProcessed
+ * @property rowsLeft
+ * @property percentComplete
+ * @property elapsedSeconds
+ * @property estimatedSecondsLeft
+ * @property estimatedCompletionTime
+ * @constructor Create empty Active d d l d t o
  */
 data class ActiveDDLDTO(
     val currentStep: String?,
@@ -50,9 +51,23 @@ data class ActiveDDLDTO(
     val estimatedCompletionTime: String?
 )
 
+/**
+ * Active d d l input
+ *
+ * @property metricId
+ * @property metricPeriod
+ * @property databaseName
+ * @constructor Create empty Active d d l input
+ */
 data class ActiveDDLInput(
     override val metricId: String = PerformanceEnums.ACTIVE_DDL.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String,
 ) : MetricInput()
 
+/**
+ * Active d d l result
+ *
+ * @property queryList
+ * @constructor Create empty Active d d l result
+ */
 data class ActiveDDLResult(val queryList: List<ActiveDDLDTO>) : IMetricResult()

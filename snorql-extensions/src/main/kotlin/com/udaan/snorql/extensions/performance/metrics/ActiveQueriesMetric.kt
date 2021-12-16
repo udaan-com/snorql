@@ -27,6 +27,11 @@ import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.*
 
+/**
+ * Active queries metric
+ *
+ * @constructor Create empty Active queries metric
+ */
 class ActiveQueriesMetric :
     IMetric<ActiveQueryInput, ActiveQueryResult, IMetricRecommendation> {
 

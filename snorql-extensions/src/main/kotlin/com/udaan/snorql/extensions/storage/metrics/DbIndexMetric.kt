@@ -31,6 +31,11 @@ import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricOutput
 
+/**
+ * Db index metric
+ *
+ * @constructor Create empty Db index metric
+ */
 class DbIndexMetric :
     IMetric<DbIndexInput, DbIndexResult, IMetricRecommendation> {
 

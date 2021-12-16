@@ -19,6 +19,23 @@
 
 package com.udaan.snorql.framework.models
 
+/**
+ * Metric period
+ *
+ * @constructor Create empty Metric period
+ */
 enum class MetricPeriod {
-    REAL_TIME, HISTORICAL
+    /**
+     * R e a l_t i m e
+     *
+     * @constructor Create empty R e a l_t i m e
+     */
+    REAL_TIME,
+
+    /**
+     * H i s t o r i c a l
+     *
+     * @constructor Create empty H i s t o r i c a l
+     */
+    HISTORICAL
 }

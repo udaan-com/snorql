@@ -26,32 +26,35 @@ import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 
 
-class BlockedQueryModel{
-
-}
 /**
- * Data class for Data transfer object of azure_databases_mapping
- * @param [sessionId]
- * @param [status]
- * @param [blockedBy]
- * @param [waitType]
- * @param [waitResource]
- * @param [waitTime]
- * @param [cpuTime]
- * @param [logicalReads]
- * @param [reads]
- * @param [writes]
- * @param [elapsedTime]
- * @param [queryText]
- * @param [storedProc]
- * @param [command]
- * @param [loginName]
- * @param [hostName]
- * @param [programName]
- * @param [hostProcessId]
- * @param [lastRequestEndTime]
- * @param [loginTime]
- * @param [openTransactionCount]
+ * Blocked queries d t o
+ *
+ * @property sessionId
+ * @property blockedBy
+ * @property blockingThese
+ * @property batchText
+ * @property inputBuffer
+ * @property loginName
+ * @property status
+ * @property waitType
+ * @property waitResource
+ * @property waitTime
+ * @property cpuTime
+ * @property logicalReads
+ * @property reads
+ * @property writes
+ * @property hostName
+ * @property programName
+ * @property hostProcessId
+ * @property loginTime
+ * @property blockingTree
+ * @property lastRequestEndTime
+ * @property openTransactionCount
+ * @property command
+ * @property elapsedTime
+ * @property queryText
+ * @property storedProc
+ * @constructor Create empty Blocked queries d t o
  */
 data class BlockedQueriesDTO(
     val sessionId: Int,
@@ -81,10 +84,24 @@ data class BlockedQueriesDTO(
     val storedProc: String?
 )
 
+/**
+ * Blocked queries input
+ *
+ * @property metricId
+ * @property metricPeriod
+ * @property databaseName
+ * @constructor Create empty Blocked queries input
+ */
 data class BlockedQueriesInput(
     override val metricId: String = PerformanceEnums.BLOCKED_QUERIES.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String
 
 ) : MetricInput()
 
+/**
+ * Blocked queries result
+ *
+ * @property queryList
+ * @constructor Create empty Blocked queries result
+ */
 data class BlockedQueriesResult(val queryList: List<BlockedQueriesDTO>) : IMetricResult()

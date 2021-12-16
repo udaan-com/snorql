@@ -26,10 +26,12 @@ import com.udaan.snorql.framework.models.MetricPeriod
 import org.jdbi.v3.core.mapper.reflect.ColumnName
 
 /**
- * Data class for Data transfer object of index stats
- * @param [startTime]
- * @param [endTime]
- * @param [storageInMegabytes]
+ * Db growth d t o
+ *
+ * @property startTime
+ * @property endTime
+ * @property storageInMegabytes
+ * @constructor Create empty Db growth d t o
  */
 data class DbGrowthDTO(
     @ColumnName("start_time")
@@ -42,6 +44,15 @@ data class DbGrowthDTO(
     val storageInMegabytes: String
 )
 
+/**
+ * Db growth input
+ *
+ * @property metricId
+ * @property metricPeriod
+ * @property databaseName
+ * @property dbNameForGrowth
+ * @constructor Create empty Db growth input
+ */
 data class DbGrowthInput(
     override val metricId: String = StorageEnums.DB_GROWTH.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String,
@@ -49,4 +60,10 @@ data class DbGrowthInput(
 
 ) : MetricInput()
 
+/**
+ * Db growth result
+ *
+ * @property queryList
+ * @constructor Create empty Db growth result
+ */
 data class DbGrowthResult(val queryList: List<DbGrowthDTO>) : IMetricResult()

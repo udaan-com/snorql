@@ -21,7 +21,19 @@ package com.udaan.snorql.framework.models
 
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 
+/**
+ * Configuration
+ *
+ * @property configMap
+ * @constructor Create empty Configuration
+ */
 class Configuration(private val configMap: Map<String, MetricConfig>) {
+    /**
+     * Get
+     *
+     * @param metricId
+     * @return
+     */
     fun get(metricId: String): MetricConfig = configMap[metricId]
             ?: throw SQLMonitoringConfigException("Config against metric id $metricId not found")
 

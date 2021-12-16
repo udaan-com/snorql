@@ -31,6 +31,11 @@ import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricOutput
 
+/**
+ * P v s metric
+ *
+ * @constructor Create empty P v s metric
+ */
 class PVSMetric :
     IMetric<PVSInput, PVSResult, IMetricRecommendation> {
 

@@ -26,6 +26,11 @@ import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.*
 import com.udaan.snorql.extensions.accesscontrol.models.*
 
+/**
+ * User role metric
+ *
+ * @constructor Create empty User role metric
+ */
 class UserRoleMetric :
     IMetric<UserRoleInput, UserRoleResult, IMetricRecommendation> {
 

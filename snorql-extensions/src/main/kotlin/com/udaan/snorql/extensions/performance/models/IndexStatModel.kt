@@ -26,21 +26,22 @@ import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 import org.jdbi.v3.core.mapper.reflect.ColumnName
 
-class IndexStatModel {
-}
+
 /**
- * Data class for Data transfer object of index stats
- * @param [name]
- * @param [updated]
- * @param [rows]
- * @param [rowsSampled]
- * @param [steps]
- * @param [density]
- * @param [averageKeyLength]
- * @param [stringIndex]
- * @param [filterExpression]
- * @param [unfilteredRows]
- * @param [persistedSamplePercent]
+ * Index stat d t o
+ *
+ * @property name
+ * @property updated
+ * @property rows
+ * @property rowsSampled
+ * @property steps
+ * @property density
+ * @property averageKeyLength
+ * @property stringIndex
+ * @property filterExpression
+ * @property unfilteredRows
+ * @property persistedSamplePercent
+ * @constructor Create empty Index stat d t o
  */
 
 data class IndexStatDTO(
@@ -70,10 +71,26 @@ data class IndexStatDTO(
     val persistedSamplePercent: Int?
 )
 
+/**
+ * Index stat input
+ *
+ * @property metricId
+ * @property metricPeriod
+ * @property databaseName
+ * @property tableName
+ * @property indexName
+ * @constructor Create empty Index stat input
+ */
 data class IndexStatInput(
     override val metricId: String = PerformanceEnums.INDEX_STATS.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String,
     val tableName:String, val indexName:String
 ) : MetricInput()
 
+/**
+ * Index stat result
+ *
+ * @property queryList
+ * @constructor Create empty Index stat result
+ */
 data class IndexStatResult(val queryList: List<IndexStatDTO>) : IMetricResult()

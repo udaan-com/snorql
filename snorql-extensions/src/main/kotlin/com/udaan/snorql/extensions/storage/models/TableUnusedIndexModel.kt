@@ -27,13 +27,16 @@ import com.udaan.snorql.framework.models.MetricPeriod
 import org.jdbi.v3.core.mapper.reflect.ColumnName
 
 /**
- * Data class for Data transfer object of table unused indices
- * @param [objectName]
- * @param [indexName]
- * @param [userSeeks]
- * @param [userScans]
- * @param [userLookups]
- * @param [userUpdates]
+ * Table unused index d t o
+ *
+ * @property objectName
+ * @property indexName
+ * @property userSeeks
+ * @property userScans
+ * @property userLookups
+ * @property userUpdates
+ * @property columnName
+ * @constructor Create empty Table unused index d t o
  */
 data class TableUnusedIndexDTO(
     @ColumnName("OBJECT_NAME")
@@ -56,12 +59,33 @@ data class TableUnusedIndexDTO(
     val columnName: String
 )
 
+/**
+ * Table unused index input
+ *
+ * @property metricId
+ * @property metricPeriod
+ * @property databaseName
+ * @property tableName
+ * @constructor Create empty Table unused index input
+ */
 data class TableUnusedIndexInput(
     override val metricId: String = StorageEnums.TABLE_UNUSED_INDEX.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String,
     val tableName: String
 ) : MetricInput()
 
+/**
+ * Table unused index result
+ *
+ * @property queryList
+ * @constructor Create empty Table unused index result
+ */
 data class TableUnusedIndexResult(val queryList: List<TableUnusedIndexDTO>) : IMetricResult()
 
+/**
+ * Table unused index recommendation
+ *
+ * @property indexesToDrop
+ * @constructor Create empty Table unused index recommendation
+ */
 data class TableUnusedIndexRecommendation(val indexesToDrop: List<String>) : IMetricRecommendation()

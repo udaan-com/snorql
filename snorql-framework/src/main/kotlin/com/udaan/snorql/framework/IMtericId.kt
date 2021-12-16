@@ -19,6 +19,16 @@
 
 package com.udaan.snorql.framework
 
+/**
+ * I mteric id
+ *
+ * @constructor Create empty I mteric id
+ */
 interface IMtericId {
+    /**
+     * Get id
+     *
+     * @return
+     */
     fun getId(): String
 }

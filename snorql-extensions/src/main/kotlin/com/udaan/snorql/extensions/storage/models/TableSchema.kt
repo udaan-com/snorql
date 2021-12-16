@@ -24,6 +24,21 @@ import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 
+/**
+ * Table schema d t o
+ *
+ * @property columnName
+ * @property createdDate
+ * @property isRowGuid
+ * @property isIdentity
+ * @property ordinalPosition
+ * @property columnDefault
+ * @property isNullable
+ * @property dataType
+ * @property characterMaximumLength
+ * @property collationName
+ * @constructor Create empty Table schema d t o
+ */
 data class TableSchemaDTO (
     val columnName:String,
     val createdDate:String,
@@ -37,10 +52,25 @@ data class TableSchemaDTO (
     val collationName:String?
 )
 
+/**
+ * Table schema input
+ *
+ * @property metricId
+ * @property metricPeriod
+ * @property databaseName
+ * @property tableName
+ * @constructor Create empty Table schema input
+ */
 data class TableSchemaInput(
     override val metricId: String = StorageEnums.TABLE_SCHEMA.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String,
     val tableName: String,
 ) : MetricInput()
 
+/**
+ * Table schema result
+ *
+ * @property queryList
+ * @constructor Create empty Table schema result
+ */
 data class TableSchemaResult(val queryList: List<TableSchemaDTO>) : IMetricResult()

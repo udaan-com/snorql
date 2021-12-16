@@ -24,6 +24,14 @@ import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 
+/**
+ * User role d t o
+ *
+ * @property name
+ * @property role
+ * @property type
+ * @constructor Create empty User role d t o
+ */
 data class UserRoleDTO (
         val name: String,
         val role: String,
@@ -31,9 +39,23 @@ data class UserRoleDTO (
 )
 
 
+/**
+ * User role input
+ *
+ * @property metricId
+ * @property metricPeriod
+ * @property databaseName
+ * @constructor Create empty User role input
+ */
 data class UserRoleInput(
         override val metricId: String = AccessControlEnums.USER_ROLE.getId(),
         override val metricPeriod: MetricPeriod, override val databaseName: String
 ) : MetricInput()
 
+/**
+ * User role result
+ *
+ * @property queryList
+ * @constructor Create empty User role result
+ */
 data class UserRoleResult(val queryList: List<UserRoleDTO>) : IMetricResult()

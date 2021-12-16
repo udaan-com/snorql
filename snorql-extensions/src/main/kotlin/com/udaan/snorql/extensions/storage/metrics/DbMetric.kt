@@ -32,6 +32,11 @@ import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricOutput
 
+/**
+ * Db metric
+ *
+ * @constructor Create empty Db metric
+ */
 class DbMetric :
     IMetric<DbInput, DbResult, IMetricRecommendation> {
 

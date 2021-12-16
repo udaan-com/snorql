@@ -25,6 +25,11 @@ import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.*
 
+/**
+ * Index stats metric
+ *
+ * @constructor Create empty Index stats metric
+ */
 class IndexStatsMetric :
     IMetric<IndexStatInput, IndexStatResult, IMetricRecommendation> {
 

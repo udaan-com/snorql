@@ -54,6 +54,11 @@ object SqlMetricManager {
         }
     }
 
+    /**
+     * Set connection
+     *
+     * @param connection
+     */
     fun setConnection(connection: Connection) {
         SqlMetricManager.connection = connection
     }
@@ -64,12 +69,28 @@ object SqlMetricManager {
                     ?: throw SQLMonitoringConnectionException("Connection is null. Cannot get QueryExecutor instance.")
         }
 
+    /**
+     * Add metric
+     *
+     * @param metricId
+     * @param instance
+     */
     fun addMetric(metricId: String,
-            instance: IMetric<*, *, *>
+                  instance: IMetric<*, *, *>
     ) {
         metricIdToMetricMap[metricId] = instance
     }
 
+    /**
+     * Get metric
+     *
+     * @param T
+     * @param O
+     * @param V
+     * @param metricId
+     * @param metricInput
+     * @return
+     */
     fun <T : MetricInput, O : IMetricResult, V : IMetricRecommendation> getMetric(metricId: String,
                                                                                   metricInput: T): MetricResponse<*, *> {
         val instance =

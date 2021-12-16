@@ -19,15 +19,38 @@
 
 package com.udaan.snorql.framework.metric
 
+/**
+ * Query executor
+ *
+ * @property connection
+ * @constructor Create empty Query executor
+ */
 class QueryExecutor(val connection: Connection) {
-    inline fun <reified T> execute(databaseName:String,query: String,
-            params: Map<String, *> = mapOf<String, Any>()): List<T> {
+    /**
+     * Execute
+     *
+     * @param T
+     * @param databaseName
+     * @param query
+     * @param params
+     * @return
+     */
+    inline fun <reified T> execute(databaseName:String, query: String,
+                                   params: Map<String, *> = mapOf<String, Any>()): List<T> {
         return connection.run(databaseName, query, T::class.java, params)
     }
 
-    fun persistData(databaseName:String,tableName: String,
-            columns: List<String>,
-            rows: List<List<Any>>) {
+    /**
+     * Persist data
+     *
+     * @param databaseName
+     * @param tableName
+     * @param columns
+     * @param rows
+     */
+    fun persistData(databaseName:String, tableName: String,
+                    columns: List<String>,
+                    rows: List<List<Any>>) {
         connection.storeData(databaseName,tableName, columns, rows)
     }
 

@@ -20,8 +20,29 @@
 
 package com.udaan.snorql.framework
 
+/**
+ * S q l monitoring config exception
+ *
+ * @constructor
+ *
+ * @param message
+ */
 class SQLMonitoringConfigException(message: String): Exception(message)
 
+/**
+ * S q l monitoring connection exception
+ *
+ * @constructor
+ *
+ * @param message
+ */
 class SQLMonitoringConnectionException(message: String): Exception(message)
 
+/**
+ * S q l monitoring exception
+ *
+ * @constructor
+ *
+ * @param message
+ */
 class SQLMonitoringException(message: String): Exception(message)

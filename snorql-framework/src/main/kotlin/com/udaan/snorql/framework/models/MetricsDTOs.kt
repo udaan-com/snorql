@@ -22,6 +22,11 @@ package com.udaan.snorql.framework.models
 import java.sql.Timestamp
 
 
+/**
+ * Metric input
+ *
+ * @constructor Create empty Metric input
+ */
 abstract class MetricInput {
     abstract val metricId: String
     abstract val metricPeriod: MetricPeriod
@@ -31,19 +36,58 @@ abstract class MetricInput {
     val recommendationRequired: Boolean = false
 }
 
+/**
+ * Metric config
+ *
+ * @property queries
+ * @property supportsHistorical
+ * @property supportsRealTime
+ * @property isParameterized
+ * @constructor Create empty Metric config
+ */
 data class MetricConfig(val queries: Map<String, String>,
-        val supportsHistorical: Boolean,
-        val supportsRealTime: Boolean,
-        val isParameterized: Boolean)
+                        val supportsHistorical: Boolean,
+                        val supportsRealTime: Boolean,
+                        val isParameterized: Boolean)
 
+/**
+ * Metric output
+ *
+ * @param T
+ * @param V
+ * @property result
+ * @property recommendation
+ * @constructor Create empty Metric output
+ */
 data class MetricOutput<T : IMetricResult, V : IMetricRecommendation>(val result: T,
                                                                       val recommendation: V?)
 
+/**
+ * Metric response
+ *
+ * @param T
+ * @param V
+ * @property metricInput
+ * @property metricOutput
+ * @property metadata
+ * @constructor Create empty Metric response
+ */
 data class MetricResponse<T : IMetricResult, V : IMetricRecommendation>(
     val metricInput: MetricInput,
     val metricOutput: MetricOutput<T, V>,
     val metadata: Map<String, Any>? = null
 )
 
+/**
+ * I metric result
+ *
+ * @constructor Create empty I metric result
+ */
 abstract class IMetricResult
+
+/**
+ * I metric recommendation
+ *
+ * @constructor Create empty I metric recommendation
+ */
 abstract class IMetricRecommendation

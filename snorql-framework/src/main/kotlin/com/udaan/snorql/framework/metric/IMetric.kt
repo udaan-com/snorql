@@ -21,8 +21,22 @@ package com.udaan.snorql.framework.metric
 
 import com.udaan.snorql.framework.models.*
 
+/**
+ * I metric
+ *
+ * @param T
+ * @param O
+ * @param R
+ * @constructor Create empty I metric
+ */
 interface IMetric<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation> {
 
+    /**
+     * Get metric config
+     *
+     * @param metricId
+     * @return
+     */
     fun getMetricConfig(metricId: String): MetricConfig {
         return SqlMetricManager.configuration.get(metricId)
     }
@@ -36,9 +50,22 @@ interface IMetric<in T : MetricInput, O : IMetricResult, R : IMetricRecommendati
         }
         return MetricOutput(metricResult, metricRecommendation)
     }
+
+    /**
+     * Save metric result
+     *
+     * @param metricInput
+     * @param result
+     */
     fun saveMetricResult(metricInput: MetricInput, result: IMetricResult)
 
 
+    /**
+     * Get metric response
+     *
+     * @param metricInput
+     * @return
+     */
     fun getMetricResponse(metricInput: T): MetricResponse<O, R> {
         val metricOutput = getMetricOutput(metricInput)
        return MetricResponse<O, R>(
@@ -48,10 +75,24 @@ interface IMetric<in T : MetricInput, O : IMetricResult, R : IMetricRecommendati
         )
     }
 
+    /**
+     * Get metric response metadata
+     *
+     * @param metricInput
+     * @param metricOutput
+     * @return
+     */
     fun getMetricResponseMetadata(metricInput: T, metricOutput: MetricOutput<O, R>): Map<String, Any>? {
         return null
     }
 
+    /**
+     * Get metric recommendations
+     *
+     * @param metricInput
+     * @param metricResult
+     * @return
+     */
     fun getMetricRecommendations(
         metricInput: T,
         metricResult: O
@@ -59,6 +100,13 @@ interface IMetric<in T : MetricInput, O : IMetricResult, R : IMetricRecommendati
         return null
     }
 
+    /**
+     * Get metric result
+     *
+     * @param metricInput
+     * @param metricConfig
+     * @return
+     */
     abstract fun getMetricResult(
         metricInput: T,
         metricConfig: MetricConfig

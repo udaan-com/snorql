@@ -26,13 +26,15 @@ import com.udaan.snorql.framework.models.MetricPeriod
 import org.jdbi.v3.core.mapper.reflect.ColumnName
 
 /**
- * Data class for Data transfer object of table
- * @param [name]
- * @param [rows]
- * @param [reserved]
- * @param [data]
- * @param [indexSize]
- * @param [unused]
+ * Table d t o
+ *
+ * @property name
+ * @property rows
+ * @property reserved
+ * @property data
+ * @property indexSize
+ * @property unused
+ * @constructor Create empty Table d t o
  */
 data class TableDTO(
     val name: String,
@@ -44,10 +46,25 @@ data class TableDTO(
     val unused: String
 )
 
+/**
+ * Table input
+ *
+ * @property metricId
+ * @property metricPeriod
+ * @property databaseName
+ * @property tableName
+ * @constructor Create empty Table input
+ */
 data class TableInput(
     override val metricId: String = StorageEnums.TABLE.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String,
     val tableName: String,
 ) : MetricInput()
 
+/**
+ * Table result
+ *
+ * @property queryList
+ * @constructor Create empty Table result
+ */
 data class TableResult(val queryList: List<TableDTO>) : IMetricResult()

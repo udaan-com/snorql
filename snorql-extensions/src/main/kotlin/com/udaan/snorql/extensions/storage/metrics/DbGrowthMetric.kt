@@ -31,6 +31,11 @@ import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricOutput
 
+/**
+ * Db growth metric
+ *
+ * @constructor Create empty Db growth metric
+ */
 class DbGrowthMetric :
     IMetric<DbGrowthInput, DbGrowthResult, IMetricRecommendation> {
 

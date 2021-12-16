@@ -25,13 +25,15 @@ import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 
 /**
- * Data class for Data transfer object of db index
- * @param [rows]
- * @param [indexName]
- * @param [tableName]
- * @param [totalSpaceMB]
- * @param [usedSpaceMB]
- * @param [unusedSpaceMB]
+ * Db index d t o
+ *
+ * @property rows
+ * @property indexName
+ * @property tableName
+ * @property totalSpaceMB
+ * @property usedSpaceMB
+ * @property unusedSpaceMB
+ * @constructor Create empty Db index d t o
  */
 data class DbIndexDTO(
     val rows: String,
@@ -42,9 +44,23 @@ data class DbIndexDTO(
     val unusedSpaceMB: String
 )
 
+/**
+ * Db index input
+ *
+ * @property metricId
+ * @property metricPeriod
+ * @property databaseName
+ * @constructor Create empty Db index input
+ */
 data class DbIndexInput(
     override val metricId: String = StorageEnums.DB_INDEX.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String,
 ) : MetricInput()
 
+/**
+ * Db index result
+ *
+ * @property queryList
+ * @constructor Create empty Db index result
+ */
 data class DbIndexResult(val queryList: List<DbIndexDTO>) : IMetricResult()
