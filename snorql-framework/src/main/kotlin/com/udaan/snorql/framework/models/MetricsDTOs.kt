@@ -23,7 +23,7 @@ import java.sql.Timestamp
 
 
 /**
- * Metric input
+ * Abstract class to define the desired metric input
  *
  * @constructor Create empty Metric input
  */
@@ -63,14 +63,28 @@ data class MetricOutput<T : IMetricResult, V : IMetricRecommendation>(val result
                                                                       val recommendation: V?)
 
 /**
- * Metric response
+ * Data class to hold the metric response
+ * MetricResponse holds the following:
+ * <ul>
+ * <li>MetricInput</li>
+ * <li>MetricOutput</li>
+ * <li>Metadata</li>
+ * <ul>
  *
- * @param T
- * @param V
- * @property metricInput
- * @property metricOutput
- * @property metadata
- * @constructor Create empty Metric response
+ * @param T                 The wrapper DTO class for metric result
+ * @param V                 The wrapper DTO class for metric recommendation
+ * @property metricInput    The input as received in the request
+ *                          from the user
+ * @property metricOutput   The output to be returned to the user
+ *                          The output is wrapped in a metric DTO
+ *                          class and recommendation along with it
+ *                          is wrapped in metric recommendation DTO
+ *                          class
+ * @property metadata       Any additional metadata that is to be
+ *                          sent back to the user
+ * @constructor             Create a metric response instance with
+ *                          desired metric input, metric output and
+ *                          metadata
  */
 data class MetricResponse<T : IMetricResult, V : IMetricRecommendation>(
     val metricInput: MetricInput,

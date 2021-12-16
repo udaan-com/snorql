@@ -26,13 +26,13 @@ package com.udaan.snorql.framework.metric
  */
 interface Connection {
     /**
-     * Run
+     * Run binds to <T> by executing a query using a databaseName instance
      *
      * @param T
-     * @param databaseName
-     * @param query
+     * @param databaseName database name to create instance
+     * @param query execute the query
      * @param mapClass
-     * @param params
+     * @param params parameters for metric
      * @return
      */
     fun <T> run(databaseName:String, query: String,

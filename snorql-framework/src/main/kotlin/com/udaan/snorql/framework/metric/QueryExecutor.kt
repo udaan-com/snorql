@@ -27,7 +27,7 @@ package com.udaan.snorql.framework.metric
  */
 class QueryExecutor(val connection: Connection) {
     /**
-     * Execute
+     * Execute the query using the connection instance
      *
      * @param T
      * @param databaseName
@@ -41,7 +41,7 @@ class QueryExecutor(val connection: Connection) {
     }
 
     /**
-     * Persist data
+     * Persist data to enable historical data in snorql
      *
      * @param databaseName
      * @param tableName

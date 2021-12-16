@@ -26,7 +26,7 @@ import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.*
 
 /**
- * Active d d l metric
+ * Active DDL Metric for Active Queries metric
  *
  * @constructor Create empty Active d d l metric
  */
