@@ -60,11 +60,12 @@ class DbMetric :
         metricOutput: MetricOutput<DbResult, IMetricRecommendation>
     ): Map<String, Any>? {
         val responseMetadata = mutableMapOf<String, Any>()
-        val query =
-            getMetricConfig(metricInput.metricId).queries["main"]
-        val dbSizeQuery =
-            getMetricConfig(metricInput.metricId).queries["dbSize"]
+        val metricConfig = getMetricConfig(metricInput.metricId)
+        val query = metricConfig.queries["main"]
+        val dbSizeQuery = metricConfig.queries["dbSize"]
         responseMetadata["underlyingQueries"] = listOf(query, dbSizeQuery)
+        responseMetadata["referenceDocumentation"] = metricConfig.referenceDoc
+        responseMetadata["description"] = metricConfig.description
         return responseMetadata
     }
 
