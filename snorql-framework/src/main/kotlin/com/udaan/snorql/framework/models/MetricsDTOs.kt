@@ -34,7 +34,9 @@ abstract class MetricInput {
 data class MetricConfig(val queries: Map<String, String>,
         val supportsHistorical: Boolean,
         val supportsRealTime: Boolean,
-        val isParameterized: Boolean)
+        val isParameterized: Boolean,
+        val referenceDoc: String,
+        val description: String)
 
 data class MetricOutput<T : IMetricResult, V : IMetricRecommendation>(val result: T,
                                                                       val recommendation: V?)
