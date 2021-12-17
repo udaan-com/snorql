@@ -23,8 +23,7 @@ import com.udaan.snorql.framework.SQLMonitoringConfigException
 
 /**
  * Class responsible for fetching configuration of a metric
- * <p>The configuration of a metric is stored in sql-monitoring-conf.json
- * <p>The configMap
+ * The configuration of a metric is stored in sql-monitoring-conf.json
  *
  * @property configMap metric ConfigMap instance
  * @constructor Create an instance of Configuration Class for a metric

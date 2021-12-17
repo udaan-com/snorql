@@ -28,20 +28,20 @@ import org.jdbi.v3.core.mapper.reflect.ColumnName
 
 
 /**
- * Index stat d t o
+ * Wrapper class to hold individual index statistics for Index Stats Metric
  *
- * @property name
- * @property updated
- * @property rows
- * @property rowsSampled
- * @property steps
- * @property density
- * @property averageKeyLength
- * @property stringIndex
- * @property filterExpression
- * @property unfilteredRows
- * @property persistedSamplePercent
- * @constructor Create empty Index stat d t o
+ * @property name name of the index
+ * @property updated timestamp when index was last updated
+ * @property rows number of rows
+ * @property rowsSampled number of rows sampled
+ * @property steps number of steps
+ * @property density index density
+ * @property averageKeyLength average length of keys in index
+ * @property stringIndex is it string type index
+ * @property filterExpression filter expression
+ * @property unfilteredRows number of rows unfiltered
+ * @property persistedSamplePercent percentage of persisted samples
+ * @constructor Create Index Statistics wrapper
  */
 
 data class IndexStatDTO(
@@ -72,14 +72,14 @@ data class IndexStatDTO(
 )
 
 /**
- * Index stat input
+ * Wrapper class to hold Index Stats Metric input
  *
- * @property metricId
+ * @property metricId id of IndexStatsMetric
  * @property metricPeriod
- * @property databaseName
- * @property tableName
- * @property indexName
- * @constructor Create empty Index stat input
+ * @property databaseName database on which metric is used
+ * @property tableName table on which metric is used
+ * @property indexName name of the index
+ * @constructor Create Index stat metric input
  */
 data class IndexStatInput(
     override val metricId: String = PerformanceEnums.INDEX_STATS.getId(),
@@ -88,9 +88,12 @@ data class IndexStatInput(
 ) : MetricInput()
 
 /**
- * Index stat result
+ * Wrapper class to hold Index stat metric result
  *
- * @property queryList
+ * <p>Result of index stats metric is a list of Index Statistics
+ * which are wrapped using [IndexStatDTO]</p>
+ *
+ * @property queryList list of index statistics wrapped in [IndexStatDTO]
  * @constructor Create empty Index stat result
  */
 data class IndexStatResult(val queryList: List<IndexStatDTO>) : IMetricResult()

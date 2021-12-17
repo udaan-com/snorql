@@ -26,30 +26,30 @@ import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 
 /**
- * Active query d t o
+ * Wrapper class to hold individual active query for Active Query Metric
  *
- * @property sessionId
- * @property status
- * @property blockedBy
- * @property waitType
- * @property waitResource
- * @property percentComplete
- * @property waitTime
- * @property cpuTime
- * @property logicalReads
- * @property reads
- * @property writes
- * @property elapsedTime
- * @property queryText
- * @property storedProc
+ * @property sessionId session id for the active query
+ * @property status status of the active query
+ * @property blockedBy query blocker (if query is blocked)
+ * @property waitType type of wait (if query is in waiting state)
+ * @property waitResource resource for which wuery is waiting (if query is in waiting state)
+ * @property percentComplete percentage of query execution completed
+ * @property waitTime time for which the query has been waiting
+ * @property cpuTime cpu time utilized by the query
+ * @property logicalReads logical reads performed by the query
+ * @property reads reads operations performed by the query
+ * @property writes write operations performed by the query
+ * @property elapsedTime time elapsed since query execution started
+ * @property queryText actual active query string
+ * @property storedProc stored procedure
  * @property command
  * @property loginName
- * @property hostName
- * @property programName
- * @property hostProcessId
- * @property lastRequestEndTime
- * @property loginTime
- * @property openTransactionCount
+ * @property hostName name of host on which query is getting executed
+ * @property programName program name on which query is running
+ * @property hostProcessId host's process id
+ * @property lastRequestEndTime last request end time
+ * @property loginTime login time
+ * @property openTransactionCount count of transactions currently open
  * @constructor Create empty Active query d t o
  */
 data class ActiveQueryDTO(
@@ -78,12 +78,12 @@ data class ActiveQueryDTO(
 )
 
 /**
- * Active query input
+ * Wrapper class for Active query metric input
  *
- * @property metricId
+ * @property metricId id of ActiveQueryMetric
  * @property metricPeriod
- * @property databaseName
- * @constructor Create empty Active query input
+ * @property databaseName database on which metric is used
+ * @constructor Create Active query input
  */
 data class ActiveQueryInput(
     override val metricId: String = PerformanceEnums.ACTIVE_QUERIES.getId(),
@@ -91,9 +91,12 @@ data class ActiveQueryInput(
 ) : MetricInput()
 
 /**
- * Active query result
+ * Wrapper class for Active query metric result
  *
- * @property queryList
- * @constructor Create empty Active query result
+ * <p>Result of active queries metric is a list of Active Queries with metadata
+ * which are wrapped using [ActiveQueryDTO]</p>
+ *
+ * @property queryList list of active queries wrapped in [ActiveQueryDTO]
+ * @constructor Create Active query result
  */
 data class ActiveQueryResult(val queryList: List<ActiveQueryDTO>) : IMetricResult()

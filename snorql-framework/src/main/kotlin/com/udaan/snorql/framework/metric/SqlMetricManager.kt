@@ -55,9 +55,13 @@ object SqlMetricManager {
     }
 
     /**
-     * Set connection
+     * Set snorql connection instance to the user's database connection
      *
-     * @param connection
+     * <p>It is called by the user to provide user's database connection instance to snorql.
+     * This connection instance will be used by snorql to execute queries to fetch data
+     * for the metrics</p>
+     *
+     * @param connection user's database connection instance
      */
     fun setConnection(connection: Connection) {
         SqlMetricManager.connection = connection
@@ -70,10 +74,12 @@ object SqlMetricManager {
         }
 
     /**
-     * Add metric
+     * Map metric instance against metric id in [metricIdToMetricMap]
      *
-     * @param metricId
-     * @param instance
+     * <p>[metricIdToMetricMap] is a map of metric id to metric instance</p>
+     *
+     * @param metricId id of the metric
+     * @param instance instance of the metric
      */
     fun addMetric(metricId: String,
                   instance: IMetric<*, *, *>
@@ -82,14 +88,18 @@ object SqlMetricManager {
     }
 
     /**
-     * Get metric
+     * Get metric response. Includes input, result, recommendations (if enabled)
+     * and additional metadata.
      *
-     * @param T
-     * @param O
-     * @param V
-     * @param metricId
-     * @param metricInput
-     * @return
+     * <p>The user can use <code>getMetric</code> function with appropriate inputs
+     * to generate the metric response.</p>
+     *
+     * @param T Wrapper class for metric input
+     * @param O Wrapper class for metric result
+     * @param V Wrapper class for metric recommendation
+     * @param metricId id of the metric to use
+     * @param metricInput input for the metric triggered
+     * @return metric response wrapped in MetricResponse
      */
     fun <T : MetricInput, O : IMetricResult, V : IMetricRecommendation> getMetric(metricId: String,
                                                                                   metricInput: T): MetricResponse<*, *> {

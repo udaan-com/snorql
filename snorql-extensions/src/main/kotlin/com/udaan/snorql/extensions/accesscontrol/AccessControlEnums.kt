@@ -22,20 +22,21 @@ package com.udaan.snorql.extensions.accesscontrol
 import com.udaan.snorql.framework.IMtericId
 
 /**
- * Access control enums
+ * Access control metric enums
  *
- * @property metricId
- * @constructor Create empty Access control enums
+ * @property metricId id of access control metric in context
+ * @constructor Create Access control enums for an access control metric
  */
 enum class AccessControlEnums(private val metricId:String):IMtericId {
 
     /**
-     * U s e r_r o l e
-     *
-     * @constructor Create empty U s e r_r o l e
+     * Map userRole to USER_ROLE
      */
     USER_ROLE("userRole");
 
+    /**
+     * Function used to fetch id of this access control metric instance
+     */
     override fun getId(): String {
         return "accessControl_" + this.metricId
     }

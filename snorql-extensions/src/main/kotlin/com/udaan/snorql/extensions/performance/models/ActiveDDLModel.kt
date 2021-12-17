@@ -26,18 +26,18 @@ import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 
 /**
- * Active d d l d t o
- *
- * @property currentStep
- * @property queryText
- * @property totalRows
- * @property rowsProcessed
- * @property rowsLeft
- * @property percentComplete
- * @property elapsedSeconds
- * @property estimatedSecondsLeft
- * @property estimatedCompletionTime
- * @constructor Create empty Active d d l d t o
+ * Model class to hold individual active DDL query for Active DDL Query Metric
+ * Model class to hold the query result for [ActiveDDLMetric]
+ * @property currentStep current active step in the query
+ * @property queryText Active DDL SQL query
+ * @property totalRows Rows affected by active DDL query
+ * @property rowsProcessed Number of rows processed by the query
+ * @property rowsLeft Number of rows remaining to be processed by query
+ * @property percentComplete execution completion percentage of the DDL query
+ * @property elapsedSeconds seconds elapsed since execution started
+ * @property estimatedSecondsLeft seconds left to complete execution
+ * @property estimatedCompletionTime estimated time for complete execution of query
+ * @constructor Create ActiveDDLDTO for an active DDL query
  */
 data class ActiveDDLDTO(
     val currentStep: String?,
@@ -52,11 +52,11 @@ data class ActiveDDLDTO(
 )
 
 /**
- * Active d d l input
+ * Wrapper class to hold input for Active DDL Queries metric
  *
- * @property metricId
+ * @property metricId id of ActiveDDLMetric
  * @property metricPeriod
- * @property databaseName
+ * @property databaseName database on which metric is used
  * @constructor Create empty Active d d l input
  */
 data class ActiveDDLInput(
@@ -65,9 +65,12 @@ data class ActiveDDLInput(
 ) : MetricInput()
 
 /**
- * Active d d l result
+ * Wrapper class to hold the result of ActiveDDLMetric
  *
- * @property queryList
- * @constructor Create empty Active d d l result
+ * <p>Result of active DDL queries metric is a list of Active DDL Queries with metadata
+ * which is wrapped using [ActiveDDLResult]</p>
+ *
+ * @property queryList List of active DDL queries wrapped in [ActiveDDLDTO]
+ * @constructor Create ActiveDDLMetric Result
  */
 data class ActiveDDLResult(val queryList: List<ActiveDDLDTO>) : IMetricResult()

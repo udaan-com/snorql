@@ -26,30 +26,30 @@ import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 
 /**
- * Long running query d t o
+ * Wrapper class to hold Long Running Query with metadata for Long Running Queries metric
  *
- * @property sessionId
- * @property status
- * @property blockedBy
- * @property waitType
- * @property waitResource
- * @property waitTime
- * @property cpuTime
- * @property logicalReads
- * @property reads
- * @property writes
- * @property elapsedTime
- * @property queryText
- * @property storedProc
- * @property command
- * @property loginName
- * @property hostName
- * @property programName
- * @property hostProcessId
- * @property lastRequestEndTime
- * @property loginTime
- * @property openTransactionCount
- * @constructor Create empty Long running query d t o
+ * @property sessionId session id of the query
+ * @property status current status of the query
+ * @property blockedBy query blocker (if query is blocked)
+ * @property waitType type of wait (if query is in waiting state)
+ * @property waitResource resource for which query is waiting (if query is in waiting state)
+ * @property waitTime time for which the query has been waiting
+ * @property cpuTime cpu time utilized by the query
+ * @property logicalReads logical reads performed by the query
+ * @property reads read operations performed by the query
+ * @property writes write operations performed by the query
+ * @property elapsedTime time elapsed since execution of long running query started
+ * @property queryText actual long running query string
+ * @property storedProc stored procedure
+ * @property command command
+ * @property loginName login name
+ * @property hostName name of host on which query is getting executed
+ * @property programName program name on which query is running
+ * @property hostProcessId id of query process on host
+ * @property lastRequestEndTime last request end time
+ * @property loginTime login time
+ * @property openTransactionCount number of transactions open by long running query
+ * @constructor Create Long running query metric wrapper
  */
 data class LongRunningQueryDTO(
     val sessionId: Int,
@@ -76,13 +76,13 @@ data class LongRunningQueryDTO(
 )
 
 /**
- * Long running input
+ * Wrapper class to hold Long running query metric input
  *
- * @property metricId
- * @property metricPeriod
- * @property databaseName
- * @property elapsedTime
- * @constructor Create empty Long running input
+ * @property metricId id of Long running query metric
+ * @property metricPeriod metric period
+ * @property databaseName database on which metric is used
+ * @property elapsedTime filter queries whose time elapsed is greater than [elapsedTime]
+ * @constructor Create empty running query metric input
  */
 data class LongRunningInput(
     override val metricId: String = PerformanceEnums.LONG_RUNNING_QUERIES.getId(),
@@ -91,9 +91,12 @@ data class LongRunningInput(
 ) : MetricInput()
 
 /**
- * Long running result
+ * Wrapper class for Long running queries metric result
  *
- * @property queryList
+ * Result of long running queries metric is a list of Long Running Queries with metadata
+ * which are wrapped using [LongRunningQueryDTO]
+ *
+ * @property queryList list of long running queries wrapped in [LongRunningQueryDTO]
  * @constructor Create empty Long running result
  */
 data class LongRunningResult(val queryList: List<LongRunningQueryDTO>) : IMetricResult()
