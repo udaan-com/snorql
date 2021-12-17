@@ -27,7 +27,7 @@ import com.udaan.snorql.framework.models.MetricPeriod
 
 
 /**
- * Model class to hold blocked query with metadata for Blocked Query metric
+ * Wrapper class to hold blocked query with metadata for Blocked Query metric
  *
  * @property sessionId session id of the query
  * @property blockedBy query blocker (if query is blocked)
@@ -85,7 +85,7 @@ data class BlockedQueriesDTO(
 )
 
 /**
- * Model class to hold blocked queries metric input
+ * Wrapper to hold blocked queries metric input
  *
  * @property metricId id of blocked queries metric
  * @property metricPeriod
@@ -99,12 +99,12 @@ data class BlockedQueriesInput(
 ) : MetricInput()
 
 /**
- * Model class for Blocked queries metric result
+ * Wrapper class for Blocked queries metric result
  *
- * Result of blocked queries metric is a list of Blocked Queries with metadata
- * which are wrapped using [BlockedQueriesDTO]
+ * <p>Result of blocked queries metric is a list of Blocked Queries with metadata
+ * which are wrapped using [BlockedQueriesDTO]</p>
  *
- * @property queryList list of blocked queries wrapped in [BlockedQueriesDTO]
+ * @property queryList list of bloacked queries wrapped in [BlockedQueriesDTO]
  * @constructor Create Blocked queries metric result
  */
 data class BlockedQueriesResult(val queryList: List<BlockedQueriesDTO>) : IMetricResult()

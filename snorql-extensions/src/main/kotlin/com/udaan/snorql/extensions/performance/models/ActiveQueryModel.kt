@@ -26,7 +26,7 @@ import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 
 /**
- * Model class to hold individual active query for Active Query Metric
+ * Wrapper class to hold individual active query for Active Query Metric
  *
  * @property sessionId session id for the active query
  * @property status status of the active query
@@ -78,7 +78,7 @@ data class ActiveQueryDTO(
 )
 
 /**
- * Model class for Active query metric input
+ * Wrapper class for Active query metric input
  *
  * @property metricId id of ActiveQueryMetric
  * @property metricPeriod
@@ -91,10 +91,10 @@ data class ActiveQueryInput(
 ) : MetricInput()
 
 /**
- * Model class for Active query metric result
+ * Wrapper class for Active query metric result
  *
- * Result of active queries metric is a list of Active Queries with metadata
- * which are wrapped using [ActiveQueryDTO]
+ * <p>Result of active queries metric is a list of Active Queries with metadata
+ * which are wrapped using [ActiveQueryDTO]</p>
  *
  * @property queryList list of active queries wrapped in [ActiveQueryDTO]
  * @constructor Create Active query result

@@ -28,7 +28,7 @@ import org.jdbi.v3.core.mapper.reflect.ColumnName
 
 
 /**
- * Model class to hold individual index statistics for Index Stats Metric
+ * Wrapper class to hold individual index statistics for Index Stats Metric
  *
  * @property name name of the index
  * @property updated timestamp when index was last updated
@@ -41,7 +41,7 @@ import org.jdbi.v3.core.mapper.reflect.ColumnName
  * @property filterExpression filter expression
  * @property unfilteredRows number of rows unfiltered
  * @property persistedSamplePercent percentage of persisted samples
- * @constructor Create Index Statistics model
+ * @constructor Create Index Statistics wrapper
  */
 
 data class IndexStatDTO(
@@ -72,14 +72,14 @@ data class IndexStatDTO(
 )
 
 /**
- * Model class to hold Index Stats Metric input
+ * Wrapper class to hold Index Stats Metric input
  *
  * @property metricId id of IndexStatsMetric
  * @property metricPeriod
  * @property databaseName database on which metric is used
  * @property tableName table on which metric is used
  * @property indexName name of the index
- * @constructor Create Index stat metric input model
+ * @constructor Create Index stat metric input
  */
 data class IndexStatInput(
     override val metricId: String = PerformanceEnums.INDEX_STATS.getId(),
@@ -88,12 +88,12 @@ data class IndexStatInput(
 ) : MetricInput()
 
 /**
- * Model class to hold Index stat metric result
+ * Wrapper class to hold Index stat metric result
  *
- * Result of index stats metric is a list of Index Statistics
- * which are wrapped using [IndexStatDTO]
+ * <p>Result of index stats metric is a list of Index Statistics
+ * which are wrapped using [IndexStatDTO]</p>
  *
  * @property queryList list of index statistics wrapped in [IndexStatDTO]
- * @constructor Create empty Index stat result model
+ * @constructor Create empty Index stat result
  */
 data class IndexStatResult(val queryList: List<IndexStatDTO>) : IMetricResult()

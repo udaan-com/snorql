@@ -28,9 +28,9 @@ import com.udaan.snorql.framework.models.*
 /**
  * Class which implements the Long Running Queries metric
  *
- * The long running queries metric is used to list the queries
+ * <p>The long running queries metric is used to list the queries
  * with useful metadata which have been running for more than a
- * specified time (seconds).
+ * specified time (seconds).</p>
  *
  * @constructor Create Long running queries metric
  */

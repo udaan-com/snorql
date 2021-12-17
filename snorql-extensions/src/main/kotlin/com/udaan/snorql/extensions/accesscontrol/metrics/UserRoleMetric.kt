@@ -29,8 +29,8 @@ import com.udaan.snorql.extensions.accesscontrol.models.*
 /**
  * User role metric class is the implementation of user role metric
  *
- * The user role metric can be used to get the user roles defined for the database.
- * User role metric returns the name, privileges and type of user role.
+ * <p>The user role metric can be used to get the user roles defined for the database.
+ * User role metric returns the name, privileges and type of user role.</p>
  *
  * @constructor Create user role metric
  */
@@ -39,7 +39,7 @@ class UserRoleMetric :
 
     override fun getMetricResult(
         metricInput: UserRoleInput,
-        metricConfig: MetricConfig,
+        metricConfig: MetricConfig
     ): UserRoleResult {
         // check the metricConfig.supportedHistory before getting the query
         val query =
@@ -53,7 +53,7 @@ class UserRoleMetric :
 
     override fun getMetricResponseMetadata(
         metricInput: UserRoleInput,
-        metricOutput: MetricOutput<UserRoleResult, IMetricRecommendation>,
+        metricOutput: MetricOutput<UserRoleResult, IMetricRecommendation>
     ): Map<String, Any>? {
         val responseMetadata = mutableMapOf<String, Any>()
         val query =
