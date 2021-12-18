@@ -52,12 +52,16 @@ interface IMetric<in T : MetricInput, O : IMetricResult, R : IMetricRecommendati
     }
 
     /**
-     * Save metric result
+     * Saves metric result in the historical storage cluster
      *
      * @param metricInput
      * @param result
      */
     fun saveMetricResult(metricInput: MetricInput, result: IMetricResult)
+
+//    fun saveMetricJobResult(metricInput: MetricInput, metricOutput: MetricOutput<O, R>): Boolean {
+//
+//    }
 
 
     /**

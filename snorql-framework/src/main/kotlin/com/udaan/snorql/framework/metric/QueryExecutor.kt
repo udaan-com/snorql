@@ -19,6 +19,9 @@
 
 package com.udaan.snorql.framework.metric
 
+import com.udaan.snorql.framework.models.MetricInput
+import com.udaan.snorql.framework.models.MetricOutput
+
 /**
  * Query executor
  *
@@ -53,5 +56,4 @@ class QueryExecutor(val connection: Connection) {
                     rows: List<List<Any>>) {
         connection.storeData(databaseName,tableName, columns, rows)
     }
-
 }
