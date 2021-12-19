@@ -30,8 +30,8 @@ import com.udaan.snorql.framework.models.*
 /**
  * Class which implements Active Queries Metric
  *
- * <p>The active queries metric fetches the active queries for the
- * specified database along with other metadata.</p>
+ * The active queries metric fetches the active queries for the
+ * specified database along with other metadata.
  *
  * @constructor Create Active queries metric
  */

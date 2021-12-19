@@ -20,13 +20,14 @@
 package com.udaan.snorql.framework.metric
 
 /**
- * Connection
+ * [Connection] interface defines methods to be overridden by the user for successful connection with user's database
  *
- * @constructor Create empty Connection
+ * Methods defined in [Connection] are dependent on the user's database. User needs to override the methods for snorql
+ * to successfully interact with the user's database.
  */
 interface Connection {
     /**
-     * Run binds to <T> by executing a query using a databaseName instance
+     * Run binds to `<T>` by executing a query using a databaseName instance
      *
      * @param T
      * @param databaseName database name to create instance
@@ -40,12 +41,12 @@ interface Connection {
                 params: Map<String, *> = emptyMap<String, String>()): List<T>
 
     /**
-     * Store data
+     * [storeData] is used to write data into user's database
      *
-     * @param databaseName
-     * @param tableName
-     * @param columns
-     * @param rows
+     * @param databaseName name of database to write into
+     * @param tableName name of table to write into
+     * @param columns the columns that will be written
+     * @param rows actual data rows to be written
      */
     fun storeData(databaseName:String, tableName: String,
                   columns: List<String>,

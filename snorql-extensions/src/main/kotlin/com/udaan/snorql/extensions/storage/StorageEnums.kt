@@ -22,66 +22,50 @@ package com.udaan.snorql.extensions.storage
 import com.udaan.snorql.framework.IMtericId
 
 /**
- * Storage enums
+ * Storage metric ids enum class
  *
- * @property metricId
- * @constructor Create empty Storage enums
+ * @property metricId id of metric in context
+ * @constructor Create Storage metric enums
  */
 enum class StorageEnums(private val metricId:String): IMtericId {
 
     /**
-     * D b
-     *
-     * @constructor Create empty D b
+     * Database
      */
     DB("db"),
 
     /**
-     * D b_t a b l e s
-     *
-     * @constructor Create empty D b_t a b l e s
+     * Database Tables metric id
      */
     DB_TABLES("dbTables"),
 
     /**
-     * D b_i n d e x
-     *
-     * @constructor Create empty D b_i n d e x
+     * Database Index metric id
      */
     DB_INDEX("dbIndex"),
 
     /**
-     * D b_g r o w t h
-     *
-     * @constructor Create empty D b_g r o w t h
+     * Database Growth metric id
      */
     DB_GROWTH("dbGrowth"),
 
     /**
-     * T a b l e
-     *
-     * @constructor Create empty T a b l e
+     * Table metric id
      */
     TABLE("table"),
 
     /**
-     * T a b l e_u n u s e d_i n d e x
-     *
-     * @constructor Create empty T a b l e_u n u s e d_i n d e x
+     * Table Unused Index metric id
      */
     TABLE_UNUSED_INDEX("tableUnusedIndex"),
 
     /**
-     * P v s
-     *
-     * @constructor Create empty P v s
+     * Persistent version store metric id
      */
     PVS("pvs"),
 
     /**
-     * T a b l e_s c h e m a
-     *
-     * @constructor Create empty T a b l e_s c h e m a
+     * Table schema metric id
      */
     TABLE_SCHEMA("tableSchema");
 

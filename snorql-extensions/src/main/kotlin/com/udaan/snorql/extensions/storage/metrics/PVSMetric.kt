@@ -32,9 +32,11 @@ import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricOutput
 
 /**
- * P v s metric
+ * Class implementing the Persistent Version Store Metric
  *
- * @constructor Create empty P v s metric
+ * The persistent version store metric fetches the persistent version store size with open transactions statistics.
+ *
+ * @constructor Create Persistent version store metric
  */
 class PVSMetric :
     IMetric<PVSInput, PVSResult, IMetricRecommendation> {

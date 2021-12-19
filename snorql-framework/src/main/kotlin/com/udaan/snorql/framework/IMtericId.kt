@@ -20,15 +20,16 @@
 package com.udaan.snorql.framework
 
 /**
- * Interface responsible for getting Metric IDs
+ * Interface which will be implemented by metric category enum classes
  *
- * @constructor Create empty I mteric id
+ * Metric IDs can be obtained using the metric category enum classes by the class implementing the metric. Metric ids
+ * are mapped as enums, which can be returned by performing desired operations using [getId]
  */
 interface IMtericId {
     /**
      * Get metric id
      *
-     * @return metric id
+     * @return metric id string
      */
     fun getId(): String
 }

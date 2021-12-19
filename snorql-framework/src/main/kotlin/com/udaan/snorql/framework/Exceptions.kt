@@ -21,28 +21,22 @@
 package com.udaan.snorql.framework
 
 /**
- * S q l monitoring config exception
+ * Exception class when a metric configuration cannot be found
  *
- * @constructor
- *
- * @param message
+ * @param message Error message string
  */
 class SQLMonitoringConfigException(message: String): Exception(message)
 
 /**
- * S q l monitoring connection exception
+ * Exception class when user supplied connection instance is not found, or unusable
  *
- * @constructor
- *
- * @param message
+ * @param message Error message string
  */
 class SQLMonitoringConnectionException(message: String): Exception(message)
 
 /**
- * S q l monitoring exception
+ * Exception class when snorql is unable to give metric response back to the user due to some error
  *
- * @constructor
- *
- * @param message
+ * @param message Error message string
  */
 class SQLMonitoringException(message: String): Exception(message)

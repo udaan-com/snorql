@@ -27,7 +27,7 @@ import com.udaan.snorql.framework.models.MetricPeriod
 
 /**
  * Model class to hold individual active DDL query for Active DDL Query Metric
- * Model class to hold the query result for [ActiveDDLMetric]
+ * Model class to hold the query result of [ActiveDDLMetric]
  * @property currentStep current active step in the query
  * @property queryText Active DDL SQL query
  * @property totalRows Rows affected by active DDL query
@@ -57,7 +57,7 @@ data class ActiveDDLDTO(
  * @property metricId id of ActiveDDLMetric
  * @property metricPeriod
  * @property databaseName database on which metric is used
- * @constructor Create empty Active d d l input
+ * @constructor Create ActiveDDLMetric Input
  */
 data class ActiveDDLInput(
     override val metricId: String = PerformanceEnums.ACTIVE_DDL.getId(),

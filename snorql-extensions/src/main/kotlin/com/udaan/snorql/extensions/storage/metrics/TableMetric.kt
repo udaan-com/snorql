@@ -32,9 +32,9 @@ import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricOutput
 
 /**
- * Table metric
+ * [TableMetric] class implements the table statistics metric
  *
- * @constructor Create empty Table metric
+ * @constructor Create table metric
  */
 class TableMetric :
     IMetric<TableInput, TableResult, IMetricRecommendation> {

@@ -28,6 +28,9 @@ import com.udaan.snorql.framework.SQLMonitoringConnectionException
 import com.udaan.snorql.framework.SQLMonitoringException
 import com.udaan.snorql.framework.models.*
 
+/**
+ * [SqlMetricManager] is used to interact with snorql framework
+ */
 object SqlMetricManager {
 
     private var connection: Connection? = null
@@ -57,9 +60,9 @@ object SqlMetricManager {
     /**
      * Set snorql connection instance to the user's database connection
      *
-     * <p>It is called by the user to provide user's database connection instance to snorql.
+     * It is called by the user to provide user's database connection instance to snorql.
      * This connection instance will be used by snorql to execute queries to fetch data
-     * for the metrics</p>
+     * for the metrics
      *
      * @param connection user's database connection instance
      */
@@ -91,8 +94,8 @@ object SqlMetricManager {
      * Get metric response. Includes input, result, recommendations (if enabled)
      * and additional metadata.
      *
-     * <p>The user can use <code>getMetric</code> function with appropriate inputs
-     * to generate the metric response.</p>
+     * The user can use [getMetric] function with appropriate inputs
+     * to generate the metric response.
      *
      * @param T Wrapper class for metric input
      * @param O Wrapper class for metric result
