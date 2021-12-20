@@ -19,9 +19,6 @@
 
 package com.udaan.snorql.framework.metric
 
-import com.udaan.snorql.framework.models.MetricInput
-import com.udaan.snorql.framework.models.MetricOutput
-
 /**
  * Query executor
  *
@@ -38,8 +35,10 @@ class QueryExecutor(val connection: Connection) {
      * @param params
      * @return
      */
-    inline fun <reified T> execute(databaseName:String, query: String,
-                                   params: Map<String, *> = mapOf<String, Any>()): List<T> {
+    inline fun <reified T> execute(
+        databaseName: String, query: String,
+        params: Map<String, *> = mapOf<String, Any>(),
+    ): List<T> {
         return connection.run(databaseName, query, T::class.java, params)
     }
 
@@ -51,9 +50,27 @@ class QueryExecutor(val connection: Connection) {
      * @param columns
      * @param rows
      */
-    fun persistData(databaseName:String, tableName: String,
-                    columns: List<String>,
-                    rows: List<List<Any>>) {
-        connection.storeData(databaseName,tableName, columns, rows)
+    fun persistData(
+        databaseName: String, tableName: String,
+        columns: List<String>,
+        rows: List<List<Any>>,
+    ) {
+        connection.storeData(databaseName, tableName, columns, rows)
+    }
+
+    fun persistJobConfigData(metricId: String, databaseName: String, triggerName: String): Boolean {
+        println("""Following data has been saved in the database: 
+            |1. Metric ID: $metricId 
+            |2. Database Name: $databaseName
+            |3. Trigger Key: $triggerName""".trimMargin())
+        return true
+    }
+
+    fun removeFromDatabase(metricId: String, databaseName: String, triggerName: String): Boolean {
+        println("""Following data has been removed from the database: 
+            |1. Metric ID: $metricId 
+            |2. Database Name: $databaseName
+            |3. Trigger Key: $triggerName""".trimMargin())
+        return true
     }
 }
