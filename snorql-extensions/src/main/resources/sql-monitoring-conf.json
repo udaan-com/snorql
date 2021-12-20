@@ -5,7 +5,9 @@
     },
     "supportsHistorical": true,
     "supportsRealTime": true,
-    "isParameterized": false
+    "isParameterized": false,
+    "referenceDoc": "",
+    "description": ""
   },
   "performance_longRunningQueries": {
     "queries": {
@@ -13,7 +15,9 @@
     },
     "supportsHistorical": true,
     "supportsRealTime": true,
-    "isParameterized": true
+    "isParameterized": true,
+    "referenceDoc": "",
+    "description": ""
   },
   "performance_blockedQueries": {
     "queries": {
@@ -21,7 +25,9 @@
     },
     "supportsHistorical": true,
     "supportsRealTime": true,
-    "isParameterized": false
+    "isParameterized": false,
+    "referenceDoc": "",
+    "description": ""
   },
   "performance_indexStats": {
     "queries": {
@@ -29,7 +35,9 @@
     },
     "supportsHistorical": true,
     "supportsRealTime": true,
-    "isParameterized": true
+    "isParameterized": true,
+    "referenceDoc": "",
+    "description": ""
   },
   "performance_activeDDL": {
     "queries": {
@@ -37,7 +45,9 @@
     },
     "supportsHistorical": true,
     "supportsRealTime": true,
-    "isParameterized": false
+    "isParameterized": false,
+    "referenceDoc": "",
+    "description": ""
   },
 
   "accessControl_userRole": {
@@ -46,7 +56,9 @@
     },
     "supportsHistorical": false,
     "supportsRealTime": true,
-    "isParameterized": false
+    "isParameterized": false,
+    "referenceDoc": "",
+    "description": ""
   },
   "storage_db": {
     "queries": {
@@ -55,7 +67,9 @@
     },
     "supportsHistorical": false,
     "supportsRealTime": true,
-    "isParameterized": false
+    "isParameterized": false,
+    "referenceDoc": "https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-spaceused-transact-sql?view=sql-server-ver15#examples",
+    "description": "Displaying updated space information about a database"
   },
   "storage_dbTables": {
     "queries": {
@@ -63,7 +77,9 @@
     },
     "supportsHistorical": true,
     "supportsRealTime": true,
-    "isParameterized": false
+    "isParameterized": false,
+    "referenceDoc": "",
+    "description": ""
   },
   "storage_dbIndex": {
     "queries": {
@@ -71,7 +87,9 @@
     },
     "supportsHistorical": true,
     "supportsRealTime": true,
-    "isParameterized": false
+    "isParameterized": false,
+    "referenceDoc": "",
+    "description": ""
   },
   "storage_table": {
     "queries": {
@@ -79,7 +97,9 @@
     },
     "supportsHistorical": true,
     "supportsRealTime": true,
-    "isParameterized": true
+    "isParameterized": true,
+    "referenceDoc": "https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-spaceused-transact-sql?view=sql-server-ver15#examples",
+    "description": "Displaying disk space information about a table"
   },
   "storage_dbGrowth": {
     "queries": {
@@ -87,7 +107,9 @@
     },
     "supportsHistorical": true,
     "supportsRealTime": true,
-    "isParameterized": true
+    "isParameterized": true,
+    "referenceDoc": "",
+    "description": ""
   },
   "storage_pvs": {
     "queries": {
@@ -95,7 +117,9 @@
     },
     "supportsHistorical": false,
     "supportsRealTime": true,
-    "isParameterized": false
+    "isParameterized": false,
+    "referenceDoc": "",
+    "description": ""
   },
   "storage_tableUnusedIndex": {
     "queries": {
@@ -103,7 +127,9 @@
     },
     "supportsHistorical": false,
     "supportsRealTime": true,
-    "isParameterized": false
+    "isParameterized": false,
+    "referenceDoc": "",
+    "description": ""
   },
   "storage_tableSchema": {
     "queries": {
@@ -111,6 +137,8 @@
     },
     "supportsHistorical": false,
     "supportsRealTime": true,
-    "isParameterized": false
+    "isParameterized": false,
+    "referenceDoc": "",
+    "description": ""
   }
 }
