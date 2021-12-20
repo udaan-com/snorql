@@ -79,7 +79,7 @@ object SqlMetricManager {
     /**
      * Map metric instance against metric id in [metricIdToMetricMap]
      *
-     * <p>[metricIdToMetricMap] is a map of metric id to metric instance</p>
+     * [metricIdToMetricMap] is a map of metric id to metric instance
      *
      * @param metricId id of the metric
      * @param instance instance of the metric

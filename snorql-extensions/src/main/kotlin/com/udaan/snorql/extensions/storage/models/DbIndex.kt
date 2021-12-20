@@ -45,7 +45,7 @@ data class DbIndexDTO(
 )
 
 /**
- * Wrapper class to hold input for Database Index Metric
+ * Model class to hold input for Database Index Metric
  *
  * @property metricId id of DatabaseIndexMetric
  * @property metricPeriod metric period
