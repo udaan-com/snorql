@@ -56,9 +56,12 @@ class ActiveQueriesMetric :
         metricOutput: MetricOutput<ActiveQueryResult, IMetricRecommendation>
     ): Map<String, Any>? {
         val responseMetadata = mutableMapOf<String, Any>()
-        val query =
-            getMetricConfig(metricInput.metricId).queries["main"]
+        val metricConfig = getMetricConfig(metricInput.metricId)
+        val query = metricConfig.queries["main"]
         responseMetadata["underlyingQueries"] = listOf(query)
+        responseMetadata["referenceDocumentation"] = metricConfig.referenceDoc
+        responseMetadata["description"] = metricConfig.description
+
         return responseMetadata
     }
 

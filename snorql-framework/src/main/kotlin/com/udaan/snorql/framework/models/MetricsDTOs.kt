@@ -22,11 +22,6 @@ package com.udaan.snorql.framework.models
 import java.sql.Timestamp
 
 
-/**
- * Abstract class to define the desired metric input
- *
- * @constructor Create empty Metric input
- */
 abstract class MetricInput {
     abstract val metricId: String
     abstract val metricPeriod: MetricPeriod
@@ -36,72 +31,21 @@ abstract class MetricInput {
     val recommendationRequired: Boolean = false
 }
 
-/**
- * Metric config
- *
- * @property queries
- * @property supportsHistorical
- * @property supportsRealTime
- * @property isParameterized
- * @constructor Create empty Metric config
- */
 data class MetricConfig(val queries: Map<String, String>,
-                        val supportsHistorical: Boolean,
-                        val supportsRealTime: Boolean,
-                        val isParameterized: Boolean)
+        val supportsHistorical: Boolean,
+        val supportsRealTime: Boolean,
+        val isParameterized: Boolean,
+        val referenceDoc: String,
+        val description: String)
 
-/**
- * Metric output
- *
- * @param T
- * @param V
- * @property result
- * @property recommendation
- * @constructor Create empty Metric output
- */
 data class MetricOutput<T : IMetricResult, V : IMetricRecommendation>(val result: T,
                                                                       val recommendation: V?)
 
-/**
- * Data class to hold the metric response
- * MetricResponse holds the following:
- * <ul>
- * <li>MetricInput</li>
- * <li>MetricOutput</li>
- * <li>Metadata</li>
- * <ul>
- *
- * @param T                 The wrapper DTO class for metric result
- * @param V                 The wrapper DTO class for metric recommendation
- * @property metricInput    The input as received in the request
- *                          from the user
- * @property metricOutput   The output to be returned to the user
- *                          The output is wrapped in a metric DTO
- *                          class and recommendation along with it
- *                          is wrapped in metric recommendation DTO
- *                          class
- * @property metadata       Any additional metadata that is to be
- *                          sent back to the user
- * @constructor             Create a metric response instance with
- *                          desired metric input, metric output and
- *                          metadata
- */
 data class MetricResponse<T : IMetricResult, V : IMetricRecommendation>(
     val metricInput: MetricInput,
     val metricOutput: MetricOutput<T, V>,
     val metadata: Map<String, Any>? = null
 )
 
-/**
- * I metric result
- *
- * @constructor Create empty I metric result
- */
 abstract class IMetricResult
-
-/**
- * I metric recommendation
- *
- * @constructor Create empty I metric recommendation
- */
 abstract class IMetricRecommendation
