@@ -27,16 +27,16 @@ import com.udaan.snorql.framework.models.MetricPeriod
 import org.jdbi.v3.core.mapper.reflect.ColumnName
 
 /**
- * Table unused index d t o
+ * Model class to hold index statistics for [TableUnusedIndexMetric]
  *
- * @property objectName
- * @property indexName
- * @property userSeeks
- * @property userScans
- * @property userLookups
- * @property userUpdates
- * @property columnName
- * @constructor Create empty Table unused index d t o
+ * @property objectName name of object
+ * @property indexName name of index
+ * @property userSeeks number of user seek operations
+ * @property userScans number of user scan operations
+ * @property userLookups number of user lookup operations
+ * @property userUpdates number of user update operations
+ * @property columnName column name
+ * @constructor Create index statistics model
  */
 data class TableUnusedIndexDTO(
     @ColumnName("OBJECT_NAME")
@@ -60,12 +60,12 @@ data class TableUnusedIndexDTO(
 )
 
 /**
- * Table unused index input
+ * Model class to hold input for [TableUnusedIndexMetric]
  *
- * @property metricId
- * @property metricPeriod
- * @property databaseName
- * @property tableName
+ * @property metricId id of [TableUnusedIndexMetric]
+ * @property metricPeriod period of metric
+ * @property databaseName database name
+ * @property tableName name of table in context
  * @constructor Create empty Table unused index input
  */
 data class TableUnusedIndexInput(
@@ -75,17 +75,17 @@ data class TableUnusedIndexInput(
 ) : MetricInput()
 
 /**
- * Table unused index result
+ * Model class to hold result of [TableUnusedIndexMetric]
  *
- * @property queryList
- * @constructor Create empty Table unused index result
+ * @property queryList list of index statistics wrapped in [TableUnusedIndexDTO]
+ * @constructor Create Table unused index metric result model
  */
 data class TableUnusedIndexResult(val queryList: List<TableUnusedIndexDTO>) : IMetricResult()
 
 /**
- * Table unused index recommendation
+ * Model class to hold recommendations for [TableUnusedIndexMetric]
  *
- * @property indexesToDrop
- * @constructor Create empty Table unused index recommendation
+ * @property indexesToDrop list of indexes to be dropped
+ * @constructor Create Table unused index metric recommendation model
  */
 data class TableUnusedIndexRecommendation(val indexesToDrop: List<String>) : IMetricRecommendation()

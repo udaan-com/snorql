@@ -26,12 +26,12 @@ import com.udaan.snorql.framework.models.MetricPeriod
 import org.jdbi.v3.core.mapper.reflect.ColumnName
 
 /**
- * Db growth d t o
+ * Model class to hold database growth statistics for Database Growth Metric
  *
- * @property startTime
- * @property endTime
- * @property storageInMegabytes
- * @constructor Create empty Db growth d t o
+ * @property startTime start time
+ * @property endTime end time
+ * @property storageInMegabytes database storage in megabytes
+ * @constructor Create Database Growth Metric Model
  */
 data class DbGrowthDTO(
     @ColumnName("start_time")
@@ -45,13 +45,13 @@ data class DbGrowthDTO(
 )
 
 /**
- * Db growth input
+ * Model class to hold input for Database Growth Metric
  *
- * @property metricId
- * @property metricPeriod
- * @property databaseName
- * @property dbNameForGrowth
- * @constructor Create empty Db growth input
+ * @property metricId id of DBGrowthMetric
+ * @property metricPeriod period of metric
+ * @property databaseName database name on which metric is used
+ * @property dbNameForGrowth database name for growth
+ * @constructor Create Database Growth Metric input model
  */
 data class DbGrowthInput(
     override val metricId: String = StorageEnums.DB_GROWTH.getId(),
@@ -61,9 +61,9 @@ data class DbGrowthInput(
 ) : MetricInput()
 
 /**
- * Db growth result
+ * Model class to hold result for Database Growth Metric
  *
- * @property queryList
- * @constructor Create empty Db growth result
+ * @property queryList list of Database Growth statistics wrapped in [DbGrowthDTO]
+ * @constructor Create Database Growth Metric result
  */
 data class DbGrowthResult(val queryList: List<DbGrowthDTO>) : IMetricResult()

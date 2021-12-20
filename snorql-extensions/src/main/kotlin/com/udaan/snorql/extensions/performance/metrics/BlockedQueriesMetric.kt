@@ -28,8 +28,8 @@ import com.udaan.snorql.framework.models.*
 /**
  * Class which implements Blocked Queries Metric
  *
- * <p>Blocked queries metric can be used to fetch the queries which are in the
- * blocked state.</p>
+ * Blocked queries metric can be used to fetch the queries which are in the
+ * blocked state.
  *
  * @constructor Create Blocked queries metric
  */

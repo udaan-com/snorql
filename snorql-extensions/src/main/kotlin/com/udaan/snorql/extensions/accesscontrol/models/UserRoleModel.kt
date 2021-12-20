@@ -25,12 +25,12 @@ import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 
 /**
- * Wrapper class to hold individual user role of UserRoleMetric
+ * Model class to hold individual user role of UserRoleMetric
  *
  * @property name name of the user role
  * @property role privileges or user group name
  * @property type tpe of role (SQL User/External Group/External User/etc)
- * @constructor Create user role wrapper for each user role
+ * @constructor Create user role model for each user role
  */
 data class UserRoleDTO (
         val name: String,
@@ -40,7 +40,7 @@ data class UserRoleDTO (
 
 
 /**
- * Wrapper class to hold input for UserRoleMetric
+ * Model class to hold input for UserRoleMetric
  *
  * @property metricId id of UserRoleMetric
  * @property metricPeriod
@@ -53,7 +53,7 @@ data class UserRoleInput(
 ) : MetricInput()
 
 /**
- * Wrapper class to hold the result of UserRoleMetric
+ * Model class to hold the result of UserRoleMetric
  *
  * Data class UserRoleResult holds a list of UserRoleDTO which is returned to the user
  *

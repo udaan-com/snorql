@@ -26,16 +26,16 @@ import com.udaan.snorql.framework.models.MetricPeriod
 import org.jdbi.v3.core.mapper.reflect.ColumnName
 
 /**
- * Db d t o
+ * Model class to hold Database statistics for Database Metric
  *
- * @property databaseName
- * @property databaseSize
- * @property unallocatedSpace
- * @property reserved
- * @property data
- * @property indexSize
- * @property unused
- * @constructor Create empty Db d t o
+ * @property databaseName name of the database
+ * @property databaseSize size of the database
+ * @property unallocatedSpace unallocated space in database
+ * @property reserved reserved space in database
+ * @property data used space by data in database
+ * @property indexSize size of index in database
+ * @property unused unused space in database
+ * @constructor Create Database Statistics model
  */
 data class DbDTO(
     @ColumnName("database_name")
@@ -57,17 +57,17 @@ data class DbDTO(
 )
 
 /**
- * Db storage size
+ * Model class to hold storage statistics for database metric
  *
- * @property dbTotalSize
- * @property databaseName
- * @property databaseSize
- * @property unallocatedSpace
- * @property reserved
- * @property data
- * @property indexSize
- * @property unused
- * @constructor Create empty Db storage size
+ * @property dbTotalSize total size of database
+ * @property databaseName name of database
+ * @property databaseSize size of database
+ * @property unallocatedSpace unallocated space in database
+ * @property reserved reserved space in database
+ * @property data space taken by data in database
+ * @property indexSize size of index in database
+ * @property unused unused space in database
+ * @constructor Create Database Storage Size Statistics model
  */
 data class DbStorageSize(
     val dbTotalSize: Int,
@@ -91,13 +91,13 @@ data class DbStorageSize(
 )
 
 /**
- * Db input
+ * Model class to hold input for Database Metric
  *
- * @property metricId
- * @property metricPeriod
- * @property databaseName
- * @property dbName
- * @constructor Create empty Db input
+ * @property metricId id of database metric
+ * @property metricPeriod metric period
+ * @property databaseName name of database
+ * @property dbName name of database
+ * @constructor Create Database Input Statistics model
  */
 data class DbInput(
     override val metricId: String = StorageEnums.DB.getId(),
@@ -106,9 +106,9 @@ data class DbInput(
 ) : MetricInput()
 
 /**
- * Db result
+ * Model class to hold result for database metric
  *
- * @property queryList
- * @constructor Create empty Db result
+ * @property queryList list of database storage statistics wrapped in [DbStorageSize]
+ * @constructor Create Database result model
  */
 data class DbResult(val queryList: List<DbStorageSize>) : IMetricResult()

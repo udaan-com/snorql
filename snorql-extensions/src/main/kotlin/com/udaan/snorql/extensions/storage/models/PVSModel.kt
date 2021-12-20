@@ -26,17 +26,17 @@ import com.udaan.snorql.framework.models.MetricPeriod
 import org.jdbi.v3.core.mapper.reflect.ColumnName
 
 /**
- * P v s d t o
+ * Model class to hold persistent version store and transaction statistics for [PVSMetric]
  *
- * @property persistentVersionStoreSizeGb
- * @property onlineIndexVersionStoreSizeGb
- * @property currentAbortedTransactionCount
- * @property abortedVersionCleanerStartTime
- * @property abortedVersionCleanerEndTime
- * @property oldestTransactionBeginTime
- * @property activeTransactionSessionId
- * @property activeTransactionElapsedTimeSeconds
- * @constructor Create empty P v s d t o
+ * @property persistentVersionStoreSizeGb persistent version store size in GB
+ * @property onlineIndexVersionStoreSizeGb online index version store size in GB
+ * @property currentAbortedTransactionCount count of currently aborted transactions
+ * @property abortedVersionCleanerStartTime aborted version cleaner start time
+ * @property abortedVersionCleanerEndTime aborted version cleaner end time
+ * @property oldestTransactionBeginTime oldest transaction begin time
+ * @property activeTransactionSessionId active transaction session id
+ * @property activeTransactionElapsedTimeSeconds active transaction elapsed time in seconds
+ * @constructor Create [PVSMetric] model
  */
 data class PVSDTO(
     @ColumnName("persistent_version_store_size_gb")
@@ -65,12 +65,12 @@ data class PVSDTO(
 )
 
 /**
- * P v s input
+ * Model class to hold input for Persistent Version Store Metric
  *
- * @property metricId
- * @property metricPeriod
- * @property databaseName
- * @constructor Create empty P v s input
+ * @property metricId id of Persistent Version Store metric
+ * @property metricPeriod metric period
+ * @property databaseName name of database
+ * @constructor Create Persistent Version Store input model
  */
 data class PVSInput(
     override val metricId: String = StorageEnums.PVS.getId(),
@@ -78,9 +78,9 @@ data class PVSInput(
 ) : MetricInput()
 
 /**
- * P v s result
+ * Model class to hold result of persistent version store metric
  *
- * @property queryList
- * @constructor Create empty P v s result
+ * @property queryList list of PVS and transaction statistics wrapped in [PVSDTO]
+ * @constructor Create Persistent Version Store result model
  */
 data class PVSResult(val queryList: List<PVSDTO>) : IMetricResult()

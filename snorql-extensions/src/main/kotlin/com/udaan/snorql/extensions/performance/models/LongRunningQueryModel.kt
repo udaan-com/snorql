@@ -26,7 +26,7 @@ import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 
 /**
- * Wrapper class to hold Long Running Query with metadata for Long Running Queries metric
+ * Model class to hold Long Running Query with metadata for Long Running Queries metric
  *
  * @property sessionId session id of the query
  * @property status current status of the query
@@ -49,7 +49,7 @@ import com.udaan.snorql.framework.models.MetricPeriod
  * @property lastRequestEndTime last request end time
  * @property loginTime login time
  * @property openTransactionCount number of transactions open by long running query
- * @constructor Create Long running query metric wrapper
+ * @constructor Create Long running query metric model
  */
 data class LongRunningQueryDTO(
     val sessionId: Int,
@@ -76,13 +76,13 @@ data class LongRunningQueryDTO(
 )
 
 /**
- * Wrapper class to hold Long running query metric input
+ * Model class to hold Long running query metric input
  *
  * @property metricId id of Long running query metric
  * @property metricPeriod metric period
  * @property databaseName database on which metric is used
  * @property elapsedTime filter queries whose time elapsed is greater than [elapsedTime]
- * @constructor Create empty running query metric input
+ * @constructor Create running query metric input model
  */
 data class LongRunningInput(
     override val metricId: String = PerformanceEnums.LONG_RUNNING_QUERIES.getId(),
@@ -91,12 +91,12 @@ data class LongRunningInput(
 ) : MetricInput()
 
 /**
- * Wrapper class for Long running queries metric result
+ * Model class for Long running queries metric result
  *
  * Result of long running queries metric is a list of Long Running Queries with metadata
  * which are wrapped using [LongRunningQueryDTO]
  *
  * @property queryList list of long running queries wrapped in [LongRunningQueryDTO]
- * @constructor Create empty Long running result
+ * @constructor Create Long running result metric model
  */
 data class LongRunningResult(val queryList: List<LongRunningQueryDTO>) : IMetricResult()

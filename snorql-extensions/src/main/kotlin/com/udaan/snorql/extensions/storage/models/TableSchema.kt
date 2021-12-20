@@ -25,19 +25,19 @@ import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 
 /**
- * Table schema d t o
+ * Model class to hold column Schema for [TableSchemaMetric]
  *
- * @property columnName
- * @property createdDate
- * @property isRowGuid
- * @property isIdentity
- * @property ordinalPosition
- * @property columnDefault
- * @property isNullable
- * @property dataType
- * @property characterMaximumLength
- * @property collationName
- * @constructor Create empty Table schema d t o
+ * @property columnName column name
+ * @property createdDate creation date
+ * @property isRowGuid is row guid flag
+ * @property isIdentity is identity flag
+ * @property ordinalPosition ordinal position
+ * @property columnDefault deafult value for column
+ * @property isNullable is nullable flag
+ * @property dataType data type of column
+ * @property characterMaximumLength maximum length of characters possible
+ * @property collationName name of collation
+ * @constructor Create column schema model
  */
 data class TableSchemaDTO (
     val columnName:String,
@@ -53,13 +53,13 @@ data class TableSchemaDTO (
 )
 
 /**
- * Table schema input
+ * Model class to hold input for [TableSchemaMetric]
  *
- * @property metricId
- * @property metricPeriod
- * @property databaseName
- * @property tableName
- * @constructor Create empty Table schema input
+ * @property metricId id of [TableSchemaMetric]
+ * @property metricPeriod period of metric
+ * @property databaseName name of database
+ * @property tableName name of table
+ * @constructor Create Table schema metric input model
  */
 data class TableSchemaInput(
     override val metricId: String = StorageEnums.TABLE_SCHEMA.getId(),
@@ -68,9 +68,9 @@ data class TableSchemaInput(
 ) : MetricInput()
 
 /**
- * Table schema result
+ * Model class to hold result of [TableSchemaMetric]
  *
- * @property queryList
- * @constructor Create empty Table schema result
+ * @property queryList list of column schemas wrapped in [TableSchemaDTO]
+ * @constructor Create Table schema metric result model
  */
 data class TableSchemaResult(val queryList: List<TableSchemaDTO>) : IMetricResult()

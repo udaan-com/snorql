@@ -26,18 +26,18 @@ import com.udaan.snorql.framework.models.MetricPeriod
 import org.jdbi.v3.core.mapper.reflect.ColumnName
 
 /**
- * Db table d t o
+ * Model class to hold table statistics for Database Table Model Metric
  *
- * @property tableName
- * @property schemaName
- * @property rows
- * @property totalSpaceKB
- * @property totalSpaceMB
- * @property usedSpaceKB
- * @property usedSpaceMB
- * @property unusedSpaceKB
- * @property unusedSpaceMB
- * @constructor Create empty Db table d t o
+ * @property tableName table name
+ * @property schemaName schema name
+ * @property rows number of rows
+ * @property totalSpaceKB total table space in KB
+ * @property totalSpaceMB total table space in MB
+ * @property usedSpaceKB used space in KB
+ * @property usedSpaceMB used space in MB
+ * @property unusedSpaceKB unused space in KB
+ * @property unusedSpaceMB unused space in MB
+ * @constructor Create Database Table Model metric model
  */
 data class DbTableDTO(
     @ColumnName("TableName")
@@ -68,12 +68,12 @@ data class DbTableDTO(
 )
 
 /**
- * Db table input
+ * Model class to hold input for Database Table Model metric
  *
- * @property metricId
- * @property metricPeriod
- * @property databaseName
- * @constructor Create empty Db table input
+ * @property metricId id of [DbTableMetric]
+ * @property metricPeriod period of metric
+ * @property databaseName name of database
+ * @constructor Create Database Table Model metric input model
  */
 data class DbTableInput(
     override val metricId: String = StorageEnums.DB_TABLES.getId(),
@@ -81,9 +81,9 @@ data class DbTableInput(
 ) : MetricInput()
 
 /**
- * Db table result
+ * Model class to hold result of database table model metric
  *
- * @property queryList
- * @constructor Create empty Db table result
+ * @property queryList list of database table model statistics wrapped in [DbTableDTO]
+ * @constructor Create database table model result model
  */
 data class DbTableResult(val queryList: List<DbTableDTO>) : IMetricResult()

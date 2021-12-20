@@ -52,7 +52,7 @@ data class ActiveDDLDTO(
 )
 
 /**
- * Wrapper class to hold input for Active DDL Queries metric
+ * Model class to hold input for Active DDL Queries metric
  *
  * @property metricId id of ActiveDDLMetric
  * @property metricPeriod
@@ -65,10 +65,10 @@ data class ActiveDDLInput(
 ) : MetricInput()
 
 /**
- * Wrapper class to hold the result of ActiveDDLMetric
+ * Model class to hold the result of ActiveDDLMetric
  *
- * <p>Result of active DDL queries metric is a list of Active DDL Queries with metadata
- * which is wrapped using [ActiveDDLResult]</p>
+ * Result of active DDL queries metric is a list of Active DDL Queries with metadata
+ * which is wrapped using [ActiveDDLResult]
  *
  * @property queryList List of active DDL queries wrapped in [ActiveDDLDTO]
  * @constructor Create ActiveDDLMetric Result

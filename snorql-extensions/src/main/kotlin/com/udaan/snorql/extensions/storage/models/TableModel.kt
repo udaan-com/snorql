@@ -26,15 +26,15 @@ import com.udaan.snorql.framework.models.MetricPeriod
 import org.jdbi.v3.core.mapper.reflect.ColumnName
 
 /**
- * Table d t o
+ * Model class to hold table statistics for [TableMetric]
  *
- * @property name
- * @property rows
- * @property reserved
- * @property data
- * @property indexSize
- * @property unused
- * @constructor Create empty Table d t o
+ * @property name table name
+ * @property rows number of rows
+ * @property reserved reserved space for table
+ * @property data space used by data in table
+ * @property indexSize size of index
+ * @property unused ununsed space in table
+ * @constructor Create table statistics metric model
  */
 data class TableDTO(
     val name: String,
@@ -47,13 +47,13 @@ data class TableDTO(
 )
 
 /**
- * Table input
+ * Model class to hold input for [TableMetric]
  *
- * @property metricId
- * @property metricPeriod
- * @property databaseName
- * @property tableName
- * @constructor Create empty Table input
+ * @property metricId id of [TableMetric]
+ * @property metricPeriod metric period
+ * @property databaseName name of database
+ * @property tableName name of table
+ * @constructor Create Table Metric input model
  */
 data class TableInput(
     override val metricId: String = StorageEnums.TABLE.getId(),
@@ -62,9 +62,9 @@ data class TableInput(
 ) : MetricInput()
 
 /**
- * Table result
+ * Model class to hold result of [TableMetric]
  *
- * @property queryList
- * @constructor Create empty Table result
+ * @property queryList list of table statistics wrapped in [TableDTO]
+ * @constructor Create table metric result model
  */
 data class TableResult(val queryList: List<TableDTO>) : IMetricResult()
