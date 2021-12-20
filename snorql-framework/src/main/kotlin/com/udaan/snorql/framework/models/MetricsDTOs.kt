@@ -39,16 +39,20 @@ abstract class MetricInput {
 /**
  * Metric configuration model class
  *
- * @property queries
- * @property supportsHistorical
- * @property supportsRealTime
- * @property isParameterized
+ * @property queries metric query string
+ * @property supportsHistorical supports historical metrics
+ * @property supportsRealTime supports real time metrics
+ * @property isParameterized has parameters flag
+ * @property referenceDoc link to metric documentation
+ * @property description metric description
  * @constructor Create Metric configuration object
  */
 data class MetricConfig(val queries: Map<String, String>,
                         val supportsHistorical: Boolean,
                         val supportsRealTime: Boolean,
-                        val isParameterized: Boolean)
+                        val isParameterized: Boolean,
+                        val referenceDoc: String,
+                        val description: String)
 
 /**
  * Metric output model class
