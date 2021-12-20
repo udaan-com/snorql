@@ -25,7 +25,7 @@ import java.sql.Timestamp
 /**
  * Abstract class to define the desired metric input
  *
- * @constructor Create Metric input object
+ * @constructor Create empty Metric input
  */
 abstract class MetricInput {
     abstract val metricId: String
@@ -37,13 +37,13 @@ abstract class MetricInput {
 }
 
 /**
- * Metric configuration model class
+ * Metric config
  *
  * @property queries
  * @property supportsHistorical
  * @property supportsRealTime
  * @property isParameterized
- * @constructor Create Metric configuration object
+ * @constructor Create empty Metric config
  */
 data class MetricConfig(val queries: Map<String, String>,
                         val supportsHistorical: Boolean,
@@ -51,13 +51,13 @@ data class MetricConfig(val queries: Map<String, String>,
                         val isParameterized: Boolean)
 
 /**
- * Metric output model class
+ * Metric output
  *
- * @param T metric result model class
- * @param V metric recommendation model class
- * @property result metric result
- * @property recommendation metric recommendation
- * @constructor Create Metric output object
+ * @param T
+ * @param V
+ * @property result
+ * @property recommendation
+ * @constructor Create empty Metric output
  */
 data class MetricOutput<T : IMetricResult, V : IMetricRecommendation>(val result: T,
                                                                       val recommendation: V?)
@@ -65,11 +65,11 @@ data class MetricOutput<T : IMetricResult, V : IMetricRecommendation>(val result
 /**
  * Data class to hold the metric response
  * MetricResponse holds the following:
- *
- * 1. MetricInput
- * 2. MetricOutput
- * 3. Metadata
- *
+ * <ul>
+ * <li>MetricInput</li>
+ * <li>MetricOutput</li>
+ * <li>Metadata</li>
+ * <ul>
  *
  * @param T                 The wrapper DTO class for metric result
  * @param V                 The wrapper DTO class for metric recommendation
@@ -93,11 +93,15 @@ data class MetricResponse<T : IMetricResult, V : IMetricRecommendation>(
 )
 
 /**
- * Abstract Metric Result Class
+ * I metric result
+ *
+ * @constructor Create empty I metric result
  */
 abstract class IMetricResult
 
 /**
- * Abstract metric recommendation class
+ * I metric recommendation
+ *
+ * @constructor Create empty I metric recommendation
  */
 abstract class IMetricRecommendation

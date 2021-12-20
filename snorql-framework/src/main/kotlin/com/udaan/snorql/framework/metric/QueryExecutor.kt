@@ -20,20 +20,20 @@
 package com.udaan.snorql.framework.metric
 
 /**
- * Query Executor class responsible for interacting with [Connection] interface child class
+ * Query executor
  *
- * @property connection instance of user's database connection
- * @constructor Create Query executor instance
+ * @property connection
+ * @constructor Create empty Query executor
  */
 class QueryExecutor(val connection: Connection) {
     /**
      * Execute the query using the connection instance
      *
-     * @param T [query] result row's model class
-     * @param databaseName name of database to query
-     * @param query actual query string
-     * @param params parameters to be sent along with the [query]
-     * @return Query result. Returned as list of individual rows`
+     * @param T
+     * @param databaseName
+     * @param query
+     * @param params
+     * @return
      */
     inline fun <reified T> execute(databaseName:String, query: String,
                                    params: Map<String, *> = mapOf<String, Any>()): List<T> {
@@ -41,12 +41,12 @@ class QueryExecutor(val connection: Connection) {
     }
 
     /**
-     * Persist data in database
+     * Persist data to enable historical data in snorql
      *
-     * @param databaseName name of database to store data in
-     * @param tableName name to table to store data in
-     * @param columns columns to be stored
-     * @param rows actual data to be stored
+     * @param databaseName
+     * @param tableName
+     * @param columns
+     * @param rows
      */
     fun persistData(databaseName:String, tableName: String,
                     columns: List<String>,
