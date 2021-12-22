@@ -1,35 +1,34 @@
 package com.udaan.snorql.framework.job
 
-import com.udaan.snorql.framework.SQLMonitoringException
-import com.udaan.snorql.framework.job.model.ActualMetricInput
-import com.udaan.snorql.framework.job.model.TriggerConfig
-import com.udaan.snorql.framework.metric.IMetric
-import com.udaan.snorql.framework.metric.SqlMetricManager
+import com.udaan.snorql.framework.job.model.JobTriggerConfig
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
-import org.quartz.*
+import org.quartz.JobBuilder
+import org.quartz.JobDataMap
+import org.quartz.JobDetail
+import org.quartz.Scheduler
+import org.quartz.SimpleScheduleBuilder
+import org.quartz.SimpleTrigger
+import org.quartz.TriggerBuilder
+import org.quartz.TriggerKey
 import org.quartz.impl.StdSchedulerFactory
 import org.quartz.impl.matchers.GroupMatcher
-import java.lang.Exception
 import java.sql.Timestamp
 import java.util.*
 
 class JobManager(
-    private val schedFact: StdSchedulerFactory = StdSchedulerFactory(),
-    val sched: Scheduler = schedFact.scheduler,
-) {
+        private val schedulerFactory: StdSchedulerFactory = StdSchedulerFactory(),
+        private val scheduler: Scheduler = schedulerFactory.scheduler,
+                ) {
 
 //    private val queryExecutor = SqlMetricManager.queryExecutor
 
-    private val job: JobDetail = JobBuilder.newJob(SimpleJob::class.java)
-        .withIdentity("watcherJob", "monitoring")
-        .storeDurably()
-        .build()
+
 
     fun startScheduler(): Boolean {
         return try {
-            sched.start()
+            scheduler.start()
             true
         } catch (e: Exception) {
             print("Scheduler start failed due to $e")
@@ -38,15 +37,13 @@ class JobManager(
     }
 
     /**
-     * [addDataRecording] does the following:
+     * [addJob] does the following:
      * 1. Configures a trigger with record data job and gets the trigger id
      * 2. If successful, Saves the following in the database: triggerId, metricId, databaseName, metricInput
      * 3. Returns true if successful
      */
-    fun <T : MetricInput, O : IMetricResult, V : IMetricRecommendation> addDataRecording(
-        jobConfig: TriggerConfig,
-        metricInput: T,
-    ): Boolean {
+    fun <T : MetricInput, O : IMetricResult, V : IMetricRecommendation> addJob(jobConfig: JobTriggerConfig,
+            metricInput: T): Boolean {
         return try {
             // Transaction Start
             val triggerName: String = UUID.randomUUID().toString()
@@ -54,7 +51,11 @@ class JobManager(
             val startFrom = jobConfig.startFrom
             val endAt = jobConfig.endAt
             val configSuccess: Boolean =
-                configureTrigger<T, O, V>(triggerName, metricInput, intervalInSeconds, startFrom, endAt)
+                configureTrigger<T, O, V>(triggerName,
+                        metricInput,
+                        intervalInSeconds,
+                        startFrom,
+                        endAt)
             val recordSaveSuccess: Boolean = true
 //                queryExecutor.persistJobConfigData(metricInput.metricId, metricInput.databaseName, triggerName)
             if (configSuccess or recordSaveSuccess) {
@@ -73,50 +74,56 @@ class JobManager(
     }
 
     private fun <T : MetricInput, O : IMetricResult, V : IMetricRecommendation> configureTrigger(
-        triggerName: String,
-        metricInput: T,
-        intervalInSeconds: Int,
-        startFrom: Timestamp?,
-        endAt: Timestamp?,
-    ): Boolean {
+            triggerName: String,
+            metricInput: T,
+            intervalInSeconds: Int,
+            startFrom: Timestamp?,
+            endAt: Timestamp?,
+                                                                                                ): Boolean {
         var metricResult: O? = null
         var metricRecommendation: V? = null
         val jobDataMap = JobDataMap()
-        jobDataMap.put("metricInputObject", metricInput)
-        jobDataMap.put("metricResultObject", metricResult)
-        jobDataMap.put("metricRecommendationObject", metricRecommendation)
-        val trigger: SimpleTrigger = TriggerBuilder.newTrigger()
-            .withIdentity(triggerName, "monitoring")
-            .startAt(startFrom)
-            .usingJobData(jobDataMap)
-            // .usingJobData("metricInput", metricInput.toJsonString()) // Converting metricInput to JSONString
-            .withSchedule(SimpleScheduleBuilder
-                .simpleSchedule()
-                .withIntervalInSeconds(intervalInSeconds))
-            .endAt(endAt)
-            .build()
+        jobDataMap["metricInputObject"] = metricInput
+        jobDataMap["metricResultObject"] = metricResult
+        jobDataMap["metricRecommendationObject"] = metricRecommendation
+        val trigger: SimpleTrigger =
+            TriggerBuilder.newTrigger()
+                    .withIdentity(triggerName, "monitoring")
+                    .startAt(startFrom)
+                    .usingJobData(jobDataMap)
+                    // .usingJobData("metricInput", metricInput.toJsonString()) // Converting metricInput to JSONString
+                    .withSchedule(SimpleScheduleBuilder.simpleSchedule()
+                            .withIntervalInSeconds(intervalInSeconds))
+                    .endAt(endAt)
+                    .build()
+
+        val job= JobBuilder.newJob(SimpleJob<T,O,V>().javaClass)
+                .withIdentity("watcherJob", "monitoring")
+                .storeDurably()
+                .build()
         return triggerJob(job, trigger)
     }
 
     fun getAllTriggers(jobId: String = "watcherJob") {
-        val allTriggerKeys = sched.getTriggerKeys(GroupMatcher.anyGroup())
+        val allTriggerKeys = scheduler.getTriggerKeys(GroupMatcher.anyGroup())
         allTriggerKeys.forEach { triggerKey ->
             run {
-                println(sched.getTrigger(triggerKey))
+                println(scheduler.getTrigger(triggerKey))
                 println("Trigger Data Map: Metric Input - ${
-                    sched.getTrigger(triggerKey)
-                        .jobDataMap["metricInputObject"]
+                    scheduler.getTrigger(triggerKey).jobDataMap["metricInputObject"]
                 }")
             }
         }
         print("All triggers printed")
     }
 
-    fun removeDataRecording(metricId: String, databaseName: String, triggerName: String): Boolean {
+    fun removeDataRecording(metricId: String,
+            databaseName: String,
+            triggerName: String): Boolean {
         return try {
             // Transaction start
 //            queryExecutor.removeFromDatabase(metricId, databaseName, triggerName)
-            sched.unscheduleJob(TriggerKey(triggerName, "monitoring"))
+            scheduler.unscheduleJob(TriggerKey(triggerName, "monitoring"))
             // Transaction Commit
             true
         } catch (e: Exception) {
@@ -126,9 +133,10 @@ class JobManager(
         }
     }
 
-    private fun triggerJob(job: JobDetail, trigger: SimpleTrigger): Boolean {
+    private fun triggerJob(job: JobDetail,
+            trigger: SimpleTrigger): Boolean {
         return try {
-            sched.scheduleJob(job, trigger)
+            scheduler.scheduleJob(job, trigger)
             true
         } catch (e: Exception) {
             print("Job Scheduling failed due to $e")

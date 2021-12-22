@@ -8,7 +8,7 @@ import org.quartz.Job
 import org.quartz.JobDataMap
 import org.quartz.JobExecutionContext
 
-class SimpleJob :  Job {
+class SimpleJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation> :  Job {
     /**
      * (Deprecated) This function does the following:
      * 1. Gets the trigger name which triggered the job using <code>context.trigger.key.name</code>
@@ -34,12 +34,14 @@ class SimpleJob :  Job {
         // Get metric Input
         val metricInput = dataMap["metricInput"]
 
-        val metricInputObject: MetricInput = dataMap["metricInputObject"] as MetricInput
+
+
+        val metricInputObject: T = dataMap["metricInputObject"] as T
 
 
         // Once Metric Input is available, getMetricResponse/Result
         // We need to set up metric factories which can give us metric classes
-//        val metricResponse = SqlMetricManager.getMetric<>
+        val metricResponse = SqlMetricManager.getMetric<T,O,R>(metricInputObject.metricId,metricInputObject)
 
         // Once we have the response, persist data
         // val queryExecutor = SqlMetricManager.queryExecutor
