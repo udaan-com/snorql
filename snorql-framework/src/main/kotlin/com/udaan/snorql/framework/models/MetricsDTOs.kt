@@ -35,7 +35,7 @@ data class MetricConfig(val queries: Map<String, String>,
         val supportsHistorical: Boolean,
         val supportsRealTime: Boolean,
         val isParameterized: Boolean,
-        val referenceDoc: String,
+        val referenceDoc: List<String>,
         val description: String)
 
 data class MetricOutput<T : IMetricResult, V : IMetricRecommendation>(val result: T,
