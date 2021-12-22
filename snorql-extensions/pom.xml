@@ -73,6 +73,10 @@
             <artifactId>snorql-framework</artifactId>
             <version>${versions.snorql-framework}</version>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <testResources>
