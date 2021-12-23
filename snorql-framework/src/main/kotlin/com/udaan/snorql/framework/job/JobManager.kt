@@ -1,6 +1,12 @@
 package com.udaan.snorql.framework.job
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.google.gson.Gson
 import com.udaan.snorql.framework.job.model.JobTriggerConfig
+import com.udaan.snorql.framework.job.model.QuartzProperties
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
@@ -11,13 +17,19 @@ import java.sql.Timestamp
 import java.util.*
 
 class JobManager(
-    private val schedulerFactory: StdSchedulerFactory = StdSchedulerFactory(),
+    private val schedulerFactory: StdSchedulerFactory = StdSchedulerFactory(QuartzProperties.prop),
     private val scheduler: Scheduler = schedulerFactory.scheduler,
 ) {
     companion object {
         private const val MONITORING_GROUP_NAME = "monitoring"
+        private val gson: Gson = Gson()
     }
 
+    private val objectMapper: ObjectMapper
+        get() {
+            return jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+                false).registerKotlinModule()
+        }
 
     fun startScheduler(): Boolean {
         return try {
@@ -62,7 +74,7 @@ class JobManager(
     ): Boolean {
         val jobName: String = metricInput.metricId // jobName = metricId (Therefore, for each metric, there is a job
         val jobDataMap = JobDataMap()
-        jobDataMap["metricInput"] = metricInput
+        jobDataMap["metricInput"] = objectMapper.writeValueAsString(metricInput) // gson.toJson(metricInput).toString() // Use Jackson
         val jobKey = JobKey(jobName, MONITORING_GROUP_NAME)
         return if (!scheduler.checkExists(jobKey)) {
             println("Job does not exist. Configuring a job with job key $jobKey")
