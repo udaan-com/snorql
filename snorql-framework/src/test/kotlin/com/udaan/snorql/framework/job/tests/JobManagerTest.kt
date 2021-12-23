@@ -1,11 +1,7 @@
 package com.udaan.snorql.framework.job.tests
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import com.udaan.snorql.framework.job.JobManager
 import com.udaan.snorql.framework.job.model.*
-import com.udaan.snorql.framework.metric.QueryExecutor
-import org.mockito.Matchers.*
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import org.junit.jupiter.api.Test
@@ -15,10 +11,11 @@ import java.time.ZoneId
 
 class JobManagerTests {
 
+    private val jobManager = JobManager()
+
     @Test
     fun jobSchedulingTest() {
         SqlMetricManager.addMetric("performance_activeQueries", ActiveQueriesMetric())
-        val jobManager = JobManager()
         jobManager.startScheduler()
         val triggerConfig1 = JobTriggerConfig(
             watchIntervalInSeconds = 1,
@@ -55,7 +52,7 @@ class JobManagerTests {
         jobManager.addJob<ActualMetricInput, ActualMetricOutput, IMetricRecommendation>(triggerConfig2,
             metricInput1)
         println("Printing the triggers configured...")
-        jobManager.getAllMonitoringJobsAndTriggers().forEach {
+        jobManager.getAllMonitoringTriggers().forEach {
             println(it)
         }
         while (true) {
@@ -64,4 +61,10 @@ class JobManagerTests {
 //        jobManager.triggerJob()
 //        jobManager.triggerJob()
     }
+
+//    @Test // Used to remove all the triggers
+//    fun removeAllTriggers() {
+//        jobManager.startScheduler()
+//        jobManager.removeAllTriggers()
+//    }
 }

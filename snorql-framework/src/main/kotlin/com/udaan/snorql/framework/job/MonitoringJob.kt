@@ -4,23 +4,18 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.google.gson.Gson
 import com.udaan.snorql.framework.job.model.HistoricalDatabaseSchemaDTO
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
+import com.udaan.snorql.framework.models.SnorqlConstants
 import org.quartz.Job
 import org.quartz.JobExecutionContext
 import java.lang.Exception
 import java.util.*
 
-class SimpleJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation> : Job {
-    private val objectMapper: ObjectMapper
-        get() {
-            return jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-                false).registerKotlinModule()
-        }
+class MonitoringJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation> : Job {
 
     /**
      * (Deprecated) This function does the following:
@@ -46,11 +41,11 @@ class SimpleJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation
             print("Quartz Job execution started!!")
             val runID: String = UUID.randomUUID().toString() // Generate a random monitoring run id
             val mergedDataMap = context.mergedJobDataMap
-            println(" - Trigger Key: ${context.trigger.key}")
-            val metricInput: T =
-                objectMapper.readValue(mergedDataMap["metricInput"] as String)
+//            println(" - Trigger Key: ${context.trigger.key}")
+//            val metricInput: T =
+//                objectMapper.readValue(mergedDataMap["metricInput"] as String)
 //            val metricInput: T = gson.fromJson(mergedDataMap["metricInput"] as String, MetricInput::class.java) as T
-//            val metricInput: T = mergedDataMap["metricInput"] as T
+            val metricInput: T = mergedDataMap["metricInput"] as T
             val metricResponse = SqlMetricManager.getMetric<T, O, R>(metricInput.metricId, metricInput)
             val metricOutput = metricResponse.metricOutput
 
@@ -58,18 +53,16 @@ class SimpleJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation
                 runId = runID,
                 metricId = metricInput.metricId,
                 databaseName = metricInput.databaseName,
-                source = "MONITORING_JOB",
+                source = SnorqlConstants.MONITORING_GROUP_NAME,
                 metricInput = metricInput,
                 metricOutput = metricOutput
             )
-            val storageId = "HISTORICAL_DATA_BUCKET_ID"
-//            SqlMetricManager.queryExecutor.persistHistoricalData(storageId, listOf(dataRecorded))
+            val storageId = SnorqlConstants.HISTORICAL_DATA_BUCKET_ID
+            SqlMetricManager.queryExecutor.persistHistoricalData(storageId, listOf(dataRecorded))
             println("Following data was recorded: $dataRecorded")
             println("Quartz Job execution complete!!")
         } catch (e: Exception) {
             println("There was an exception while recording data: $e")
         }
-
-
     }
 }

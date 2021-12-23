@@ -35,9 +35,11 @@ interface Connection {
      * @param params parameters for metric
      * @return
      */
-    fun <T> run(databaseName:String, query: String,
-                mapClass: Class<T>,
-                params: Map<String, *> = emptyMap<String, String>()): List<T>
+    fun <T> run(
+        databaseName: String, query: String,
+        mapClass: Class<T>,
+        params: Map<String, *> = emptyMap<String, String>(),
+    ): List<T>
 
     /**
      * Store data
@@ -47,7 +49,9 @@ interface Connection {
      * @param columns
      * @param rows
      */
-    fun storeData(databaseName:String, tableName: String,
-                  columns: List<String>,
-                  rows: List<List<Any>>)
+    fun storeData(
+        storageBucketId: String,
+        columns: List<String>,
+        rows: List<List<Any>>,
+    )
 }

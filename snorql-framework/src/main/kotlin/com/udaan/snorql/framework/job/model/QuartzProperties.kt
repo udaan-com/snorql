@@ -4,6 +4,7 @@ import java.util.*
 
 object QuartzProperties {
     val prop = Properties()
+
     init {
         //RMI configuration to make the client to connect to the Quartz server
         prop["org.quartz.scheduler.rmi.export"] = "true"
@@ -20,6 +21,7 @@ object QuartzProperties {
         prop["org.quartz.scheduler.jobFactory.class"] = "org.quartz.simpl.SimpleJobFactory"
         prop["org.quartz.jobStore.class"] = "org.quartz.impl.jdbcjobstore.JobStoreTX"
         prop["org.quartz.jobStore.driverDelegateClass"] = "org.quartz.impl.jdbcjobstore.StdJDBCDelegate"
+//        prop["org.quartz.jobStore.driverDelegateClass"] = "org.quartz.impl.jdbcjobstore.MSSQLDelegate"
         prop["org.quartz.jobStore.dataSource"] = "quartzDataSource"
         prop["org.quartz.jobStore.tablePrefix"] = "QRTZ_"
         prop["org.quartz.jobStore.isClustered"] = "false"
@@ -32,5 +34,12 @@ object QuartzProperties {
         prop["org.quartz.dataSource.quartzDataSource.user"] = "root"
         prop["org.quartz.dataSource.quartzDataSource.password"] = "mysql@0000"
         prop["org.quartz.dataSource.quartzDataSource.maxConnections"] = "2"
+//        prop["org.quartz.dataSource.quartzDataSource.driver"] = "com.mysql.jdbc.Driver"
+//        prop["org.quartz.dataSource.quartzDataSource.driver"] = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+//        prop["org.quartz.dataSource.quartzDataSource.URL"] = // "jdbc:sqlserver://uddevsql.database.windows.net:1433;database=db-test;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;Authentication=ActiveDirectoryIntegrated"
+//             "jdbc:sqlserver:uddevsql.database.windows.net:1433;database=db-test;"
+//        prop["org.quartz.dataSource.quartzDataSource.user"] = "udaan@uddevsql" // System.getenv("DB_USER").trim()
+//        prop["org.quartz.dataSource.quartzDataSource.password"] = "Dev@rjun1" // System.getenv("DB_PASSWORD").trim()
+//        prop["org.quartz.dataSource.quartzDataSource.maxConnections"] = "2"
     }
 }

@@ -22,6 +22,7 @@ package com.udaan.snorql.framework.metric
 import com.udaan.snorql.framework.job.model.HistoricalDatabaseSchemaDTO
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.IMetricResult
+import com.udaan.snorql.framework.models.SnorqlConstants
 
 /**
  * Query executor
@@ -55,21 +56,29 @@ class QueryExecutor(val connection: Connection) {
      * @param rows
      */
     fun persistData(
-        databaseName: String, tableName: String,
+        storageBucketId: String,
         columns: List<String>,
         rows: List<List<Any>>,
     ) {
-        connection.storeData(databaseName, tableName, columns, rows)
+        connection.storeData(storageBucketId, columns, rows)
     }
 
     fun persistHistoricalData(
         storageId: String,
         historicalDataList: List<HistoricalDatabaseSchemaDTO>,
     ) {
-        println("Following data has been persisted in $storageId")
+        val columns = SnorqlConstants.historicalDataTableColumns
+        val rows = mutableListOf<List<String>>()
         historicalDataList.forEach {
-            println(it)
+            val row = mutableListOf<String>()
+            row.add(it.runId)
+            row.add(it.metricId)
+            row.add(it.databaseName)
+            row.add(SnorqlConstants.objectMapper.writeValueAsString(it.metricInput))
+            row.add(SnorqlConstants.objectMapper.writeValueAsString(it.metricOutput))
+            rows.add(row)
         }
+        connection.storeData(storageId, columns, rows.toList())
     }
 
     fun persistJobConfigData(metricId: String, databaseName: String, triggerName: String): Boolean {

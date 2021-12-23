@@ -38,11 +38,8 @@ object SqlMetricManager {
 
     val logger by logger()
 
-    private val objectMapper: ObjectMapper
-        get() {
-            return jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-                    false).registerKotlinModule()
-        }
+    private val objectMapper: ObjectMapper = SnorqlConstants.objectMapper
+
     val configuration: Configuration by lazy {
         val file = SqlMetricManager::class.java.getResource(CONFIG_FILE_LOCATION).readText()
         if (file.isNotEmpty()) {
