@@ -1,19 +1,17 @@
 package com.udaan.snorql.extensions.accesscontrol.metrics
 
-import com.udaan.snorql.extensions.performance.models.LongRunningInput
 import com.udaan.snorql.extensions.storage.metrics.DbMetric
 import com.udaan.snorql.extensions.storage.models.DbDTO
 import com.udaan.snorql.extensions.storage.models.DbInput
 import com.udaan.snorql.extensions.storage.models.DbResult
 import com.udaan.snorql.extensions.storage.models.DbStorageSize
 import com.udaan.snorql.framework.SQLMonitoringConfigException
+import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricOutput
 import com.udaan.snorql.framework.models.MetricPeriod
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.ExpectedException
 import java.lang.Exception
 import kotlin.test.assertEquals
 import kotlin.test.fail
@@ -32,35 +30,35 @@ class DbMetricTest {
             databaseName = "randomDatabaseName", dbName = "randomDBName").metricId).queries["dbSize"]
 
     // Metric configs
-    private val metricConfig1 =
+    private val metricConfigWithMainAndDbSizeQueries =
         MetricConfig(queries = mapOf("main" to "dbMetricMainQuery", "dbSize" to "dbSizeQueryString"),
             description = "randomDescription",
             isParameterized = true,
             referenceDoc = "",
             supportsHistorical = true,
             supportsRealTime = true)
-    private val metricConfig2 =
+    private val metricConfigWithoutMainQuery =
         MetricConfig(queries = mapOf("notMain" to "dbMetricMainQuery", "dbSize" to "dbSizeQueryString"),
             description = "randomDescription",
             isParameterized = true,
             referenceDoc = "",
             supportsHistorical = true,
             supportsRealTime = true)
-    private val metricConfig3 =
+    private val metricConfigWithoutDbSizeQuery =
         MetricConfig(queries = mapOf("main" to "dbMetricMainQuery", "notDbSize" to "dbSizeQueryString"),
             description = "randomDescription",
             isParameterized = true,
             referenceDoc = "",
             supportsHistorical = true,
             supportsRealTime = true)
-    private val metricConfig4 =
+    private val metricConfigWithoutMainAndDbSizeQueries =
         MetricConfig(queries = mapOf("notMain" to "dbMetricMainQuery", "notDbSize" to "dbSizeQueryString"),
             description = "randomDescription",
             isParameterized = true,
             referenceDoc = "",
             supportsHistorical = true,
             supportsRealTime = true)
-    private val metricConfig5 =
+    private val metricConfigWithoutQueries =
         MetricConfig(queries = mapOf(),
             description = "randomDescription",
             isParameterized = true,
@@ -102,27 +100,32 @@ class DbMetricTest {
         unused = "6MB")
 
     // DB Metric Inputs
-    private val dbMetricInput1 =
+    private val dbMetricInputHistorical =
         DbInput(metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName1", dbName = "randomDbName1")
-    private val dbMetricInput2 =
+    private val dbMetricInputRealTime =
         DbInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName1", dbName = "randomDbName1")
-    private val dbMetricInput3 = DbInput(metricId = "randomIncorrectMetricId", // Incorrect metric ID
-        metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName1", dbName = "randomDbName1")
-    private val dbMetricInput4 = DbInput(metricId = "", // Empty String metric ID
+    private val dbMetricInputWithIncorrectMetricId =
+        DbInput(metricId = "randomIncorrectMetricId", // Incorrect metric ID
+            metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName1", dbName = "randomDbName1")
+    private val dbMetricInputWithEmptyMetricId = DbInput(metricId = "", // Empty String metric ID
         metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName1", dbName = "randomDbName1")
 
     // DB Metric Result
-    private val dbMetricResult1 = DbResult(listOf(dbStorageMetric1, dbStorageMetric2))
-    private val dbMetricResult2 = DbResult(listOf(dbStorageMetric1))
-    private val dbMetricResult3 = DbResult(listOf()) // empty result
+    private val dbMetricResultMultipleResults = DbResult(listOf(dbStorageMetric1, dbStorageMetric2))
+    private val dbMetricResultSingleResult = DbResult(listOf(dbStorageMetric1))
+    private val dbMetricResultEmptyResult = DbResult(listOf()) // empty result
 
     // DB Metric Output
-    private val metricOutput1 = MetricOutput<DbResult, IMetricRecommendation>(dbMetricResult1, null)
-    private val metricOutput2 = MetricOutput<DbResult, IMetricRecommendation>(dbMetricResult2, null)
-    private val metricOutput3 = MetricOutput<DbResult, IMetricRecommendation>(dbMetricResult3, null)
+    private val metricOutputMultipleResults =
+        MetricOutput<DbResult, IMetricRecommendation>(dbMetricResultMultipleResults, null)
+    private val metricOutputSingleResult =
+        MetricOutput<DbResult, IMetricRecommendation>(dbMetricResultSingleResult, null)
+    private val metricOutputEmptyResult = MetricOutput<DbResult, IMetricRecommendation>(dbMetricResultEmptyResult, null)
 
-//    @Rule
-//    public val expectedExceptionRule: ExpectedException = ExpectedException.none()
+    @Test
+    fun testGetMetricResult() {
+        val mockSqlMetricManager: SqlMetricManager = mock(SqlMetricManager::class.java)
+    }
 
     @Test
     fun testGetMetricResponseMetadata() {
@@ -132,24 +135,26 @@ class DbMetricTest {
             "description" to "Displaying updated space information about a database"
         )
         assertEquals(expected = expectedOutput1,
-            dbMetric.getMetricResponseMetadata(dbMetricInput1, metricOutput1))
+            dbMetric.getMetricResponseMetadata(dbMetricInputHistorical, metricOutputMultipleResults))
         assertEquals(expected = expectedOutput1,
-            dbMetric.getMetricResponseMetadata(dbMetricInput1, metricOutput2))
+            dbMetric.getMetricResponseMetadata(dbMetricInputHistorical, metricOutputSingleResult))
         assertEquals(expected = expectedOutput1,
-            dbMetric.getMetricResponseMetadata(dbMetricInput1, metricOutput3))
+            dbMetric.getMetricResponseMetadata(dbMetricInputHistorical, metricOutputEmptyResult))
         assertEquals(expected = expectedOutput1,
-            dbMetric.getMetricResponseMetadata(dbMetricInput2, metricOutput1))
+            dbMetric.getMetricResponseMetadata(dbMetricInputRealTime, metricOutputMultipleResults))
         assertEquals(expected = expectedOutput1,
-            dbMetric.getMetricResponseMetadata(dbMetricInput2, metricOutput2))
+            dbMetric.getMetricResponseMetadata(dbMetricInputRealTime, metricOutputSingleResult))
         assertEquals(expected = expectedOutput1,
-            dbMetric.getMetricResponseMetadata(dbMetricInput2, metricOutput3))
+            dbMetric.getMetricResponseMetadata(dbMetricInputRealTime, metricOutputEmptyResult))
     }
 
     @Test
     fun testSQLMonitoringConfigException() {
-        val metricInputList = listOf<DbInput>(dbMetricInput3, dbMetricInput4)
+        val metricInputList = listOf<DbInput>(dbMetricInputWithIncorrectMetricId, dbMetricInputWithEmptyMetricId)
         val metricConfigList =
-            listOf<MetricConfig>(metricConfig2, metricConfig4, metricConfig5)
+            listOf(metricConfigWithoutMainQuery,
+                metricConfigWithoutMainAndDbSizeQueries,
+                metricConfigWithoutQueries)
         for (metricInput in metricInputList) {
             for (metricConfig in metricConfigList) {
                 try {
@@ -158,6 +163,20 @@ class DbMetricTest {
                     continue
                 } catch (e: Exception) {
                     fail("Test failing with Exception: $e\nMetric Input: $metricInput\nMetric Config: $metricConfig")
+                }
+            }
+        }
+        val metricOutputList = listOf(metricOutputMultipleResults,
+            metricOutputSingleResult,
+            metricOutputEmptyResult)
+        for (metricInput in metricInputList) {
+            for (metricOutput in metricOutputList) {
+                try {
+                    dbMetric.getMetricResponseMetadata(metricInput = metricInput, metricOutput = metricOutput)
+                } catch (e: SQLMonitoringConfigException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Test failing with Exception: $e\nMetric Input: $metricInput\nMetric Config: $metricOutput")
                 }
             }
         }
