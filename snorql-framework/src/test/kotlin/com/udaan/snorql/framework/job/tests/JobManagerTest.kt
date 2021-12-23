@@ -1,5 +1,7 @@
 package com.udaan.snorql.framework.job.tests
 
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import com.udaan.snorql.framework.job.JobManager
 import com.udaan.snorql.framework.job.model.*
 import com.udaan.snorql.framework.metric.QueryExecutor
@@ -7,7 +9,6 @@ import org.mockito.Matchers.*
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
 import java.sql.Timestamp
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -42,7 +43,9 @@ class JobManagerTests {
             databaseName = "uddevsql/db-test"
         )
 //        val mockQueryExecutor = Mockito.mock(QueryExecutor::class.java)
-//        Mockito.`when`(mockQueryExecutor.persistHistoricalData(anyString(), any())).thenAnswer{
+//        val mockQueryExecutor: QueryExecutor = mock()
+//        val mockManager: SqlMetricManager = mock()
+//        whenever(mockManager.queryExecutor.persistHistoricalData(anyString(), any())).thenAnswer {
 //            println("Following data has been saved in storageBucketId ${it.arguments[0]}\n${it.arguments[1]}")
 //        }
         jobManager.addJob<ActualMetricInput, ActualMetricOutput, IMetricRecommendation>(triggerConfig1,
