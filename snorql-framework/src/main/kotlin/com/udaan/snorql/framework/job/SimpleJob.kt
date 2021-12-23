@@ -3,8 +3,9 @@ package com.udaan.snorql.framework.job
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.google.gson.Gson
+import com.google.common.reflect.TypeToken
 import com.udaan.snorql.framework.job.model.HistoricalDatabaseSchemaDTO
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
@@ -21,6 +22,7 @@ class SimpleJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation
             return jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
                 false).registerKotlinModule()
         }
+
 
     /**
      * (Deprecated) This function does the following:
@@ -48,7 +50,7 @@ class SimpleJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation
             val mergedDataMap = context.mergedJobDataMap
             println(" - Trigger Key: ${context.trigger.key}")
             val metricInput: T =
-                objectMapper.readValue(mergedDataMap["metricInput"] as String)
+                objectMapper.readValue(mergedDataMap["metricInput"] as String, Class.forName(mergedDataMap["inputClass"] as String)) as T
 //            val metricInput: T = gson.fromJson(mergedDataMap["metricInput"] as String, MetricInput::class.java) as T
 //            val metricInput: T = mergedDataMap["metricInput"] as T
             val metricResponse = SqlMetricManager.getMetric<T, O, R>(metricInput.metricId, metricInput)
