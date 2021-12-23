@@ -1,9 +1,6 @@
 package com.udaan.snorql.framework.job.model
 
-import com.mchange.v2.c3p0.impl.C3P0Defaults.extensions
-import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.IMetric
-import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricConfig
@@ -17,7 +14,7 @@ data class JobTriggerConfig(
     val watchIntervalInSeconds: Int,
     val startFrom: Timestamp? = null,
     val endAt: Timestamp? = null,
-                           )
+)
 
 data class ActualMetricInput(
     override val metricId: String,
@@ -66,9 +63,9 @@ data class ActualMetricOutput(val queryList: List<ActualQueryDTO>) : IMetricResu
 class ActiveQueriesMetric : IMetric<ActualMetricInput, ActualMetricOutput, IMetricRecommendation> {
 
     override fun getMetricResult(
-            metricInput: ActualMetricInput,
-            metricConfig: MetricConfig
-                                ): ActualMetricOutput {
+        metricInput: ActualMetricInput,
+        metricConfig: MetricConfig,
+    ): ActualMetricOutput {
         // check the metricConfig.supportedHistory before getting the query
 //        val query =
 //            metricConfig.queries["main"]
@@ -80,9 +77,9 @@ class ActiveQueriesMetric : IMetric<ActualMetricInput, ActualMetricOutput, IMetr
     }
 
     override fun getMetricResponseMetadata(
-            metricInput: ActualMetricInput,
-            metricOutput: MetricOutput<ActualMetricOutput, IMetricRecommendation>
-                                          ): Map<String, Any>? {
+        metricInput: ActualMetricInput,
+        metricOutput: MetricOutput<ActualMetricOutput, IMetricRecommendation>,
+    ): Map<String, Any>? {
 //        val responseMetadata = mutableMapOf<String, Any>()
 //        val query =
 //            getMetricConfig(metricInput.metricId).queries["main"]
@@ -96,27 +93,36 @@ class ActiveQueriesMetric : IMetric<ActualMetricInput, ActualMetricOutput, IMetr
     }
 }
 
+data class HistoricalDatabaseSchemaDTO(
+    val runId: String,
+    val metricId: String,
+    val databaseName: String,
+    val source: String,
+    val metricInput: MetricInput,
+    val metricOutput: MetricOutput<out IMetricResult, out IMetricRecommendation>
+)
+
 data class ActualQueryDTO(
-        val sessionId: Int,
-        val status: String,
-        val blockedBy: Int,
-        val waitType: String?,
-        val waitResource: String?,
-        val percentComplete: Int,
-        val waitTime: String?,
-        val cpuTime: Int?,
-        val logicalReads: Int?,
-        val reads: Int?,
-        val writes: Int?,
-        val elapsedTime: String,
-        val queryText: String,
-        val storedProc: String,
-        val command: String,
-        val loginName: String,
-        val hostName: String,
-        val programName: String,
-        val hostProcessId: Int,
-        val lastRequestEndTime: String,
-        val loginTime: String,
-        val openTransactionCount: Int
-                         )
+    val sessionId: Int,
+    val status: String,
+    val blockedBy: Int,
+    val waitType: String?,
+    val waitResource: String?,
+    val percentComplete: Int,
+    val waitTime: String?,
+    val cpuTime: Int?,
+    val logicalReads: Int?,
+    val reads: Int?,
+    val writes: Int?,
+    val elapsedTime: String,
+    val queryText: String,
+    val storedProc: String,
+    val command: String,
+    val loginName: String,
+    val hostName: String,
+    val programName: String,
+    val hostProcessId: Int,
+    val lastRequestEndTime: String,
+    val loginTime: String,
+    val openTransactionCount: Int,
+)

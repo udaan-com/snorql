@@ -1,14 +1,16 @@
 package com.udaan.snorql.framework.job
 
+import com.udaan.snorql.framework.job.model.HistoricalDatabaseSchemaDTO
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
 import org.quartz.Job
-import org.quartz.JobDataMap
 import org.quartz.JobExecutionContext
+import java.lang.Exception
+import java.util.*
 
-class SimpleJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation> :  Job {
+class SimpleJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation> : Job {
     /**
      * (Deprecated) This function does the following:
      * 1. Gets the trigger name which triggered the job using <code>context.trigger.key.name</code>
@@ -16,7 +18,7 @@ class SimpleJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation
      *
      * The function does the following:
      * 1. Fetched the MergedJobDataMap, which holds metricId and databaseName.
-     * 2. Incase the trigger does not has the values, these can be fetched from the database which holds the mapping of
+     * 2. In case the trigger does not has the values, these can be fetched from the database which holds the mapping of
      * triggerName -> metricId, databaseName and metricInput
      * 3. Once it has the parameters, it calls getMetricOutput which returns metricOutput (Result & Recommendation)
      * 4. timestamp, runId, metricId, databaseName, source, metricOutput, metricInput are stored in historical data cluster
@@ -29,27 +31,31 @@ class SimpleJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation
         // 4. Generate a run ID using UUID
         // 5. Store historical data in database
 
-        val dataMap: JobDataMap = context.trigger.jobDataMap
+        try {
+            print("Quartz Job execution started!!")
+            val runID: String = UUID.randomUUID().toString() // Generate a random monitoring run id
+            val mergedDataMap = context.mergedJobDataMap
+            println(" - Trigger Key: ${context.trigger.key}")
+            val metricInput: T = mergedDataMap["metricInput"] as T
+            val metricResponse = SqlMetricManager.getMetric<T, O, R>(metricInput.metricId, metricInput)
+            val metricOutput = metricResponse.metricOutput
 
-        // Get metric Input
-        val metricInput = dataMap["metricInput"]
+            val dataRecorded = HistoricalDatabaseSchemaDTO(
+                runId = runID,
+                metricId = metricInput.metricId,
+                databaseName = metricInput.databaseName,
+                source = "MONITORING_JOB",
+                metricInput = metricInput,
+                metricOutput = metricOutput
+            )
+            val storageId = "HISTORICAL_DATA_BUCKET_ID"
+//            SqlMetricManager.queryExecutor.persistHistoricalData(storageId, listOf(dataRecorded))
+            println("Following data was recorded: $dataRecorded")
+            println("Quartz Job execution complete!!")
+        } catch (e: Exception) {
+            println("There was an exception while recording data: $e")
+        }
 
 
-
-        val metricInputObject: T = dataMap["metricInputObject"] as T
-
-
-        // Once Metric Input is available, getMetricResponse/Result
-        // We need to set up metric factories which can give us metric classes
-        val metricResponse = SqlMetricManager.getMetric<T,O,R>(metricInputObject.metricId,metricInputObject)
-
-        // Once we have the response, persist data
-        // val queryExecutor = SqlMetricManager.queryExecutor
-        // queryExecutor.persistData(databaseName, tableName, columns, rows)
-
-//        println("Trigger data map from inside of Job: $metricInput")
-        println("mertric input object: $metricInputObject")
-        println()
-        println("This is quartz job which got executed")
     }
 }

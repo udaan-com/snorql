@@ -19,6 +19,10 @@
 
 package com.udaan.snorql.framework.metric
 
+import com.udaan.snorql.framework.job.model.HistoricalDatabaseSchemaDTO
+import com.udaan.snorql.framework.models.IMetricRecommendation
+import com.udaan.snorql.framework.models.IMetricResult
+
 /**
  * Query executor
  *
@@ -56,6 +60,16 @@ class QueryExecutor(val connection: Connection) {
         rows: List<List<Any>>,
     ) {
         connection.storeData(databaseName, tableName, columns, rows)
+    }
+
+    fun persistHistoricalData(
+        storageId: String,
+        historicalDataList: List<HistoricalDatabaseSchemaDTO>,
+    ) {
+        println("Following data has been persisted in $storageId")
+        historicalDataList.forEach {
+            println(it)
+        }
     }
 
     fun persistJobConfigData(metricId: String, databaseName: String, triggerName: String): Boolean {
