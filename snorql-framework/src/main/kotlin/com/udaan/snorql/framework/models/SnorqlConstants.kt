@@ -16,5 +16,5 @@ object SnorqlConstants {
 
     const val HISTORICAL_DATA_BUCKET_ID = "historical_bucket"
     val historicalDataTableColumns =
-        listOf("runId", "metricId", "databaseName", "source", "metricInput", "metricOutput")
+        listOf("runId", "timestamp", "metricId", "databaseName", "source", "metricInput", "metricOutput")
 }

@@ -13,6 +13,7 @@ import com.udaan.snorql.framework.models.SnorqlConstants
 import org.quartz.Job
 import org.quartz.JobExecutionContext
 import java.lang.Exception
+import java.sql.Timestamp
 import java.util.*
 
 class MonitoringJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation> : Job {
@@ -45,12 +46,15 @@ class MonitoringJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommenda
 //            val metricInput: T =
 //                objectMapper.readValue(mergedDataMap["metricInput"] as String)
 //            val metricInput: T = gson.fromJson(mergedDataMap["metricInput"] as String, MetricInput::class.java) as T
-            val metricInput: T = mergedDataMap["metricInput"] as T
+            val metricInput: T =
+                SnorqlConstants.objectMapper.readValue(mergedDataMap["metricInput"] as String,
+                    Class.forName(mergedDataMap["inputClass"] as String)) as T
             val metricResponse = SqlMetricManager.getMetric<T, O, R>(metricInput.metricId, metricInput)
             val metricOutput = metricResponse.metricOutput
 
             val dataRecorded = HistoricalDatabaseSchemaDTO(
                 runId = runID,
+                timestamp = Timestamp(System.currentTimeMillis()),
                 metricId = metricInput.metricId,
                 databaseName = metricInput.databaseName,
                 source = SnorqlConstants.MONITORING_GROUP_NAME,

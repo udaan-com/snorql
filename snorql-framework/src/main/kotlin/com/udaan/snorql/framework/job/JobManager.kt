@@ -62,6 +62,7 @@ class JobManager(
         val triggerName: String = metricInput.metricId.plus("_").plus(metricInput.databaseName)
         val jobDataMap = JobDataMap()
         jobDataMap["metricInput"] = objectMapper.writeValueAsString(metricInput) // gson.toJson(metricInput).toString() // Use Jackson
+        jobDataMap["inputClass"] = metricInput::class.java.name
         val jobKey = JobKey(jobName, SnorqlConstants.MONITORING_GROUP_NAME)
         val triggerKey = TriggerKey(triggerName, SnorqlConstants.MONITORING_GROUP_NAME)
         return if (!scheduler.checkExists(jobKey)) {

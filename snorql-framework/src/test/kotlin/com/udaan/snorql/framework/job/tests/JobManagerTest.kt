@@ -18,12 +18,17 @@ class JobManagerTests {
         SqlMetricManager.addMetric("performance_activeQueries", ActiveQueriesMetric())
         jobManager.startScheduler()
         val triggerConfig1 = JobTriggerConfig(
-            watchIntervalInSeconds = 1,
+            watchIntervalInSeconds = 2,
             startFrom = Timestamp.from(LocalDateTime.now().toInstant(ZoneId.systemDefault().rules.getOffset(
                 LocalDateTime.now())))
         )
         val triggerConfig2 = JobTriggerConfig(
             watchIntervalInSeconds = 3,
+            startFrom = Timestamp.from(LocalDateTime.now().toInstant(ZoneId.systemDefault().rules.getOffset(
+                LocalDateTime.now())))
+        )
+        val triggerConfig3 = JobTriggerConfig(
+            watchIntervalInSeconds = 6,
             startFrom = Timestamp.from(LocalDateTime.now().toInstant(ZoneId.systemDefault().rules.getOffset(
                 LocalDateTime.now())))
         )
@@ -49,7 +54,7 @@ class JobManagerTests {
             metricInput1)
         jobManager.addJob<ActualMetricInput, ActualMetricOutput, IMetricRecommendation>(triggerConfig2,
             metricInput2)
-        jobManager.addJob<ActualMetricInput, ActualMetricOutput, IMetricRecommendation>(triggerConfig2,
+        jobManager.addJob<ActualMetricInput, ActualMetricOutput, IMetricRecommendation>(triggerConfig3,
             metricInput1)
         println("Printing the triggers configured...")
         jobManager.getAllMonitoringTriggers().forEach {

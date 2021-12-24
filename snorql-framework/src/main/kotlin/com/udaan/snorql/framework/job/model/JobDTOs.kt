@@ -95,6 +95,7 @@ class ActiveQueriesMetric : IMetric<ActualMetricInput, ActualMetricOutput, IMetr
 
 data class HistoricalDatabaseSchemaDTO(
     val runId: String,
+    val timestamp: Timestamp,
     val metricId: String,
     val databaseName: String,
     val source: String,
