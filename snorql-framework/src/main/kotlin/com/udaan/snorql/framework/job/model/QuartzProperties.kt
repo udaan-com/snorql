@@ -29,7 +29,7 @@ object QuartzProperties {
         //If we do not specify this configuration, QUARTZ will use RAM(in-memory) to store jobs
         //Once we restart QUARTZ, the jobs will not be persisted
         // Configure your MySQL properties
-        prop["org.quartz.dataSource.quartzDataSource.driver"] = "com.mysql.jdbc.Driver"
+        prop["org.quartz.dataSource.quartzDataSource.driver"] = "com.mysql.cj.jdbc.Driver"
         prop["org.quartz.dataSource.quartzDataSource.URL"] = "jdbc:mysql://localhost:3306/quartz"
         prop["org.quartz.dataSource.quartzDataSource.user"] = "root"
         prop["org.quartz.dataSource.quartzDataSource.password"] = "mysql@0000"

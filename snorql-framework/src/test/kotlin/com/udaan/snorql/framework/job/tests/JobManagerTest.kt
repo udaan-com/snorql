@@ -1,10 +1,15 @@
 package com.udaan.snorql.framework.job.tests
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import com.udaan.snorql.framework.job.JobManager
 import com.udaan.snorql.framework.job.model.*
+import com.udaan.snorql.framework.metric.Connection
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyString
 import java.sql.Timestamp
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -16,6 +21,8 @@ class JobManagerTests {
     @Test
     fun jobSchedulingTest() {
         SqlMetricManager.addMetric("performance_activeQueries", ActiveQueriesMetric())
+        val mockConnection: Connection = mock()
+        SqlMetricManager.setConnection(mockConnection)
         jobManager.startScheduler()
         val triggerConfig1 = JobTriggerConfig(
             watchIntervalInSeconds = 2,
@@ -44,6 +51,13 @@ class JobManagerTests {
             metricId = "performance_activeQueries",
             databaseName = "uddevsql/db-test"
         )
+
+//        whenever(SqlMetricManager.queryExecutor.persistHistoricalData(anyString(), any())).thenAnswer{
+//            val storageId: String = it.arguments[0] as String
+//            val historicalDataDTOList: Any! = it.arguments[1]
+//
+//        }
+
 //        val mockQueryExecutor = Mockito.mock(QueryExecutor::class.java)
 //        val mockQueryExecutor: QueryExecutor = mock()
 //        val mockManager: SqlMetricManager = mock()
@@ -72,4 +86,12 @@ class JobManagerTests {
 //        jobManager.startScheduler()
 //        jobManager.removeAllTriggers()
 //    }
+
+//    @Test // Used to remove all the triggers
+//    fun removeEverything() {
+//        jobManager.startScheduler()
+//        jobManager.removeEverything()
+//    }
+
+
 }

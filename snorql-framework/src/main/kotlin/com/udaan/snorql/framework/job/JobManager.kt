@@ -137,6 +137,10 @@ class JobManager(
 //        }
 //    }
 
+    fun removeEverything() {
+        scheduler.clear()
+    }
+
     fun removeDataRecording(
         triggerName: String
     ): Boolean {

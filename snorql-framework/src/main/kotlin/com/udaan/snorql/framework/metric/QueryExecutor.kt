@@ -72,7 +72,7 @@ class QueryExecutor(val connection: Connection) {
         historicalDataList.forEach {
             val row = mutableListOf<String>()
             row.add(it.runId)
-            row.add(it.timestamp)
+            row.add(it.timestamp.toString())
             row.add(it.metricId)
             row.add(it.databaseName)
             row.add(SnorqlConstants.objectMapper.writeValueAsString(it.metricInput))
