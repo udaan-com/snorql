@@ -1,8 +1,10 @@
 package com.udaan.snorql.extensions.accesscontrol.metrics
 
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.udaan.snorql.framework.metric.Connection
+import com.udaan.snorql.framework.metric.QueryExecutor
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.MetricConfig
 import org.mockito.ArgumentMatchers
@@ -56,19 +58,23 @@ object TestHelper {
             supportsRealTime = true
         )
 
-    suspend inline fun <reified T> mockSqlMetricManager(
-        databaseName: String, query: String, params: Map<String, *>, outputMetricList: List<T>
+    inline fun <reified T> mockSqlMetricManager(
+        outputMetricList: List<T>
     ): SqlMetricManager {
-//        val mockConnectionInstance: Connection = mock()
+        val mockConnectionInstance: Connection = mock()
 //        SqlMetricManager.setConnection(mockConnectionInstance)
         val sqlMetricManager: SqlMetricManager = mock()
+        whenever(sqlMetricManager.queryExecutor).thenReturn(QueryExecutor(mockConnectionInstance))
         whenever(
             sqlMetricManager.queryExecutor.execute<T>(
-                ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyString()
+//                eq(ArgumentMatchers.anyString()),
+//                eq(ArgumentMatchers.anyString())
+                databaseName = "randomDatabaseName1",
+                query = "MetricMainQuery"
             )
         ).thenAnswer {
             val queryString = it.arguments[1]
+//            println("List: $outputMetricList")
             when {
                 (queryString == metricConfigWithMainAndDbSizeQueries.queries["main"]) -> {
                     outputMetricList
@@ -81,6 +87,7 @@ object TestHelper {
                 }
             }
         }
+//        println("List: $outputMetricList")
         return sqlMetricManager
     }
 }

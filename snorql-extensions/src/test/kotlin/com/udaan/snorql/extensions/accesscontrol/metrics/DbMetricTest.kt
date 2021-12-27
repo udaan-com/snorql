@@ -17,6 +17,8 @@ import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricOutput
 import com.udaan.snorql.framework.models.MetricPeriod
 import org.junit.Test
+import org.mockito.ArgumentMatcher
+import org.mockito.ArgumentMatchers.anyString
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
@@ -167,6 +169,36 @@ class DbMetricTest {
                 }
             }
         }
+    }
+
+    @Test
+    fun testExecuteFunction() {
+        val mockSqlMetricManager = TestHelper.mockSqlMetricManager<DbDTO>(listOf<DbDTO>(dbMetric1, dbMetric2))
+        assertEquals(
+            listOf(dbMetric1, dbMetric2),
+            mockSqlMetricManager.queryExecutor.execute<DbDTO>(
+                databaseName = "randomDatabaseName1",
+                query = "MetricMainQuery"
+            )
+        )
+    }
+
+    @Test
+    fun testGetMetricResult1() {
+//        val mockSqlMetricManager = TestHelper.mockSqlMetricManager<DbDTO>(listOf<DbDTO>())
+//        whenever(
+//            DbMetric().getMetricResult(
+//                dbMetricInputRealTime,
+//                TestHelper.metricConfigWithMainAndDbSizeQueries
+//            )
+//        ).thenReturn(
+//            DbResult(
+//                mockSqlMetricManager.queryExecutor.execute<DbStorageSize>(
+//                    databaseName = "randomDatabaseName1",
+//                    query = "MetricMainQuery"
+//                )
+//            )
+//        )
     }
 
     @Test
