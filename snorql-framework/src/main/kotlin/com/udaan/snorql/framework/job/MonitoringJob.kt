@@ -16,7 +16,7 @@ import java.lang.Exception
 import java.sql.Timestamp
 import java.util.*
 
-class MonitoringJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation> : Job {
+public class MonitoringJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation> : Job {
 
     /**
      * (Deprecated) This function does the following:
