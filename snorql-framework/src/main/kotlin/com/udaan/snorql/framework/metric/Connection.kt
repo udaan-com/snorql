@@ -42,12 +42,13 @@ interface Connection {
     /**
      * Store data
      *
-     * @param databaseName
-     * @param tableName
+     * @param storageBucketId
      * @param columns
      * @param rows
      */
-    fun storeData(databaseName:String, tableName: String,
-                  columns: List<String>,
-                  rows: List<List<Any>>)
+    fun storeData(
+        storageBucketId: String,
+        columns: List<String>,
+        rows: List<List<Any>>,
+    )
 }
