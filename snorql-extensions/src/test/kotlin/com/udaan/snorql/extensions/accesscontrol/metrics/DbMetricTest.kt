@@ -2,6 +2,8 @@ package com.udaan.snorql.extensions.accesscontrol.metrics
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.udaan.snorql.extensions.storage.metrics.DbMetric
 import com.udaan.snorql.extensions.storage.models.DbDTO
 import com.udaan.snorql.extensions.storage.models.DbInput
@@ -15,7 +17,6 @@ import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricOutput
 import com.udaan.snorql.framework.models.MetricPeriod
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyString
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
@@ -27,63 +28,16 @@ class DbMetricTest {
     // DB Metric Query String
     private val dbMetricMainQuery: String? = dbMetric.getMetricConfig(
         DbInput(
-            metricPeriod = MetricPeriod.HISTORICAL,
+            metricPeriod = MetricPeriod.REAL_TIME,
             databaseName = "randomDatabaseName", dbName = "randomDBName"
         ).metricId
     ).queries["main"]
     private val dbMetricDbSizeQuery: String? = dbMetric.getMetricConfig(
         DbInput(
-            metricPeriod = MetricPeriod.HISTORICAL,
+            metricPeriod = MetricPeriod.REAL_TIME,
             databaseName = "randomDatabaseName", dbName = "randomDBName"
         ).metricId
     ).queries["dbSize"]
-
-    // Metric configs
-    private val metricConfigWithMainAndDbSizeQueries =
-        MetricConfig(
-            queries = mapOf("main" to "dbMetricMainQuery", "dbSize" to "dbSizeQueryString"),
-            description = "randomDescription",
-            isParameterized = true,
-            referenceDoc = "",
-            supportsHistorical = true,
-            supportsRealTime = true
-        )
-    private val metricConfigWithoutMainQuery =
-        MetricConfig(
-            queries = mapOf("notMain" to "dbMetricMainQuery", "dbSize" to "dbSizeQueryString"),
-            description = "randomDescription",
-            isParameterized = true,
-            referenceDoc = "",
-            supportsHistorical = true,
-            supportsRealTime = true
-        )
-    private val metricConfigWithoutDbSizeQuery =
-        MetricConfig(
-            queries = mapOf("main" to "dbMetricMainQuery", "notDbSize" to "dbSizeQueryString"),
-            description = "randomDescription",
-            isParameterized = true,
-            referenceDoc = "",
-            supportsHistorical = true,
-            supportsRealTime = true
-        )
-    private val metricConfigWithoutMainAndDbSizeQueries =
-        MetricConfig(
-            queries = mapOf("notMain" to "dbMetricMainQuery", "notDbSize" to "dbSizeQueryString"),
-            description = "randomDescription",
-            isParameterized = true,
-            referenceDoc = "",
-            supportsHistorical = true,
-            supportsRealTime = true
-        )
-    private val metricConfigWithoutQueries =
-        MetricConfig(
-            queries = mapOf(),
-            description = "randomDescription",
-            isParameterized = true,
-            referenceDoc = "",
-            supportsHistorical = true,
-            supportsRealTime = true
-        )
 
 
     // Database Stats Metrics
@@ -160,9 +114,9 @@ class DbMetricTest {
     // Incorrect metric configs
     private val incorrectMetricConfigList =
         listOf(
-            metricConfigWithoutMainQuery,
-            metricConfigWithoutMainAndDbSizeQueries,
-            metricConfigWithoutQueries
+            TestHelper.metricConfigWithoutMainQuery,
+            TestHelper.metricConfigWithoutMainAndDbSizeQueries,
+            TestHelper.metricConfigWithoutQueries
         )
 
 
@@ -218,28 +172,28 @@ class DbMetricTest {
     @Test
     fun testGetMetricResult() {
 
-        val mockConnectionInstance: Connection = mock()
-        SqlMetricManager.setConnection(mockConnectionInstance)
-        whenever(dbMetricMainQuery?.let {
-            SqlMetricManager.queryExecutor.execute<DbDTO>(
-                anyString(),
-                anyString()
-            )
-        }).thenAnswer {
-            listOf<DbDTO>(dbMetric1, dbMetric2)
-        }
-        whenever(dbMetricDbSizeQuery?.let {
-            SqlMetricManager.queryExecutor.execute<Int>(
-                anyString(),
-                anyString()
-            )
-        }).thenAnswer {
-            listOf<Int>(400, 200)
-        }
+//        val mockConnectionInstance: Connection = mock()
+//        SqlMetricManager.setConnection(mockConnectionInstance)
+//        whenever(
+//            SqlMetricManager.queryExecutor.execute<DbDTO>(
+//                eq(any()),
+//                eq(any())
+//            )
+//        ).thenAnswer {
+//            listOf<DbDTO>(dbMetric1, dbMetric2)
+//        }
+//        whenever(
+//            SqlMetricManager.queryExecutor.execute<Int>(
+//                eq(any()),
+//                eq(any())
+//            )
+//        ).thenAnswer {
+//            listOf<Int>(400, 200)
+//        }
 
         assertEquals(
             dbMetricResultMultipleResults,
-            dbMetric.getMetricResult(dbMetricInputRealTime, metricConfigWithMainAndDbSizeQueries)
+            dbMetric.getMetricResult(dbMetricInputRealTime, TestHelper.metricConfigWithMainAndDbSizeQueries)
         )
 
 
