@@ -16,6 +16,12 @@ data class JobTriggerConfig(
     val endAt: Timestamp? = null,
 )
 
+abstract class RecordingJobConfigOutline {
+    abstract val watchIntervalInSeconds: Int
+    abstract val startFrom: Timestamp
+    abstract val endAt: Timestamp?
+}
+
 data class ActualMetricInput(
     override val metricId: String,
     override val metricPeriod: MetricPeriod = MetricPeriod.REAL_TIME,
