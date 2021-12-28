@@ -1,17 +1,23 @@
 package com.udaan.snorql.extensions.accesscontrol.metrics
 
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import com.udaan.snorql.extensions.performance.metrics.ActiveDDLMetric
 import com.udaan.snorql.extensions.performance.models.ActiveDDLDTO
 import com.udaan.snorql.extensions.performance.models.ActiveDDLInput
 import com.udaan.snorql.extensions.performance.models.ActiveDDLResult
+import com.udaan.snorql.extensions.storage.models.DbDTO
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.SQLMonitoringConnectionException
+import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricOutput
 import com.udaan.snorql.framework.models.MetricPeriod
 import org.junit.Test
+import java.lang.Exception
 import kotlin.test.assertEquals
+import kotlin.test.fail
 
 class ActiveDDLMetricTest {
     companion object {
@@ -24,15 +30,51 @@ class ActiveDDLMetricTest {
 
     // Active DDL Query Input
     private val activeDDLInput1 =
-        ActiveDDLInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName")
+        ActiveDDLInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName1")
     private val activeDDLInput2 =
-        ActiveDDLInput(metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName")
+        ActiveDDLInput(metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName2")
     private val activeDDLInput3 = ActiveDDLInput(metricId = "randomIncorrectID", // Incorrect Metric ID passed
         metricPeriod = MetricPeriod.REAL_TIME,
         databaseName = "randomDatabaseName")
     private val activeDDLInput4 = ActiveDDLInput(metricId = "", // Empty string metricID
         metricPeriod = MetricPeriod.HISTORICAL,
         databaseName = "randomDatabaseName")
+    private val activeDDLInput5 =
+        ActiveDDLInput(metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName3")
+
+    // Metric Configs
+    val metricConfig3 = MetricConfig(
+        queries = mapOf("notMain" to "SELECT randomColumn from randomTable"),
+        supportsHistorical = false,
+        supportsRealTime = true,
+        isParameterized = false,
+        referenceDoc = "",
+        description = ""
+    )
+    val metricConfig4 = MetricConfig(
+        queries = mapOf(),
+        supportsHistorical = false,
+        supportsRealTime = true,
+        isParameterized = false,
+        referenceDoc = "",
+        description = ""
+    )
+    val metricConfig1 = MetricConfig(
+        queries = mapOf("main" to "SELECT randomColumn from randomTable"),
+        supportsHistorical = false,
+        supportsRealTime = true,
+        isParameterized = false,
+        referenceDoc = "",
+        description = ""
+    )
+    val metricConfig2 = MetricConfig(
+        queries = mapOf("main" to ""),
+        supportsHistorical = false,
+        supportsRealTime = true,
+        isParameterized = false,
+        referenceDoc = "",
+        description = ""
+    )
 
     // Random active ddl query 1
     private val activeDDLQuery1 = ActiveDDLDTO(currentStep = "1 Current Step",
@@ -75,74 +117,85 @@ class ActiveDDLMetricTest {
             "description" to ""
         )
 
-        // Tests
-        assertEquals(expected = expectedOutput1,
-            activeDDLMetric.getMetricResponseMetadata(activeDDLInput1, metricOutput1))
-        assertEquals(expected = expectedOutput1,
-            activeDDLMetric.getMetricResponseMetadata(activeDDLInput2, metricOutput1))
-        assertEquals(expected = expectedOutput1,
-            activeDDLMetric.getMetricResponseMetadata(activeDDLInput1, metricOutput2))
-        assertEquals(expected = expectedOutput1,
-            activeDDLMetric.getMetricResponseMetadata(activeDDLInput1, metricOutput3))
-        assertEquals(expected = expectedOutput1,
-            activeDDLMetric.getMetricResponseMetadata(activeDDLInput2, metricOutput3))
+        for (metricInput in listOf(activeDDLInput1, activeDDLInput2)) {
+            for (metricOutput in listOf(metricOutput1, metricOutput2, metricOutput3)) {
+                assertEquals(expected = expectedOutput1,
+                    activeDDLMetric.getMetricResponseMetadata(metricInput, metricOutput))
+            }
+        }
+
+        for (metricInput in listOf(activeDDLInput3, activeDDLInput4)) {
+            for (metricOutput in listOf(metricOutput3, metricOutput2, metricOutput1)) {
+                try {
+                    activeDDLMetric.getMetricResponseMetadata(metricInput, metricOutput)
+                } catch (e: SQLMonitoringConfigException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Test failing with Exception: $e\nMetric Input: $metricInput\nMetric Config: $metricOutput")
+                }
+            }
+        }
     }
 
-    @Test(expected = SQLMonitoringConfigException::class)
-    fun testSQLMonitoringConfigException() {
-        val metricConfig1 = MetricConfig(
-            queries = mapOf("notMain" to "SELECT randomColumn from randomTable"),
-            supportsHistorical = false,
-            supportsRealTime = true,
-            isParameterized = false,
-            referenceDoc = "",
-            description = ""
-        )
-        val metricConfig2 = MetricConfig(
-            queries = mapOf(),
-            supportsHistorical = false,
-            supportsRealTime = true,
-            isParameterized = false,
-            referenceDoc = "",
-            description = ""
-        )
+    @Test
+    fun testGetMetricResult() {
+        // Testing for SQLMonitoringConnectionException
+        for (metricInput in listOf(activeDDLInput1, activeDDLInput2)) {
+            for (metricConfig in listOf(metricConfig1, metricConfig2)) {
+                try {
+                    activeDDLMetric.getMetricResult(metricInput, metricConfig)
+                } catch (e: SQLMonitoringConnectionException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Test failing with Exception: $e\nMetric Input: $metricInput\nMetric Config: $metricConfig")
+                }
+            }
+        }
 
-        activeDDLMetric.getMetricResult(activeDDLInput1, metricConfig1)
-        activeDDLMetric.getMetricResult(activeDDLInput2, metricConfig2)
-        activeDDLMetric.getMetricResult(activeDDLInput3, metricConfig1)
-        activeDDLMetric.getMetricResult(activeDDLInput4, metricConfig2)
-        activeDDLMetric.getMetricResponseMetadata(activeDDLInput3, metricOutput3)
-        activeDDLMetric.getMetricResponseMetadata(activeDDLInput4, metricOutput3)
-        activeDDLMetric.getMetricResponseMetadata(activeDDLInput3, metricOutput2)
-        activeDDLMetric.getMetricResponseMetadata(activeDDLInput4, metricOutput1)
+        // Testing for SQLMonitoringConfigException
+        for (metricInput in listOf(activeDDLInput1, activeDDLInput2, activeDDLInput3, activeDDLInput4)) {
+            for (metricConfig in listOf(metricConfig3, metricConfig4)) {
+                try {
+                    activeDDLMetric.getMetricResult(metricInput, metricConfig)
+                } catch (e: SQLMonitoringConfigException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Test failing with Exception: $e\nMetric Input: $metricInput\nMetric Config: $metricConfig")
+                }
+            }
+        }
 
-    }
+        SqlMetricManager.setConnection(mock())
+        val databaseNames = listOf("randomDatabaseName1", "randomDatabaseName2", "randomDatabaseName3")
+        databaseNames.forEach { databaseName ->
+            whenever(
+                activeDDLMetric.executeQuery<ActiveDDLDTO>(
+                    databaseName = databaseName,
+                    queryString = "MetricMainQuery",
+                )
+            ).thenAnswer {
+                val database: String = it.getArgument(0) as String
+                val query: String = it.getArgument(1) as String
+                when {
+                    (database == "randomDatabaseName1") -> {
+                        listOf(activeDDLQuery1, activeDDLQuery2)
+                    }
+                    (database == "randomDatabaseName2") -> {
+                        listOf(activeDDLQuery1)
+                    }
+                    (database == "randomDatabaseName3") -> {
+                        listOf<ActiveDDLDTO>()
+                    }
+                    else -> {
+                        throw IllegalArgumentException("Arguments does not match: Database Name: $database; Query: $query")
+                    }
+                }
+            }
+        }
 
-    @Test(expected = SQLMonitoringConnectionException::class)
-    fun testSQLMonitoringConnectionException() {
-        val metricConfig1 = MetricConfig(
-            queries = mapOf("main" to "SELECT randomColumn from randomTable"),
-            supportsHistorical = false,
-            supportsRealTime = true,
-            isParameterized = false,
-            referenceDoc = "",
-            description = ""
-        )
-        val metricConfig2 = MetricConfig(
-            queries = mapOf("main" to ""),
-            supportsHistorical = false,
-            supportsRealTime = true,
-            isParameterized = false,
-            referenceDoc = "",
-            description = ""
-        )
-        val activeDDLMetricInput1 =
-            ActiveDDLInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName")
-        val activeDDLMetricInput2 =
-            ActiveDDLInput(metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName")
-        activeDDLMetric.getMetricResult(activeDDLMetricInput1, metricConfig1)
-        activeDDLMetric.getMetricResult(activeDDLMetricInput2, metricConfig1)
-        activeDDLMetric.getMetricResult(activeDDLMetricInput1, metricConfig2)
-        activeDDLMetric.getMetricResult(activeDDLMetricInput2, metricConfig2)
+        assertEquals(activeDDLResult1, activeDDLMetric.getMetricResult(activeDDLInput1, TestHelper.metricConfigWithMainAndDbSizeQueries))
+        assertEquals(activeDDLResult2, activeDDLMetric.getMetricResult(activeDDLInput2, TestHelper.metricConfigWithMainAndDbSizeQueries))
+        assertEquals(activeDDLResult3, activeDDLMetric.getMetricResult(activeDDLInput5, TestHelper.metricConfigWithMainAndDbSizeQueries))
+
     }
 }

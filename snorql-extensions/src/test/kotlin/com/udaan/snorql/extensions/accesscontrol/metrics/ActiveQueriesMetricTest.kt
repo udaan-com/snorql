@@ -1,41 +1,51 @@
 package com.udaan.snorql.extensions.accesscontrol.metrics
 
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import com.udaan.snorql.extensions.performance.metrics.ActiveQueriesMetric
-import com.udaan.snorql.extensions.performance.models.ActiveDDLInput
-import com.udaan.snorql.extensions.performance.models.ActiveQueryDTO
-import com.udaan.snorql.extensions.performance.models.ActiveQueryInput
-import com.udaan.snorql.extensions.performance.models.ActiveQueryResult
+import com.udaan.snorql.extensions.performance.models.*
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.SQLMonitoringConnectionException
+import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricOutput
 import com.udaan.snorql.framework.models.MetricPeriod
 import org.junit.Test
+import java.lang.Exception
 import kotlin.test.assertEquals
+import kotlin.test.fail
 
 class ActiveQueriesMetricTest {
     companion object {
         private val activeQueriesMetric = ActiveQueriesMetric()
     }
 
-    private val activeQueriesMetricMainQuery: String? = activeQueriesMetric.getMetricConfig(ActiveQueryInput(
-        metricPeriod = MetricPeriod.REAL_TIME,
-        databaseName = "randomDatabaseName").metricId).queries["main"]
+    private val activeQueriesMetricMainQuery: String? = activeQueriesMetric.getMetricConfig(
+        ActiveQueryInput(
+            metricPeriod = MetricPeriod.REAL_TIME,
+            databaseName = "randomDatabaseName"
+        ).metricId
+    ).queries["main"]
 
     // Active Query Input
     private val activeQueriesInput1 =
-        ActiveQueryInput(metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName")
+        ActiveQueryInput(metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName1")
     private val activeQueriesInput2 =
-        ActiveQueryInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName")
-    private val activeQueriesInput3 = ActiveQueryInput(metricId = "randomMetricID",
+        ActiveQueryInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName2")
+    private val activeQueriesInput3 = ActiveQueryInput(
+        metricId = "randomMetricID",
         metricPeriod = MetricPeriod.REAL_TIME,
-        databaseName = "randomDatabaseName")
+        databaseName = "randomDatabaseName"
+    )
     private val activeQueriesInput4 =
         ActiveQueryInput(metricId = "", metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName")
+    private val activeQueriesInput5 =
+        ActiveQueryInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName3")
 
     // Random Active Query
-    private val activeQuery1 = ActiveQueryDTO(sessionId = 1234,
+    private val activeQuery1 = ActiveQueryDTO(
+        sessionId = 1234,
         status = "Running",
         blockedBy = 4321,
         waitType = null,
@@ -58,7 +68,8 @@ class ActiveQueriesMetricTest {
         loginTime = "22:45:59",
         openTransactionCount = 1
     )
-    private val activeQuery2 = ActiveQueryDTO(sessionId = 4321,
+    private val activeQuery2 = ActiveQueryDTO(
+        sessionId = 4321,
         status = "Waiting",
         blockedBy = 1234,
         waitType = "Blocked",
@@ -102,6 +113,7 @@ class ActiveQueriesMetricTest {
         referenceDoc = "",
         description = ""
     )
+
     // "main" query defined
     private val metricConfig3 = MetricConfig(
         queries = mapOf("main" to "SELECT randomColumn from randomTable"),
@@ -132,23 +144,6 @@ class ActiveQueriesMetricTest {
     private val metricOutput2 = MetricOutput<ActiveQueryResult, IMetricRecommendation>(activeQueryResult2, null)
     private val metricOutput3 = MetricOutput<ActiveQueryResult, IMetricRecommendation>(activeQueryResult3, null)
 
-    @Test(expected = SQLMonitoringConfigException::class)
-    fun testSQLMonitoringConfigException() {
-        activeQueriesMetric.getMetricResult(metricInput = activeQueriesInput1,
-            metricConfig = metricConfig1)
-        activeQueriesMetric.getMetricResult(metricInput = activeQueriesInput2,
-            metricConfig = metricConfig1)
-        activeQueriesMetric.getMetricResult(metricInput = activeQueriesInput1,
-            metricConfig = metricConfig2)
-        activeQueriesMetric.getMetricResult(metricInput = activeQueriesInput2,
-            metricConfig = metricConfig2)
-        activeQueriesMetric.getMetricResponseMetadata(metricInput = activeQueriesInput1, metricOutput = metricOutput1)
-        activeQueriesMetric.getMetricResponseMetadata(metricInput = activeQueriesInput2, metricOutput = metricOutput1)
-        activeQueriesMetric.getMetricResponseMetadata(metricInput = activeQueriesInput3, metricOutput = metricOutput2)
-        activeQueriesMetric.getMetricResponseMetadata(metricInput = activeQueriesInput4, metricOutput = metricOutput3)
-        activeQueriesMetric.getMetricResponseMetadata(metricInput = activeQueriesInput3, metricOutput = metricOutput3)
-    }
-
     @Test
     fun testGetMetricResponseMetadata() {
         val expectedOutput1 = mapOf<String, Any?>(
@@ -156,29 +151,110 @@ class ActiveQueriesMetricTest {
             "referenceDocumentation" to "",
             "description" to ""
         )
-        assertEquals(expected = expectedOutput1,
-            activeQueriesMetric.getMetricResponseMetadata(activeQueriesInput1, metricOutput1))
-        assertEquals(expected = expectedOutput1,
-            activeQueriesMetric.getMetricResponseMetadata(activeQueriesInput1, metricOutput2))
-        assertEquals(expected = expectedOutput1,
-            activeQueriesMetric.getMetricResponseMetadata(activeQueriesInput1, metricOutput3))
-        assertEquals(expected = expectedOutput1,
-            activeQueriesMetric.getMetricResponseMetadata(activeQueriesInput2, metricOutput1))
-        assertEquals(expected = expectedOutput1,
-            activeQueriesMetric.getMetricResponseMetadata(activeQueriesInput2, metricOutput2))
-        assertEquals(expected = expectedOutput1,
-            activeQueriesMetric.getMetricResponseMetadata(activeQueriesInput2, metricOutput3))
+
+        for (metricInput in listOf(activeQueriesInput1, activeQueriesInput2)) {
+            for (metricOutput in listOf(metricOutput1, metricOutput2, metricOutput3)) {
+                assertEquals(
+                    expected = expectedOutput1,
+                    activeQueriesMetric.getMetricResponseMetadata(metricInput, metricOutput)
+                )
+            }
+        }
+
+        // Testing for SQLMonitoringConfigException
+        for (metricInput in listOf(
+            activeQueriesInput1,
+            activeQueriesInput2,
+            activeQueriesInput3,
+            activeQueriesInput4
+        )) {
+            for (metricOutput in listOf(metricOutput1, metricOutput2, metricOutput3)) {
+                try {
+                    activeQueriesMetric.getMetricResponseMetadata(
+                        metricInput = metricInput,
+                        metricOutput = metricOutput
+                    )
+                } catch (e: SQLMonitoringConfigException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Test failing with Exception: $e\nMetric Input: $metricInput\nMetric Config: $metricOutput")
+                }
+            }
+        }
     }
 
-    @Test(expected = SQLMonitoringConnectionException::class)
-    fun testSQLMonitoringConnectionException() {
-        activeQueriesMetric.getMetricResult(metricInput = activeQueriesInput1,
-            metricConfig = metricConfig3)
-        activeQueriesMetric.getMetricResult(metricInput = activeQueriesInput2,
-            metricConfig = metricConfig3)
-        activeQueriesMetric.getMetricResult(metricInput = activeQueriesInput1,
-            metricConfig = metricConfig4)
-        activeQueriesMetric.getMetricResult(metricInput = activeQueriesInput2,
-            metricConfig = metricConfig4)
+    @Test
+    fun testGetMetricResult() {
+        // Testing SQLMonitoringConnectionException
+        for (metricInput in listOf(activeQueriesInput1, activeQueriesInput2)) {
+            for (metricConfig in listOf(metricConfig3, metricConfig4)) {
+                try {
+                    activeQueriesMetric.getMetricResult(
+                        metricInput = metricInput,
+                        metricConfig = metricConfig
+                    )
+                } catch (e: SQLMonitoringConnectionException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Test failing with Exception: $e\nMetric Input: $metricInput\nMetric Config: $metricConfig")
+                }
+            }
+        }
+
+        // Testing for SQLMonitoringConfigException
+        for (metricInput in listOf(activeQueriesInput1, activeQueriesInput2)) {
+            for (metricConfig in listOf(metricConfig1, metricConfig2)) {
+                try {
+                    activeQueriesMetric.getMetricResult(
+                        metricInput = metricInput,
+                        metricConfig = metricConfig
+                    )
+                } catch (e: SQLMonitoringConfigException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Test failing with Exception: $e\nMetric Input: $metricInput\nMetric Config: $metricConfig")
+                }
+            }
+        }
+
+        SqlMetricManager.setConnection(mock())
+        val databaseNames = listOf("randomDatabaseName1", "randomDatabaseName2", "randomDatabaseName3")
+        databaseNames.forEach { databaseName ->
+            whenever(
+                activeQueriesMetric.executeQuery<ActiveQueryDTO>(
+                    databaseName = databaseName,
+                    queryString = "MetricMainQuery",
+                )
+            ).thenAnswer {
+                val database: String = it.getArgument(0) as String
+                val query: String = it.getArgument(1) as String
+                when {
+                    (database == "randomDatabaseName1") -> {
+                        listOf(activeQuery1, activeQuery2)
+                    }
+                    (database == "randomDatabaseName2") -> {
+                        listOf(activeQuery1)
+                    }
+                    (database == "randomDatabaseName3") -> {
+                        listOf<ActiveQueryDTO>()
+                    }
+                    else -> {
+                        throw IllegalArgumentException("Arguments does not match: Database Name: $database; Query: $query")
+                    }
+                }
+            }
+        }
+        assertEquals(
+            activeQueryResult1,
+            activeQueriesMetric.getMetricResult(activeQueriesInput1, TestHelper.metricConfigWithMainAndDbSizeQueries)
+        )
+        assertEquals(
+            activeQueryResult2,
+            activeQueriesMetric.getMetricResult(activeQueriesInput2, TestHelper.metricConfigWithMainAndDbSizeQueries)
+        )
+        assertEquals(
+            activeQueryResult3,
+            activeQueriesMetric.getMetricResult(activeQueriesInput5, TestHelper.metricConfigWithMainAndDbSizeQueries)
+        )
     }
 }

@@ -43,15 +43,32 @@ class DbMetric :
             metricConfig.queries["main"]
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
 
-        val result = SqlMetricManager.queryExecutor.execute<DbDTO>(metricInput.databaseName, query)
+        val result = executeQuery<DbDTO>(
+            metricInput.databaseName,
+            query
+        ) // SqlMetricManager.queryExecutor.execute<DbDTO>(metricInput.databaseName, query)
         val dbSizeQuery =
             metricConfig.queries["dbSize"]
                 ?: throw SQLMonitoringConfigException("SQL config query [dbSize] not found under config [${metricInput.metricId}]")
 
         val paramMap = mapOf("databaseName" to metricInput.dbName)
-        val dbSizeResult = SqlMetricManager.queryExecutor.execute<Int>(metricInput.databaseName, dbSizeQuery, paramMap)
-
-        val dbResultList :List<DbStorageSize> = result.mapIndexed { index, it ->  DbStorageSize(databaseName = it.databaseName,databaseSize = it.databaseSize, unallocatedSpace = it.unallocatedSpace,reserved = it.reserved, data = it.data, indexSize = it.indexSize, unused = it.unused, dbTotalSize = dbSizeResult[index] ) }
+        val dbSizeResult = executeQuery<Int>(
+            metricInput.databaseName,
+            dbSizeQuery,
+            paramMap
+        ) // SqlMetricManager.queryExecutor.execute<Int>(metricInput.databaseName, dbSizeQuery, paramMap)
+        val dbResultList: List<DbStorageSize> = result.mapIndexed { index, it ->
+            DbStorageSize(
+                databaseName = it.databaseName,
+                databaseSize = it.databaseSize,
+                unallocatedSpace = it.unallocatedSpace,
+                reserved = it.reserved,
+                data = it.data,
+                indexSize = it.indexSize,
+                unused = it.unused,
+                dbTotalSize = dbSizeResult[index]
+            )
+        }
         return DbResult(dbResultList)
     }
 
@@ -72,5 +89,13 @@ class DbMetric :
 
     override fun saveMetricResult(metricInput: MetricInput, result: IMetricResult) {
         TODO("Not yet implemented")
+    }
+
+    inline fun <reified T> executeQuery(
+        databaseName: String,
+        queryString: String,
+        params: Map<String, *> = mapOf<String, Any>()
+    ): List<T> {
+        return SqlMetricManager.queryExecutor.execute<T>(databaseName = databaseName, query = queryString)
     }
 }

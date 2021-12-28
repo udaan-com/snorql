@@ -9,7 +9,9 @@ import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricOutput
 import com.udaan.snorql.framework.models.MetricPeriod
 import org.junit.Test
+import java.lang.Exception
 import kotlin.test.assertEquals
+import kotlin.test.fail
 
 class BlockedQueriesMetricTest {
     companion object {
@@ -17,8 +19,11 @@ class BlockedQueriesMetricTest {
     }
 
     // to get the main query string
-    private val blockedQueriesMetricMainQuery: String? = blockedQueriesMetric.getMetricConfig(BlockedQueriesInput(
-        metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName").metricId).queries["main"]
+    private val blockedQueriesMetricMainQuery: String? = blockedQueriesMetric.getMetricConfig(
+        BlockedQueriesInput(
+            metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName"
+        ).metricId
+    ).queries["main"]
 
     // Blocked Queries inputs
     private val blockedQueriesInput1 =
@@ -26,14 +31,17 @@ class BlockedQueriesMetricTest {
     private val blockedQueriesInput2 =
         BlockedQueriesInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName")
     private val blockedQueriesInput3 =
-        BlockedQueriesInput(metricId = "randomMetricID",
+        BlockedQueriesInput(
+            metricId = "randomMetricID",
             metricPeriod = MetricPeriod.REAL_TIME,
-            databaseName = "randomDatabaseName")
+            databaseName = "randomDatabaseName"
+        )
     private val blockedQueriesInput4 =
         BlockedQueriesInput(metricId = "", metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName")
 
     // Random blocked queries
-    private val blockedQuery1 = BlockedQueriesDTO(sessionId = 1234,
+    private val blockedQuery1 = BlockedQueriesDTO(
+        sessionId = 1234,
         status = "Running",
         blockedBy = 4321,
         waitType = null,
@@ -59,7 +67,8 @@ class BlockedQueriesMetricTest {
         inputBuffer = "Some input buffer"
     )
 
-    private val blockedQuery2 = BlockedQueriesDTO(sessionId = 4321,
+    private val blockedQuery2 = BlockedQueriesDTO(
+        sessionId = 4321,
         status = "Running",
         blockedBy = 1234,
         waitType = null,
@@ -103,54 +112,70 @@ class BlockedQueriesMetricTest {
             "referenceDocumentation" to "",
             "description" to ""
         )
-        assertEquals(expected = expectedOutput1,
-            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput1, metricOutput1))
-        assertEquals(expected = expectedOutput1,
-            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput1, metricOutput2))
-        assertEquals(expected = expectedOutput1,
-            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput1, metricOutput3))
-        assertEquals(expected = expectedOutput1,
-            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput2, metricOutput1))
-        assertEquals(expected = expectedOutput1,
-            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput2, metricOutput2))
-        assertEquals(expected = expectedOutput1,
-            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput2, metricOutput3))
+        assertEquals(
+            expected = expectedOutput1,
+            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput1, metricOutput1)
+        )
+        assertEquals(
+            expected = expectedOutput1,
+            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput1, metricOutput2)
+        )
+        assertEquals(
+            expected = expectedOutput1,
+            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput1, metricOutput3)
+        )
+        assertEquals(
+            expected = expectedOutput1,
+            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput2, metricOutput1)
+        )
+        assertEquals(
+            expected = expectedOutput1,
+            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput2, metricOutput2)
+        )
+        assertEquals(
+            expected = expectedOutput1,
+            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput2, metricOutput3)
+        )
+
+        for (metricInput in listOf(
+            blockedQueriesInput1,
+            blockedQueriesInput2,
+            blockedQueriesInput3,
+            blockedQueriesInput4
+        )) {
+            for (metricOutput in listOf(metricOutput1, metricOutput2, metricOutput3)) {
+                try {
+                    blockedQueriesMetric.getMetricResponseMetadata(
+                        metricInput = metricInput,
+                        metricOutput = metricOutput
+                    )
+                } catch (e: SQLMonitoringConfigException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Test failing with Exception: $e\nMetric Input: $metricInput\nMetric Config: $metricInput")
+                }
+            }
+        }
     }
 
-    @Test(expected = SQLMonitoringConfigException::class)
-    fun testSQLMonitoringConfigException() {
-        // "main" query not defined in config
-        val metricConfig1 = MetricConfig(
-            queries = mapOf("notMain" to "SELECT randomColumn from randomTable"),
-            supportsHistorical = false,
-            supportsRealTime = true,
-            isParameterized = false,
-            referenceDoc = "",
-            description = ""
-        )
-
-        // empty queries map (no queries defined in config)
-        val metricConfig2 = MetricConfig(
-            queries = mapOf(),
-            supportsHistorical = false,
-            supportsRealTime = true,
-            isParameterized = false,
-            referenceDoc = "",
-            description = ""
-        )
-        blockedQueriesMetric.getMetricResult(metricInput = blockedQueriesInput1,
-            metricConfig = metricConfig1)
-        blockedQueriesMetric.getMetricResult(metricInput = blockedQueriesInput2,
-            metricConfig = metricConfig1)
-        blockedQueriesMetric.getMetricResult(metricInput = blockedQueriesInput1,
-            metricConfig = metricConfig2)
-        blockedQueriesMetric.getMetricResult(metricInput = blockedQueriesInput2,
-            metricConfig = metricConfig2)
-        blockedQueriesMetric.getMetricResponseMetadata(metricInput = blockedQueriesInput1, metricOutput = metricOutput1)
-        blockedQueriesMetric.getMetricResponseMetadata(metricInput = blockedQueriesInput2, metricOutput = metricOutput1)
-        blockedQueriesMetric.getMetricResponseMetadata(metricInput = blockedQueriesInput3, metricOutput = metricOutput2)
-        blockedQueriesMetric.getMetricResponseMetadata(metricInput = blockedQueriesInput4, metricOutput = metricOutput3)
-        blockedQueriesMetric.getMetricResponseMetadata(metricInput = blockedQueriesInput3, metricOutput = metricOutput3)
+    @Test
+    fun testGetMetricResult() {
+        // Testing SQLMonitoringConfigException
+        for (metricInput in listOf(blockedQueriesInput1, blockedQueriesInput2)) {
+            for (metricConfig in listOf(
+                TestHelper.metricConfigWithoutMainAndDbSizeQueries,
+                TestHelper.metricConfigWithoutMainQuery,
+                TestHelper.metricConfigWithoutQueries
+            )) {
+                try {
+                    blockedQueriesMetric.getMetricResult(metricInput, metricConfig)
+                } catch (e: SQLMonitoringConfigException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Test failing with Exception: $e\nMetric Input: $metricInput\nMetric Config: $metricConfig")
+                }
+            }
+        }
     }
 
     @Test(expected = SQLMonitoringConnectionException::class)
@@ -174,13 +199,21 @@ class BlockedQueriesMetricTest {
             referenceDoc = "",
             description = ""
         )
-        blockedQueriesMetric.getMetricResult(metricInput = blockedQueriesInput1,
-            metricConfig = metricConfig3)
-        blockedQueriesMetric.getMetricResult(metricInput = blockedQueriesInput2,
-            metricConfig = metricConfig3)
-        blockedQueriesMetric.getMetricResult(metricInput = blockedQueriesInput1,
-            metricConfig = metricConfig4)
-        blockedQueriesMetric.getMetricResult(metricInput = blockedQueriesInput2,
-            metricConfig = metricConfig4)
+        blockedQueriesMetric.getMetricResult(
+            metricInput = blockedQueriesInput1,
+            metricConfig = metricConfig3
+        )
+        blockedQueriesMetric.getMetricResult(
+            metricInput = blockedQueriesInput2,
+            metricConfig = metricConfig3
+        )
+        blockedQueriesMetric.getMetricResult(
+            metricInput = blockedQueriesInput1,
+            metricConfig = metricConfig4
+        )
+        blockedQueriesMetric.getMetricResult(
+            metricInput = blockedQueriesInput2,
+            metricConfig = metricConfig4
+        )
     }
 }

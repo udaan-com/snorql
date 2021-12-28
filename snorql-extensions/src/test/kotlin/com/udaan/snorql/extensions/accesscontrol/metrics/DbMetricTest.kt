@@ -2,23 +2,18 @@ package com.udaan.snorql.extensions.accesscontrol.metrics
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
 import com.udaan.snorql.extensions.storage.metrics.DbMetric
 import com.udaan.snorql.extensions.storage.models.DbDTO
 import com.udaan.snorql.extensions.storage.models.DbInput
 import com.udaan.snorql.extensions.storage.models.DbResult
 import com.udaan.snorql.extensions.storage.models.DbStorageSize
 import com.udaan.snorql.framework.SQLMonitoringConfigException
-import com.udaan.snorql.framework.metric.Connection
+import com.udaan.snorql.framework.SQLMonitoringConnectionException
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
-import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricOutput
 import com.udaan.snorql.framework.models.MetricPeriod
 import org.junit.Test
-import org.mockito.ArgumentMatcher
-import org.mockito.ArgumentMatchers.anyString
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
@@ -45,7 +40,7 @@ class DbMetricTest {
     // Database Stats Metrics
     private val dbMetric1 = DbDTO(
         databaseName = "randomDatabaseName1",
-        databaseSize = "260MB",
+        databaseSize = "400MB",
         unallocatedSpace = "70MB",
         reserved = "180MB",
         data = "45MB",
@@ -65,28 +60,32 @@ class DbMetricTest {
         dbTotalSize = 400,
         databaseName = "randomDatabaseName1",
         databaseSize = "400MB",
-        unallocatedSpace = "240MB",
-        reserved = "420MB",
-        data = "300MB",
-        indexSize = "2MB",
-        unused = "68MB"
+        unallocatedSpace = "70MB",
+        reserved = "180MB",
+        data = "45MB",
+        indexSize = "17MB",
+        unused = "44MB"
     )
     private val dbStorageMetric2 = DbStorageSize(
         dbTotalSize = 200,
         databaseName = "randomDatabaseName2",
-        databaseSize = "200MB",
-        unallocatedSpace = "40MB",
-        reserved = "220MB",
-        data = "100MB",
-        indexSize = "2MB",
-        unused = "6MB"
+        databaseSize = "26MB",
+        unallocatedSpace = "7MB",
+        reserved = "18MB",
+        data = "4.5MB",
+        indexSize = "1.7MB",
+        unused = "4.4MB"
     )
 
     // DB Metric Inputs
     private val dbMetricInputHistorical =
         DbInput(metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName1", dbName = "randomDbName1")
-    private val dbMetricInputRealTime =
+    private val dbMetricInputRealTime1 =
         DbInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName1", dbName = "randomDbName1")
+    private val dbMetricInputRealTime2 =
+        DbInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName2", dbName = "randomDbName1")
+    private val dbMetricInputRealTime3 =
+        DbInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName3", dbName = "randomDbName1")
     private val dbMetricInputWithIncorrectMetricId =
         DbInput(
             metricId = "randomIncorrectMetricId", // Incorrect metric ID
@@ -113,13 +112,22 @@ class DbMetricTest {
     private val incorrectMetricInputList =
         listOf<DbInput>(dbMetricInputWithIncorrectMetricId, dbMetricInputWithEmptyMetricId)
 
+    // Correct Metric Inputs
+    private val correctMetricInputList =
+        listOf<DbInput>(dbMetricInputHistorical, dbMetricInputRealTime1, dbMetricInputRealTime2, dbMetricInputRealTime3)
+
     // Incorrect metric configs
     private val incorrectMetricConfigList =
         listOf(
             TestHelper.metricConfigWithoutMainQuery,
             TestHelper.metricConfigWithoutMainAndDbSizeQueries,
-            TestHelper.metricConfigWithoutQueries
+            TestHelper.metricConfigWithoutQueries,
+            TestHelper.metricConfigWithoutDbSizeQuery
         )
+
+    // Correct metric configs
+    private val correctMetricConfigList =
+        listOf(TestHelper.metricConfigWithMainAndDbSizeQueries, TestHelper.metricConfigWithoutDbSizeQuery)
 
 
     @Test
@@ -143,15 +151,15 @@ class DbMetricTest {
         )
         assertEquals(
             expected = expectedOutput1,
-            dbMetric.getMetricResponseMetadata(dbMetricInputRealTime, metricOutputMultipleResults)
+            dbMetric.getMetricResponseMetadata(dbMetricInputRealTime1, metricOutputMultipleResults)
         )
         assertEquals(
             expected = expectedOutput1,
-            dbMetric.getMetricResponseMetadata(dbMetricInputRealTime, metricOutputSingleResult)
+            dbMetric.getMetricResponseMetadata(dbMetricInputRealTime1, metricOutputSingleResult)
         )
         assertEquals(
             expected = expectedOutput1,
-            dbMetric.getMetricResponseMetadata(dbMetricInputRealTime, metricOutputEmptyResult)
+            dbMetric.getMetricResponseMetadata(dbMetricInputRealTime1, metricOutputEmptyResult)
         )
         val metricOutputList = listOf(
             metricOutputMultipleResults,
@@ -171,63 +179,98 @@ class DbMetricTest {
         }
     }
 
-    @Test
-    fun testExecuteFunction() {
-        val mockSqlMetricManager = TestHelper.mockSqlMetricManager<DbDTO>(listOf<DbDTO>(dbMetric1, dbMetric2))
-        assertEquals(
-            listOf(dbMetric1, dbMetric2),
-            mockSqlMetricManager.queryExecutor.execute<DbDTO>(
-                databaseName = "randomDatabaseName1",
-                query = "MetricMainQuery"
-            )
-        )
-    }
-
-    @Test
-    fun testGetMetricResult1() {
-//        val mockSqlMetricManager = TestHelper.mockSqlMetricManager<DbDTO>(listOf<DbDTO>())
-//        whenever(
-//            DbMetric().getMetricResult(
-//                dbMetricInputRealTime,
-//                TestHelper.metricConfigWithMainAndDbSizeQueries
-//            )
-//        ).thenReturn(
-//            DbResult(
-//                mockSqlMetricManager.queryExecutor.execute<DbStorageSize>(
-//                    databaseName = "randomDatabaseName1",
-//                    query = "MetricMainQuery"
-//                )
+//    @Test
+//    fun testExecuteFunction() {
+//        val mockSqlMetricManager = TestHelper.mockSqlMetricManager<DbDTO>(listOf<DbDTO>(dbMetric1, dbMetric2))
+//        assertEquals(
+//            listOf(dbMetric1, dbMetric2),
+//            mockSqlMetricManager.queryExecutor.execute<DbDTO>(
+//                databaseName = "randomDatabaseName1",
+//                query = "MetricMainQuery"
 //            )
 //        )
-    }
+//    }
 
     @Test
     fun testGetMetricResult() {
+        // Check for failing test cases throwing SQLMonitoringConnectionException
+        for (metricInput in correctMetricInputList) {
+            for (metricConfig in correctMetricConfigList) {
+                try {
+                    dbMetric.getMetricResult(metricInput = metricInput, metricConfig = metricConfig)
+                } catch (e: SQLMonitoringConnectionException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Test failing with Exception: $e\nMetric Input: $metricInput\nMetric Config: $metricConfig")
+                }
+            }
+        }
 
-//        val mockConnectionInstance: Connection = mock()
-//        SqlMetricManager.setConnection(mockConnectionInstance)
-//        whenever(
-//            SqlMetricManager.queryExecutor.execute<DbDTO>(
-//                eq(any()),
-//                eq(any())
-//            )
-//        ).thenAnswer {
-//            listOf<DbDTO>(dbMetric1, dbMetric2)
-//        }
-//        whenever(
-//            SqlMetricManager.queryExecutor.execute<Int>(
-//                eq(any()),
-//                eq(any())
-//            )
-//        ).thenAnswer {
-//            listOf<Int>(400, 200)
-//        }
+        SqlMetricManager.setConnection(mock())
+        val databaseNames = listOf("randomDatabaseName1", "randomDatabaseName2", "randomDatabaseName3")
+        databaseNames.forEach { databaseName ->
+            whenever(
+                dbMetric.executeQuery<DbDTO>(
+                    databaseName = databaseName, // "randomDatabaseName1", // "randomDatabaseName1",
+                    queryString = "MetricMainQuery",
+                    // params = any()// "MetricMainQuery" // "MetricMainQuery"
+                )
+            ).thenAnswer {
+                val database: String = it.getArgument(0) as String
+                val query: String = it.getArgument(1) as String
+                when {
+                    (database == "randomDatabaseName1") -> {
+                        listOf<DbDTO>(dbMetric1, dbMetric2)
+                    }
+                    (database == "randomDatabaseName2") -> {
+                        listOf(dbMetric1)
+                    }
+                    (database == "randomDatabaseName3") -> {
+                        listOf<DbDTO>()
+                    }
+                    else -> {
+                        throw IllegalArgumentException("Arguments does not match: Database Name: $database; Query: $query")
+                    }
+                }
+            }
+
+            whenever(
+                dbMetric.executeQuery<Int>(
+                    databaseName = databaseName,
+                    queryString = "dbSizeQueryString"
+                )
+            ).thenAnswer {
+                val database: String = it.getArgument(0) as String
+                val query: String = it.getArgument(1) as String
+                when {
+                    (database == "randomDatabaseName1") -> {
+                        listOf<Int>(400, 200)
+                    }
+                    (database == "randomDatabaseName2") -> {
+                        listOf(400)
+                    }
+                    (database == "randomDatabaseName3") -> {
+                        listOf<DbDTO>()
+                    }
+                    else -> {
+                        throw IllegalArgumentException("Arguments does not match: Database Name: $database; Query: $query")
+                    }
+                }
+            }
+        }
 
         assertEquals(
             dbMetricResultMultipleResults,
-            dbMetric.getMetricResult(dbMetricInputRealTime, TestHelper.metricConfigWithMainAndDbSizeQueries)
+            dbMetric.getMetricResult(dbMetricInputRealTime1, TestHelper.metricConfigWithMainAndDbSizeQueries)
         )
-
+        assertEquals(
+            dbMetricResultSingleResult,
+            dbMetric.getMetricResult(dbMetricInputRealTime2, TestHelper.metricConfigWithMainAndDbSizeQueries)
+        )
+        assertEquals(
+            dbMetricResultEmptyResult,
+            dbMetric.getMetricResult(dbMetricInputRealTime3, TestHelper.metricConfigWithMainAndDbSizeQueries)
+        )
 
         // Check for failing test cases throwing SQLMonitoringConfigException
         for (metricInput in incorrectMetricInputList) {
