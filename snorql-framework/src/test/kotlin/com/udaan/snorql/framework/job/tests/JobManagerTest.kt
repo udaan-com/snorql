@@ -77,8 +77,8 @@ class JobManagerTests {
         while (true) {
             Thread.sleep(20_000)
         }
-//        jobManager.triggerJob()
-//        jobManager.triggerJob()
+        jobManager.triggerJob()
+        jobManager.triggerJob()
     }
 
 //    @Test // Used to remove all the triggers

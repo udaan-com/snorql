@@ -3,6 +3,7 @@ package com.udaan.snorql.framework.job
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.udaan.snorql.framework.job.model.JobTriggerConfig
 import com.udaan.snorql.framework.job.model.QuartzProperties
+import com.udaan.snorql.framework.job.model.RecordingJobConfigOutline
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
@@ -12,10 +13,15 @@ import org.quartz.impl.StdSchedulerFactory
 import org.quartz.impl.matchers.GroupMatcher
 import java.sql.Timestamp
 
-class JobManager(
-    private val schedulerFactory: StdSchedulerFactory = StdSchedulerFactory(QuartzProperties.prop),
-    private val scheduler: Scheduler = schedulerFactory.scheduler,
-) {
+object JobManager {
+
+    private var schedulerFactory: StdSchedulerFactory = StdSchedulerFactory(QuartzProperties.prop)
+    private var scheduler: Scheduler = schedulerFactory.scheduler
+
+    fun initializeJobScheduler() {
+        schedulerFactory = StdSchedulerFactory(QuartzProperties.prop)
+        scheduler = schedulerFactory.scheduler
+    }
 
     private val objectMapper: ObjectMapper = SnorqlConstants.objectMapper
 
@@ -36,7 +42,7 @@ class JobManager(
      * 3. Returns true if successful
      */
     fun <T : MetricInput, O : IMetricResult, V : IMetricRecommendation> addJob(
-        jobConfig: JobTriggerConfig,
+        jobConfig: RecordingJobConfigOutline,
         metricInput: T,
     ): Boolean {
         return try {
