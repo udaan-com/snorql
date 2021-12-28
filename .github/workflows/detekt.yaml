@@ -1,4 +1,4 @@
-name: reviewdog
+name: code-review
 on: [pull_request]
 
 jobs:
