@@ -14,7 +14,7 @@ object SnorqlConstants {
 
     const val MONITORING_GROUP_NAME = "monitoring"
 
-    const val HISTORICAL_DATA_BUCKET_ID = "historical_bucket"
+    const val HISTORICAL_DATA_BUCKET_ID = "sql_monitoring_historical_data"
     val historicalDataTableColumns =
         listOf("runId", "timestamp", "metricId", "databaseName", "source", "metricInput", "metricOutput")
 }
