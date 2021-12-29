@@ -57,6 +57,15 @@ object TestHelper {
             supportsHistorical = true,
             supportsRealTime = true
         )
+    val metricConfigWithEmptyStringMainQuery =
+        MetricConfig(
+            queries = mapOf("main" to ""),
+            description = "randomDescription",
+            isParameterized = true,
+            referenceDoc = "",
+            supportsHistorical = true,
+            supportsRealTime = true
+        )
 
     inline fun <reified T> mockSqlMetricManager(
         outputMetricList: List<T>

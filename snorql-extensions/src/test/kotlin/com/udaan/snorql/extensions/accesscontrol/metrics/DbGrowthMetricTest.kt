@@ -13,7 +13,9 @@ import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricOutput
 import com.udaan.snorql.framework.models.MetricPeriod
 import org.junit.Test
+import java.lang.Exception
 import kotlin.test.assertEquals
+import kotlin.test.fail
 
 class DbGrowthMetricTest {
     companion object {
@@ -22,26 +24,38 @@ class DbGrowthMetricTest {
 
     // DB Growth Metric Main Query
     private val dbGrowthMetricMainQuery: String? =
-        dbGrowthMetric.getMetricConfig(DbGrowthInput(metricPeriod = MetricPeriod.REAL_TIME,
-            databaseName = "randomDatabaseName", dbNameForGrowth = "randomDBName").metricId).queries["main"]
+        dbGrowthMetric.getMetricConfig(
+            DbGrowthInput(
+                metricPeriod = MetricPeriod.REAL_TIME,
+                databaseName = "randomDatabaseName", dbNameForGrowth = "randomDBName"
+            ).metricId
+        ).queries["main"]
 
     // DB Growth Metric Inputs
     private val dbGrowthInput1 =
-        DbGrowthInput(metricPeriod = MetricPeriod.HISTORICAL,
+        DbGrowthInput(
+            metricPeriod = MetricPeriod.HISTORICAL,
             databaseName = "randomDatabaseName",
-            dbNameForGrowth = "randomDBName")
+            dbNameForGrowth = "randomDBName"
+        )
     private val dbGrowthInput2 =
-        DbGrowthInput(metricPeriod = MetricPeriod.REAL_TIME,
+        DbGrowthInput(
+            metricPeriod = MetricPeriod.REAL_TIME,
             databaseName = "randomDatabaseName",
-            dbNameForGrowth = "randomDBName")
+            dbNameForGrowth = "randomDBName"
+        )
     private val dbGrowthInput3 =
-        DbGrowthInput(metricId = "incorrectMetricID", metricPeriod = MetricPeriod.REAL_TIME,
+        DbGrowthInput(
+            metricId = "incorrectMetricID", metricPeriod = MetricPeriod.REAL_TIME,
             databaseName = "randomDatabaseName",
-            dbNameForGrowth = "randomDBName")
+            dbNameForGrowth = "randomDBName"
+        )
     private val dbGrowthInput4 =
-        DbGrowthInput(metricId = "", metricPeriod = MetricPeriod.REAL_TIME,
+        DbGrowthInput(
+            metricId = "", metricPeriod = MetricPeriod.REAL_TIME,
             databaseName = "randomDatabaseName",
-            dbNameForGrowth = "randomDBName")
+            dbNameForGrowth = "randomDBName"
+        )
 
     // Configurations
     private val metricConfig1 = MetricConfig(     // "main" query not defined in config
@@ -101,43 +115,91 @@ class DbGrowthMetricTest {
             "referenceDocumentation" to "",
             "description" to ""
         )
-        assertEquals(expected = expectedOutput1,
-            dbGrowthMetric.getMetricResponseMetadata(dbGrowthInput1,
-                metricOutput1))
-        assertEquals(expected = expectedOutput1,
-            dbGrowthMetric.getMetricResponseMetadata(dbGrowthInput1,
-                metricOutput2))
-        assertEquals(expected = expectedOutput1,
-            dbGrowthMetric.getMetricResponseMetadata(dbGrowthInput1,
-                metricOutput3))
-        assertEquals(expected = expectedOutput1,
-            dbGrowthMetric.getMetricResponseMetadata(dbGrowthInput2,
-                metricOutput1))
-        assertEquals(expected = expectedOutput1,
-            dbGrowthMetric.getMetricResponseMetadata(dbGrowthInput2,
-                metricOutput2))
-        assertEquals(expected = expectedOutput1,
-            dbGrowthMetric.getMetricResponseMetadata(dbGrowthInput2,
-                metricOutput3))
+        assertEquals(
+            expected = expectedOutput1,
+            dbGrowthMetric.getMetricResponseMetadata(
+                dbGrowthInput1,
+                metricOutput1
+            )
+        )
+        assertEquals(
+            expected = expectedOutput1,
+            dbGrowthMetric.getMetricResponseMetadata(
+                dbGrowthInput1,
+                metricOutput2
+            )
+        )
+        assertEquals(
+            expected = expectedOutput1,
+            dbGrowthMetric.getMetricResponseMetadata(
+                dbGrowthInput1,
+                metricOutput3
+            )
+        )
+        assertEquals(
+            expected = expectedOutput1,
+            dbGrowthMetric.getMetricResponseMetadata(
+                dbGrowthInput2,
+                metricOutput1
+            )
+        )
+        assertEquals(
+            expected = expectedOutput1,
+            dbGrowthMetric.getMetricResponseMetadata(
+                dbGrowthInput2,
+                metricOutput2
+            )
+        )
+        assertEquals(
+            expected = expectedOutput1,
+            dbGrowthMetric.getMetricResponseMetadata(
+                dbGrowthInput2,
+                metricOutput3
+            )
+        )
+
+        for (metricInput in listOf(dbGrowthInput3, dbGrowthInput4)) {
+            for (metricOutput in listOf(metricOutput1, metricOutput2)) {
+                try {
+                    dbGrowthMetric.getMetricResponseMetadata(metricInput, metricOutput)
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricOutput = $metricOutput")
+                } catch (e: SQLMonitoringConfigException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Incorrect exception: $e \n thrown for metricInput = $metricInput \nmetricOutput = $metricOutput")
+                }
+            }
+        }
     }
 
-    @Test(expected = SQLMonitoringConfigException::class)
-    fun testSQLMonitoringConfigException() {
-        dbGrowthMetric.getMetricResult(metricInput = dbGrowthInput1, metricConfig = metricConfig1)
-        dbGrowthMetric.getMetricResult(metricInput = dbGrowthInput2, metricConfig = metricConfig1)
-        dbGrowthMetric.getMetricResult(metricInput = dbGrowthInput1, metricConfig = metricConfig2)
-        dbGrowthMetric.getMetricResult(metricInput = dbGrowthInput2, metricConfig = metricConfig2)
-        dbGrowthMetric.getMetricResponseMetadata(metricInput = dbGrowthInput3, metricOutput = metricOutput1)
-        dbGrowthMetric.getMetricResponseMetadata(metricInput = dbGrowthInput4, metricOutput = metricOutput1)
-        dbGrowthMetric.getMetricResponseMetadata(metricInput = dbGrowthInput3, metricOutput = metricOutput2)
-        dbGrowthMetric.getMetricResponseMetadata(metricInput = dbGrowthInput4, metricOutput = metricOutput2)
-    }
+    @Test
+    fun testGetMetricResult() {
+        // Testing for SQLMonitoringConnectionException
+        for (metricInput in listOf(dbGrowthInput3, dbGrowthInput4)) {
+            for (metricConfig in listOf(metricConfig3, metricConfig4)) {
+                try {
+                    dbGrowthMetric.getMetricResult(metricInput, metricConfig)
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")
+                } catch (e: SQLMonitoringConnectionException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Incorrect exception: $e \n thrown for metricInput = $metricInput \nmetricConfig = $metricConfig")
+                }
+            }
+        }
 
-    @Test(expected = SQLMonitoringConnectionException::class)
-    fun testSQLMonitoringConnectionException() {
-        dbGrowthMetric.getMetricResult(metricInput = dbGrowthInput1, metricConfig = metricConfig3)
-        dbGrowthMetric.getMetricResult(metricInput = dbGrowthInput2, metricConfig = metricConfig3)
-        dbGrowthMetric.getMetricResult(metricInput = dbGrowthInput1, metricConfig = metricConfig4)
-        dbGrowthMetric.getMetricResult(metricInput = dbGrowthInput2, metricConfig = metricConfig4)
+        // Testing for SQLMonitoringConfigException
+        for (metricInput in listOf(dbGrowthInput3, dbGrowthInput4)) {
+            for (metricConfig in listOf(metricConfig1, metricConfig2)) {
+                try {
+                    dbGrowthMetric.getMetricResult(metricInput, metricConfig)
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")
+                } catch (e: SQLMonitoringConfigException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Incorrect exception: $e \n thrown for metricInput = $metricInput \nmetricConfig = $metricConfig")
+                }
+            }
+        }
     }
 }

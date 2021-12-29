@@ -128,6 +128,7 @@ class ActiveDDLMetricTest {
             for (metricOutput in listOf(metricOutput3, metricOutput2, metricOutput1)) {
                 try {
                     activeDDLMetric.getMetricResponseMetadata(metricInput, metricOutput)
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricOutput")
                 } catch (e: SQLMonitoringConfigException) {
                     continue
                 } catch (e: Exception) {
@@ -144,6 +145,7 @@ class ActiveDDLMetricTest {
             for (metricConfig in listOf(metricConfig1, metricConfig2)) {
                 try {
                     activeDDLMetric.getMetricResult(metricInput, metricConfig)
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")
                 } catch (e: SQLMonitoringConnectionException) {
                     continue
                 } catch (e: Exception) {
@@ -157,6 +159,7 @@ class ActiveDDLMetricTest {
             for (metricConfig in listOf(metricConfig3, metricConfig4)) {
                 try {
                     activeDDLMetric.getMetricResult(metricInput, metricConfig)
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")
                 } catch (e: SQLMonitoringConfigException) {
                     continue
                 } catch (e: Exception) {

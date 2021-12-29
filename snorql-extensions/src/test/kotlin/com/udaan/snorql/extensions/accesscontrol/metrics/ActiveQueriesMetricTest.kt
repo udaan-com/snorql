@@ -163,8 +163,6 @@ class ActiveQueriesMetricTest {
 
         // Testing for SQLMonitoringConfigException
         for (metricInput in listOf(
-            activeQueriesInput1,
-            activeQueriesInput2,
             activeQueriesInput3,
             activeQueriesInput4
         )) {
@@ -174,6 +172,7 @@ class ActiveQueriesMetricTest {
                         metricInput = metricInput,
                         metricOutput = metricOutput
                     )
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricOutput")
                 } catch (e: SQLMonitoringConfigException) {
                     continue
                 } catch (e: Exception) {
@@ -193,6 +192,7 @@ class ActiveQueriesMetricTest {
                         metricInput = metricInput,
                         metricConfig = metricConfig
                     )
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")
                 } catch (e: SQLMonitoringConnectionException) {
                     continue
                 } catch (e: Exception) {
@@ -209,6 +209,7 @@ class ActiveQueriesMetricTest {
                         metricInput = metricInput,
                         metricConfig = metricConfig
                     )
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")
                 } catch (e: SQLMonitoringConfigException) {
                     continue
                 } catch (e: Exception) {

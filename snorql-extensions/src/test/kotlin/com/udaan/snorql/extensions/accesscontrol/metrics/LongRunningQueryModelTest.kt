@@ -12,6 +12,7 @@ import com.udaan.snorql.framework.models.MetricOutput
 import com.udaan.snorql.framework.models.MetricPeriod
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.fail
 
 class LongRunningQueryModelTest {
     companion object {
@@ -124,83 +125,50 @@ class LongRunningQueryModelTest {
         assertEquals(expected = expectedOutput1,
             longRunningQueriesMetric.getMetricResponseMetadata(longRunningQueriesInput2,
                 metricOutput3))
+
+        for (metricInput in listOf(longRunningQueriesInput3, longRunningQueriesInput4)) {
+            for (metricOutput in listOf(metricOutput1, metricOutput2)) {
+                try {
+                    longRunningQueriesMetric.getMetricResponseMetadata(metricInput, metricOutput)
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricOutput = $metricOutput")
+                } catch (e: SQLMonitoringConfigException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Incorrect exception: $e \n thrown for metricInput = $metricInput \nmetricOutput = $metricOutput")
+                }
+            }
+        }
+
     }
 
-    @Test(expected = SQLMonitoringConfigException::class)
-    fun testSQLMonitoringConfigException() {
-        // "main" query not defined in config
-        val metricConfig1 = MetricConfig(
-            queries = mapOf("notMain" to "SELECT randomColumn from randomTable"),
-            supportsHistorical = false,
-            supportsRealTime = true,
-            isParameterized = false,
-            referenceDoc = "",
-            description = ""
-        )
+    @Test
+    fun testGetMetricResult() {
+        // Testing for SQLMonitoringConnectionException
+        for (metricInput in listOf(longRunningQueriesInput1, longRunningQueriesInput2)) {
+            for (metricConfig in listOf(TestHelper.metricConfigWithMainAndDbSizeQueries, TestHelper.metricConfigWithEmptyStringMainQuery)) {
+                try {
+                    longRunningQueriesMetric.getMetricResult(metricInput, metricConfig)
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")
+                } catch (e: SQLMonitoringConnectionException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Incorrect exception: $e \n thrown for metricInput = $metricInput \nmetricConfig = $metricConfig")
+                }
+            }
+        }
 
-        // empty queries map (no queries defined in config)
-        val metricConfig2 = MetricConfig(
-            queries = mapOf(),
-            supportsHistorical = false,
-            supportsRealTime = true,
-            isParameterized = false,
-            referenceDoc = "",
-            description = ""
-        )
-        longRunningQueriesMetric.getMetricResult(metricInput = longRunningQueriesInput1,
-            metricConfig = metricConfig1)
-        longRunningQueriesMetric.getMetricResult(metricInput = longRunningQueriesInput2,
-            metricConfig = metricConfig1)
-        longRunningQueriesMetric.getMetricResult(metricInput = longRunningQueriesInput1,
-            metricConfig = metricConfig2)
-        longRunningQueriesMetric.getMetricResult(metricInput = longRunningQueriesInput2,
-            metricConfig = metricConfig2)
-        longRunningQueriesMetric.getMetricResponseMetadata(metricInput = longRunningQueriesInput3,
-            metricOutput = metricOutput1)
-        longRunningQueriesMetric.getMetricResponseMetadata(metricInput = longRunningQueriesInput4,
-            metricOutput = metricOutput1)
-        longRunningQueriesMetric.getMetricResponseMetadata(metricInput = longRunningQueriesInput3,
-            metricOutput = metricOutput2)
-        longRunningQueriesMetric.getMetricResponseMetadata(metricInput = longRunningQueriesInput4,
-            metricOutput = metricOutput2)
-    }
-
-    @Test(expected = SQLMonitoringConnectionException::class)
-    fun testSQLMonitoringConnectionException() {
-        // "main" query defined
-        val metricConfig3 = MetricConfig(
-            queries = mapOf("main" to "SELECT randomColumn from randomTable"),
-            supportsHistorical = false,
-            supportsRealTime = true,
-            isParameterized = false,
-            referenceDoc = "",
-            description = ""
-        )
-
-        // empty "main" query
-        val metricConfig4 = MetricConfig(
-            queries = mapOf("main" to ""),
-            supportsHistorical = false,
-            supportsRealTime = true,
-            isParameterized = false,
-            referenceDoc = "",
-            description = ""
-        )
-        val longRunningQueriesInput1 =
-            LongRunningInput(metricPeriod = MetricPeriod.HISTORICAL,
-                databaseName = "randomDatabaseName",
-                elapsedTime = "5")
-        val longRunningQueriesInput2 =
-            LongRunningInput(metricPeriod = MetricPeriod.REAL_TIME,
-                databaseName = "randomDatabaseName",
-                elapsedTime = "5")
-        longRunningQueriesMetric.getMetricResult(metricInput = longRunningQueriesInput1,
-            metricConfig = metricConfig3)
-        longRunningQueriesMetric.getMetricResult(metricInput = longRunningQueriesInput2,
-            metricConfig = metricConfig3)
-        longRunningQueriesMetric.getMetricResult(metricInput = longRunningQueriesInput1,
-            metricConfig = metricConfig4)
-        longRunningQueriesMetric.getMetricResult(metricInput = longRunningQueriesInput2,
-            metricConfig = metricConfig4)
+        // Testing for SQLMonitoringConfigException
+        for (metricInput in listOf(longRunningQueriesInput1, longRunningQueriesInput2)) {
+            for (metricConfig in listOf(TestHelper.metricConfigWithoutMainQuery, TestHelper.metricConfigWithoutQueries)) {
+                try {
+                    longRunningQueriesMetric.getMetricResult(metricInput, metricConfig)
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")
+                } catch (e: SQLMonitoringConfigException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Incorrect exception: $e \n thrown for metricInput = $metricInput \nmetricConfig = $metricConfig")
+                }
+            }
+        }
     }
 }

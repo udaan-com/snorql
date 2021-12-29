@@ -14,6 +14,7 @@ import com.udaan.snorql.framework.models.MetricOutput
 import com.udaan.snorql.framework.models.MetricPeriod
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.fail
 
 class IndexStatsMetricTest {
     companion object {
@@ -143,25 +144,50 @@ class IndexStatsMetricTest {
         assertEquals(expected = expectedOutput1,
             indexStatsMetric.getMetricResponseMetadata(indexStatsInput2,
                 metricOutput3))
+
+        for (metricInput in listOf(indexStatsInput3, indexStatsInput4)) {
+            for (metricOutput in listOf(metricOutput1, metricOutput2)) {
+                try {
+                    indexStatsMetric.getMetricResponseMetadata(metricInput, metricOutput)
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricOutput = $metricOutput")
+                } catch (e: SQLMonitoringConfigException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Incorrect exception: $e \n thrown for metricInput = $metricInput \nmetricOutput = $metricOutput")
+                }
+            }
+        }
+
     }
 
-    @Test(expected = SQLMonitoringConfigException::class)
-    fun testSQLMonitoringConfigException() {
-        indexStatsMetric.getMetricResult(metricInput = indexStatsInput1, metricConfig = metricConfig1)
-        indexStatsMetric.getMetricResult(metricInput = indexStatsInput2, metricConfig = metricConfig1)
-        indexStatsMetric.getMetricResult(metricInput = indexStatsInput1, metricConfig = metricConfig2)
-        indexStatsMetric.getMetricResult(metricInput = indexStatsInput2, metricConfig = metricConfig2)
-        indexStatsMetric.getMetricResponseMetadata(metricInput = indexStatsInput3, metricOutput = metricOutput1)
-        indexStatsMetric.getMetricResponseMetadata(metricInput = indexStatsInput4, metricOutput = metricOutput1)
-        indexStatsMetric.getMetricResponseMetadata(metricInput = indexStatsInput3, metricOutput = metricOutput2)
-        indexStatsMetric.getMetricResponseMetadata(metricInput = indexStatsInput4, metricOutput = metricOutput2)
-    }
+    @Test
+    fun testGetMetricResult() {
+        // Testing for SQLMonitoringConnectionException
+        for (metricInput in listOf(indexStatsInput1, indexStatsInput2)) {
+            for (metricConfig in listOf(metricConfig3, metricConfig4)) {
+                try {
+                    indexStatsMetric.getMetricResult(metricInput, metricConfig)
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")
+                } catch (e: SQLMonitoringConnectionException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Incorrect exception: $e \n thrown for metricInput = $metricInput \nmetricConfig = $metricConfig")
+                }
+            }
+        }
 
-    @Test(expected = SQLMonitoringConnectionException::class)
-    fun testSQLMonitoringConnectionException() {
-        indexStatsMetric.getMetricResult(metricInput = indexStatsInput1, metricConfig = metricConfig3)
-        indexStatsMetric.getMetricResult(metricInput = indexStatsInput2, metricConfig = metricConfig3)
-        indexStatsMetric.getMetricResult(metricInput = indexStatsInput1, metricConfig = metricConfig4)
-        indexStatsMetric.getMetricResult(metricInput = indexStatsInput2, metricConfig = metricConfig4)
+        // Testing for SQLMonitoringConfigException
+        for (metricInput in listOf(indexStatsInput1, indexStatsInput2)) {
+            for (metricConfig in listOf(metricConfig1, metricConfig2)) {
+                try {
+                    indexStatsMetric.getMetricResult(metricInput, metricConfig)
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")
+                } catch (e: SQLMonitoringConfigException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Incorrect exception: $e \n thrown for metricInput = $metricInput \nmetricConfig = $metricConfig")
+                }
+            }
+        }
     }
 }

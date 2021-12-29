@@ -138,8 +138,6 @@ class BlockedQueriesMetricTest {
         )
 
         for (metricInput in listOf(
-            blockedQueriesInput1,
-            blockedQueriesInput2,
             blockedQueriesInput3,
             blockedQueriesInput4
         )) {
@@ -149,6 +147,7 @@ class BlockedQueriesMetricTest {
                         metricInput = metricInput,
                         metricOutput = metricOutput
                     )
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricOutput")
                 } catch (e: SQLMonitoringConfigException) {
                     continue
                 } catch (e: Exception) {
@@ -169,6 +168,7 @@ class BlockedQueriesMetricTest {
             )) {
                 try {
                     blockedQueriesMetric.getMetricResult(metricInput, metricConfig)
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")
                 } catch (e: SQLMonitoringConfigException) {
                     continue
                 } catch (e: Exception) {
@@ -176,44 +176,21 @@ class BlockedQueriesMetricTest {
                 }
             }
         }
-    }
 
-    @Test(expected = SQLMonitoringConnectionException::class)
-    fun testSQLMonitoringConnectionException() {
-        // "main" query defined
-        val metricConfig3 = MetricConfig(
-            queries = mapOf("main" to "SELECT randomColumn from randomTable"),
-            supportsHistorical = false,
-            supportsRealTime = true,
-            isParameterized = false,
-            referenceDoc = "",
-            description = ""
-        )
-
-        // empty "main" query
-        val metricConfig4 = MetricConfig(
-            queries = mapOf("main" to ""),
-            supportsHistorical = false,
-            supportsRealTime = true,
-            isParameterized = false,
-            referenceDoc = "",
-            description = ""
-        )
-        blockedQueriesMetric.getMetricResult(
-            metricInput = blockedQueriesInput1,
-            metricConfig = metricConfig3
-        )
-        blockedQueriesMetric.getMetricResult(
-            metricInput = blockedQueriesInput2,
-            metricConfig = metricConfig3
-        )
-        blockedQueriesMetric.getMetricResult(
-            metricInput = blockedQueriesInput1,
-            metricConfig = metricConfig4
-        )
-        blockedQueriesMetric.getMetricResult(
-            metricInput = blockedQueriesInput2,
-            metricConfig = metricConfig4
-        )
+        for (metricInput in listOf(blockedQueriesInput1, blockedQueriesInput2)) {
+            for (metricConfig in listOf(
+                TestHelper.metricConfigWithMainAndDbSizeQueries,
+                TestHelper.metricConfigWithEmptyStringMainQuery
+            )) {
+                try {
+                    blockedQueriesMetric.getMetricResult(metricInput, metricConfig)
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")
+                } catch (e: SQLMonitoringConnectionException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Test failing with Exception: $e\nMetric Input: $metricInput\nMetric Config: $metricConfig")
+                }
+            }
+        }
     }
 }

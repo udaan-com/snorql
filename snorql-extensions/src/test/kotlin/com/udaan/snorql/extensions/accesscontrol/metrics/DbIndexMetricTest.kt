@@ -10,6 +10,7 @@ import com.udaan.snorql.framework.models.MetricOutput
 import com.udaan.snorql.framework.models.MetricPeriod
 import kotlin.test.assertEquals
 import org.junit.Test
+import kotlin.test.fail
 
 class DbIndexMetricTest {
     companion object {
@@ -114,25 +115,49 @@ class DbIndexMetricTest {
         assertEquals(expected = expectedOutput1,
             dbIndexMetric.getMetricResponseMetadata(dbIndexInput2,
                 metricOutput3))
+
+        for (metricInput in listOf(dbIndexInput3, dbIndexInput4)) {
+            for (metricOutput in listOf(metricOutput1, metricOutput2)) {
+                try {
+                    dbIndexMetric.getMetricResponseMetadata(metricInput, metricOutput)
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricOutput = $metricOutput")
+                } catch (e: SQLMonitoringConfigException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Incorrect exception: $e \n thrown for metricInput = $metricInput \nmetricOutput = $metricOutput")
+                }
+            }
+        }
     }
 
-    @Test(expected = SQLMonitoringConfigException::class)
-    fun testSQLMonitoringConfigException() {
-        dbIndexMetric.getMetricResult(dbIndexInput1, metricConfig1)
-        dbIndexMetric.getMetricResult(dbIndexInput2, metricConfig1)
-        dbIndexMetric.getMetricResult(dbIndexInput1, metricConfig2)
-        dbIndexMetric.getMetricResult(dbIndexInput2, metricConfig2)
-        dbIndexMetric.getMetricResponseMetadata(metricInput = dbIndexInput3, metricOutput = metricOutput1)
-        dbIndexMetric.getMetricResponseMetadata(metricInput = dbIndexInput4, metricOutput = metricOutput1)
-        dbIndexMetric.getMetricResponseMetadata(metricInput = dbIndexInput3, metricOutput = metricOutput2)
-        dbIndexMetric.getMetricResponseMetadata(metricInput = dbIndexInput4, metricOutput = metricOutput2)
-    }
+    @Test
+    fun testGetMetricResult() {
+        // Testing for SQLMonitoringConnectionException
+        for (metricInput in listOf(dbIndexInput1, dbIndexInput2)) {
+            for (metricConfig in listOf(metricConfig3, metricConfig4)) {
+                try {
+                    dbIndexMetric.getMetricResult(metricInput, metricConfig)
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")
+                } catch (e: SQLMonitoringConnectionException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Incorrect exception: $e \n thrown for metricInput = $metricInput \nmetricConfig = $metricConfig")
+                }
+            }
+        }
 
-    @Test(expected = SQLMonitoringConnectionException::class)
-    fun testSQLMonitoringConnectionException() {
-        dbIndexMetric.getMetricResult(dbIndexInput1, metricConfig3)
-        dbIndexMetric.getMetricResult(dbIndexInput2, metricConfig3)
-        dbIndexMetric.getMetricResult(dbIndexInput1, metricConfig4)
-        dbIndexMetric.getMetricResult(dbIndexInput2, metricConfig4)
+        // Testing for SQLMonitoringConfigException
+        for (metricInput in listOf(dbIndexInput1, dbIndexInput2)) {
+            for (metricConfig in listOf(metricConfig1, metricConfig2)) {
+                try {
+                    dbIndexMetric.getMetricResult(metricInput, metricConfig)
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")
+                } catch (e: SQLMonitoringConfigException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Incorrect exception: $e \n thrown for metricInput = $metricInput \nmetricConfig = $metricConfig")
+                }
+            }
+        }
     }
 }

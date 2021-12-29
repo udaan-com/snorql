@@ -11,6 +11,7 @@ import com.udaan.snorql.framework.models.MetricOutput
 import com.udaan.snorql.framework.models.MetricPeriod
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.fail
 
 class UserRoleMetricTest {
     companion object {
@@ -101,26 +102,49 @@ class UserRoleMetricTest {
             userRoleMetric.getMetricResponseMetadata(userRoleMetricInput2, metricOutput2))
         assertEquals(expected = expectedOutput1,
             userRoleMetric.getMetricResponseMetadata(userRoleMetricInput2, metricOutput3))
-    }
-    
-    @Test(expected = SQLMonitoringConnectionException::class)
-    fun testSQLMonitoringConnectionException() {
-        userRoleMetric.getMetricResult(metricInput = userRoleMetricInput1, metricConfig = metricConfig3)
-        userRoleMetric.getMetricResult(metricInput = userRoleMetricInput2, metricConfig = metricConfig4)
-        userRoleMetric.getMetricResult(metricInput = userRoleMetricInput1, metricConfig = metricConfig4)
-        userRoleMetric.getMetricResult(metricInput = userRoleMetricInput2, metricConfig = metricConfig3)
+
+        for (metricInput in listOf(userRoleMetricInput3, userRoleMetricInput4)) {
+            for (metricOutput in listOf(metricOutput1, metricOutput2)) {
+                try {
+                    userRoleMetric.getMetricResponseMetadata(metricInput, metricOutput)
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricOutput = $metricOutput")
+                } catch (e: SQLMonitoringConfigException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Incorrect exception: $e \n thrown for metricInput = $metricInput \nmetricOutput = $metricOutput")
+                }
+            }
+        }
     }
 
-    @Test(expected = SQLMonitoringConfigException::class)
-    fun testSQLMonitoringConfigException() {
-        userRoleMetric.getMetricResult(metricInput = userRoleMetricInput1,
-            metricConfig = metricConfig1)
-        userRoleMetric.getMetricResult(metricInput = userRoleMetricInput1,
-            metricConfig = metricConfig2)
-        userRoleMetric.getMetricResponseMetadata(metricInput = userRoleMetricInput1, metricOutput = metricOutput1)
-        userRoleMetric.getMetricResponseMetadata(metricInput = userRoleMetricInput2, metricOutput = metricOutput1)
-        userRoleMetric.getMetricResponseMetadata(metricInput = userRoleMetricInput3, metricOutput = metricOutput2)
-        userRoleMetric.getMetricResponseMetadata(metricInput = userRoleMetricInput4, metricOutput = metricOutput3)
-        userRoleMetric.getMetricResponseMetadata(metricInput = userRoleMetricInput3, metricOutput = metricOutput3)
+    @Test
+    fun testGetMetricResult() {
+        // Testing for SQLMonitoringConnectionException
+        for (metricInput in listOf(userRoleMetricInput1, userRoleMetricInput2)) {
+            for (metricConfig in listOf(TestHelper.metricConfigWithMainAndDbSizeQueries, TestHelper.metricConfigWithEmptyStringMainQuery)) {
+                try {
+                    userRoleMetric.getMetricResult(metricInput, metricConfig)
+                    fail("No exception: \n thrown for metricInput = $metricInput \nmetricConfig = $metricConfig")
+                } catch (e: SQLMonitoringConnectionException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Incorrect exception: $e \n thrown for metricInput = $metricInput \nmetricConfig = $metricConfig")
+                }
+            }
+        }
+
+        // Testing for SQLMonitoringConfigException
+        for (metricInput in listOf(userRoleMetricInput1, userRoleMetricInput2, userRoleMetricInput3, userRoleMetricInput4)) {
+            for (metricConfig in listOf(TestHelper.metricConfigWithoutMainQuery, TestHelper.metricConfigWithoutQueries)) {
+                try {
+                    userRoleMetric.getMetricResult(metricInput, metricConfig)
+                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")
+                } catch (e: SQLMonitoringConfigException) {
+                    continue
+                } catch (e: Exception) {
+                    fail("Incorrect exception: $e \n thrown for metricInput = $metricInput \nmetricConfig = $metricConfig")
+                }
+            }
+        }
     }
 }

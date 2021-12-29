@@ -1,12 +1,10 @@
 package com.udaan.snorql.framework.models
 
-import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.udaan.snorql.framework.SQLMonitoringConfigException
-import com.udaan.snorql.framework.metric.SqlMetricManager
 import junit.framework.Assert.assertEquals
 import org.junit.Test
 import java.lang.Exception
