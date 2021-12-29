@@ -44,7 +44,7 @@ class TableUnusedIndexMetric :
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
 
         val paramMap = mapOf("tableName" to metricInput.tableName) // adding the params here
-        val result = SqlMetricManager.queryExecutor.execute<TableUnusedIndexDTO>(metricInput.databaseName, query, paramMap)
+        val result = executeQuery<TableUnusedIndexDTO>(metricInput.databaseName, query, paramMap)
         return TableUnusedIndexResult(result)
     }
 
@@ -77,5 +77,13 @@ class TableUnusedIndexMetric :
 
     override fun saveMetricResult(metricInput: MetricInput, result: IMetricResult) {
         TODO("Not yet implemented")
+    }
+
+    inline fun <reified T> executeQuery(
+        databaseName: String,
+        queryString: String,
+        params: Map<String, *> = mapOf<String, Any>()
+    ): List<T> {
+        return SqlMetricManager.queryExecutor.execute<T>(databaseName = databaseName, query = queryString)
     }
 }
