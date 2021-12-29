@@ -25,13 +25,13 @@ object JobManager {
 
     private val objectMapper: ObjectMapper = SnorqlConstants.objectMapper
 
-    fun startScheduler(): Boolean {
-        return try {
+    private fun startScheduler(){
+         try {
             scheduler.start()
-            true
+
         } catch (e: Exception) {
             print("Scheduler start failed due to $e")
-            false
+
         }
     }
 
@@ -71,6 +71,7 @@ object JobManager {
         jobDataMap["inputClass"] = metricInput::class.java.name
         val jobKey = JobKey(jobName, SnorqlConstants.MONITORING_GROUP_NAME)
         val triggerKey = TriggerKey(triggerName, SnorqlConstants.MONITORING_GROUP_NAME)
+        startScheduler()
         return if (!scheduler.checkExists(jobKey)) {
             println("Job does not exist. Configuring a job with job key $jobKey")
             val job = JobBuilder.newJob(MonitoringJob<T, O, V>().javaClass)
