@@ -1,9 +1,5 @@
 package com.udaan.snorql.framework.job
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.udaan.snorql.framework.job.model.HistoricalDatabaseSchemaDTO
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
@@ -12,11 +8,10 @@ import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.SnorqlConstants
 import org.quartz.Job
 import org.quartz.JobExecutionContext
-import java.lang.Exception
 import java.sql.Timestamp
 import java.util.*
 
-public class MonitoringJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation> : Job {
+class MonitoringJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation> : Job {
 
     /**
      * (Deprecated) This function does the following:
