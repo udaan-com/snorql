@@ -37,7 +37,7 @@ class ActiveDDLMetric :
             metricConfig.queries["main"]
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
 
-        val result = executeQuery<ActiveDDLDTO>(metricInput.databaseName, query)
+        val result = SqlMetricManager.queryExecutor.execute<ActiveDDLDTO>(metricInput.databaseName, query)
         return ActiveDDLResult(result)
     }
 
@@ -57,13 +57,5 @@ class ActiveDDLMetric :
 
     override fun saveMetricResult(metricInput: MetricInput, result: IMetricResult) {
         TODO("Not yet implemented")
-    }
-
-    inline fun <reified T> executeQuery(
-        databaseName: String,
-        queryString: String,
-        params: Map<String, *> = mapOf<String, Any>()
-    ): List<T> {
-        return SqlMetricManager.queryExecutor.execute<T>(databaseName = databaseName, query = queryString)
     }
 }

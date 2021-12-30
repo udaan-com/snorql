@@ -1,15 +1,32 @@
-package com.udaan.snorql.extensions.metrics
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+package com.udaan.snorql.extensions.storage.metrics
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.whenever
 import com.udaan.snorql.extensions.TestHelper
-import com.udaan.snorql.extensions.storage.metrics.PVSMetric
 import com.udaan.snorql.extensions.storage.models.PVSDTO
 import com.udaan.snorql.extensions.storage.models.PVSInput
 import com.udaan.snorql.extensions.storage.models.PVSResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
-import com.udaan.snorql.framework.SQLMonitoringConnectionException
 import com.udaan.snorql.framework.metric.Connection
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
@@ -140,37 +157,14 @@ class PVSMetricTest {
 
     @Test
     fun testGetMetricResult() {
-        // Check for failing test cases throwing SQLMonitoringConnectionException
-        for (metricInput in listOf(
-            pvsMetricInputRealTime1,
-            pvsMetricInputRealTime2,
-            pvsMetricInputHistorical1,
-            pvsMetricInputHistorical2
-        )) {
-            for (metricConfig in listOf(
-                TestHelper.metricConfigWithMainAndDbSizeQueries,
-                TestHelper.metricConfigWithoutDbSizeQuery
-            )) {
-                try {
-                    pvsMetric.getMetricResult(metricInput = metricInput, metricConfig = metricConfig)
-                    fail("Test did not throw an Exception: \nMetric Input: $metricInput\nMetric Config: $metricConfig")
-                } catch (e: SQLMonitoringConnectionException) {
-                    continue
-                } catch (e: Exception) {
-                    fail("Test failing with Exception: $e\nMetric Input: $metricInput\nMetric Config: $metricConfig")
-                }
-            }
-        }
-
         val mockConnection: Connection = mock()
         SqlMetricManager.setConnection(mockConnection)
         val databaseNames = listOf("randomDatabaseName1", "randomDatabaseName2", "randomDatabaseName3")
         databaseNames.forEach { databaseName ->
             whenever(
-                pvsMetric.executeQuery<PVSDTO>(
-                    databaseName = databaseName, // "randomDatabaseName1", // "randomDatabaseName1",
-                    queryString = "MetricMainQuery",
-                    // params = any()// "MetricMainQuery" // "MetricMainQuery"
+                SqlMetricManager.queryExecutor.execute<PVSDTO>(
+                    databaseName, // "randomDatabaseName1", // "randomDatabaseName1",
+                    "MetricMainQuery"
                 )
             ).thenAnswer {
                 val database: String = it.getArgument(0) as String
@@ -245,8 +239,7 @@ class PVSMetricTest {
             for (metricConfig in listOf(
                 TestHelper.metricConfigWithoutMainAndDbSizeQueries,
                 TestHelper.metricConfigWithoutQueries,
-                TestHelper.metricConfigWithoutMainQuery,
-                TestHelper.metricConfigWithEmptyStringMainQuery
+                TestHelper.metricConfigWithoutMainQuery
             )) {
                 try {
                     pvsMetric.getMetricResult(metricInput = metricInput, metricConfig = metricConfig)

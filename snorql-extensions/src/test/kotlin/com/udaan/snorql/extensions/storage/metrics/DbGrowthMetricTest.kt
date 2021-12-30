@@ -1,6 +1,24 @@
-package com.udaan.snorql.extensions.metrics
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
-import com.udaan.snorql.extensions.storage.metrics.DbGrowthMetric
+package com.udaan.snorql.extensions.storage.metrics
+
 import com.udaan.snorql.extensions.storage.models.DbGrowthDTO
 import com.udaan.snorql.extensions.storage.models.DbGrowthInput
 import com.udaan.snorql.extensions.storage.models.DbGrowthResult
@@ -172,20 +190,7 @@ class DbGrowthMetricTest {
 
     @Test
     fun testGetMetricResult() {
-        // Testing for SQLMonitoringConnectionException
-        for (metricInput in listOf(dbGrowthInput3, dbGrowthInput4)) {
-            for (metricConfig in listOf(metricConfig3, metricConfig4)) {
-                try {
-                    dbGrowthMetric.getMetricResult(metricInput, metricConfig)
-                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")
-                } catch (e: SQLMonitoringConnectionException) {
-                    continue
-                } catch (e: Exception) {
-                    fail("Incorrect exception: $e \n thrown for metricInput = $metricInput \nmetricConfig = $metricConfig")
-                }
-            }
-        }
-
+        // TODO: success case
         // Testing for SQLMonitoringConfigException
         for (metricInput in listOf(dbGrowthInput3, dbGrowthInput4)) {
             for (metricConfig in listOf(metricConfig1, metricConfig2)) {

@@ -1,6 +1,24 @@
-package com.udaan.snorql.extensions.metrics
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
-import com.udaan.snorql.extensions.performance.metrics.IndexStatsMetric
+package com.udaan.snorql.extensions.performance.metrics
+
 import com.udaan.snorql.extensions.performance.models.IndexStatDTO
 import com.udaan.snorql.extensions.performance.models.IndexStatInput
 import com.udaan.snorql.extensions.performance.models.IndexStatResult
@@ -160,20 +178,7 @@ class IndexStatsMetricTest {
 
     @Test
     fun testGetMetricResult() {
-        // Testing for SQLMonitoringConnectionException
-        for (metricInput in listOf(indexStatsInput1, indexStatsInput2)) {
-            for (metricConfig in listOf(metricConfig3, metricConfig4)) {
-                try {
-                    indexStatsMetric.getMetricResult(metricInput, metricConfig)
-                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")
-                } catch (e: SQLMonitoringConnectionException) {
-                    continue
-                } catch (e: Exception) {
-                    fail("Incorrect exception: $e \n thrown for metricInput = $metricInput \nmetricConfig = $metricConfig")
-                }
-            }
-        }
-
+        // TODO: success case
         // Testing for SQLMonitoringConfigException
         for (metricInput in listOf(indexStatsInput1, indexStatsInput2)) {
             for (metricConfig in listOf(metricConfig1, metricConfig2)) {

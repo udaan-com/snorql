@@ -43,10 +43,7 @@ class DbMetric :
             metricConfig.queries["main"]
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
 
-        val result = executeQuery<DbDTO>(
-            metricInput.databaseName,
-            query
-        ) // SqlMetricManager.queryExecutor.execute<DbDTO>(metricInput.databaseName, query)
+        val result = SqlMetricManager.queryExecutor.execute<DbDTO>(metricInput.databaseName, query)
         val dbSizeQuery =
             metricConfig.queries["dbSize"]
                 ?: throw SQLMonitoringConfigException("SQL config query [dbSize] not found under config [${metricInput.metricId}]")

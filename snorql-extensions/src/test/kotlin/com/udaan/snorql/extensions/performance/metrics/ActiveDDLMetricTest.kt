@@ -1,10 +1,28 @@
-package com.udaan.snorql.extensions.metrics
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+package com.udaan.snorql.extensions.performance.metrics
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.whenever
 import com.udaan.snorql.extensions.TestHelper
-import com.udaan.snorql.extensions.performance.metrics.ActiveDDLMetric
 import com.udaan.snorql.extensions.performance.models.ActiveDDLDTO
 import com.udaan.snorql.extensions.performance.models.ActiveDDLInput
 import com.udaan.snorql.extensions.performance.models.ActiveDDLResult
@@ -27,7 +45,8 @@ class ActiveDDLMetricTest {
     }
 
     private val activeDDLMetricMainQuery: String? =
-        activeDDLMetric.getMetricConfig(ActiveDDLInput(metricPeriod = MetricPeriod.REAL_TIME,
+        activeDDLMetric.getMetricConfig(
+            ActiveDDLInput(metricPeriod = MetricPeriod.REAL_TIME,
             databaseName = "randomDatabaseName").metricId).queries["main"]
 
     // Active DDL Query Input
@@ -142,20 +161,6 @@ class ActiveDDLMetricTest {
 
     @Test
     fun testGetMetricResult() {
-        // Testing for SQLMonitoringConnectionException
-        for (metricInput in listOf(activeDDLInput1, activeDDLInput2)) {
-            for (metricConfig in listOf(metricConfig1, metricConfig2)) {
-                try {
-                    activeDDLMetric.getMetricResult(metricInput, metricConfig)
-                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")
-                } catch (e: SQLMonitoringConnectionException) {
-                    continue
-                } catch (e: Exception) {
-                    fail("Test failing with Exception: $e\nMetric Input: $metricInput\nMetric Config: $metricConfig")
-                }
-            }
-        }
-
         // Testing for SQLMonitoringConfigException
         for (metricInput in listOf(activeDDLInput1, activeDDLInput2, activeDDLInput3, activeDDLInput4)) {
             for (metricConfig in listOf(metricConfig3, metricConfig4)) {
@@ -175,9 +180,9 @@ class ActiveDDLMetricTest {
         val databaseNames = listOf("randomDatabaseName1", "randomDatabaseName2", "randomDatabaseName3")
         databaseNames.forEach { databaseName ->
             whenever(
-                activeDDLMetric.executeQuery<ActiveDDLDTO>(
-                    databaseName = databaseName,
-                    queryString = "MetricMainQuery",
+                SqlMetricManager.queryExecutor.execute<ActiveDDLDTO>(
+                    databaseName,
+                    "MetricMainQuery"
                 )
             ).thenAnswer {
                 val database: String = it.getArgument(0) as String

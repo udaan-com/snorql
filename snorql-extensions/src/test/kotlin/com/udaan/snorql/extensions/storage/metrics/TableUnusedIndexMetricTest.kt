@@ -1,15 +1,32 @@
-package com.udaan.snorql.extensions.metrics
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+package com.udaan.snorql.extensions.storage.metrics
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.whenever
 import com.udaan.snorql.extensions.TestHelper
-import com.udaan.snorql.extensions.storage.metrics.TableUnusedIndexMetric
 import com.udaan.snorql.extensions.storage.models.TableUnusedIndexDTO
 import com.udaan.snorql.extensions.storage.models.TableUnusedIndexInput
 import com.udaan.snorql.extensions.storage.models.TableUnusedIndexResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
-import com.udaan.snorql.framework.SQLMonitoringConnectionException
 import com.udaan.snorql.framework.metric.Connection
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
@@ -195,28 +212,6 @@ class TableUnusedIndexMetricTest {
 
     @Test
     fun testGetMetricResult() {
-        // Check for failing test cases throwing SQLMonitoringConnectionException
-        for (metricInput in listOf(
-            tableUnusedIndexMetricInputRealTime1,
-            tableUnusedIndexMetricInputRealTime2,
-            tableUnusedIndexMetricInputHistorical1,
-            tableUnusedIndexMetricInputHistorical2
-        )) {
-            for (metricConfig in listOf(
-                TestHelper.metricConfigWithMainAndDbSizeQueries,
-                TestHelper.metricConfigWithoutDbSizeQuery
-            )) {
-                try {
-                    tableUnusedIndexMetric.getMetricResult(metricInput = metricInput, metricConfig = metricConfig)
-                    fail("Test did not throw an Exception for:\nMetric Input: $metricInput\nMetric Config: $metricConfig")
-                } catch (e: SQLMonitoringConnectionException) {
-                    continue
-                } catch (e: Exception) {
-                    fail("Test failing with Exception: $e\nMetric Input: $metricInput\nMetric Config: $metricConfig")
-                }
-            }
-        }
-
         val mockConnection: Connection = mock()
         SqlMetricManager.setConnection(mockConnection)
         val metricInputList = listOf(
@@ -229,10 +224,10 @@ class TableUnusedIndexMetricTest {
         )
         metricInputList.forEach { metricInput ->
             whenever(
-                tableUnusedIndexMetric.executeQuery<TableUnusedIndexDTO>(
-                    databaseName = metricInput.databaseName,
-                    queryString = "MetricMainQuery",
-                    params = mapOf("tableName" to metricInput.tableName)
+                SqlMetricManager.queryExecutor.execute<TableUnusedIndexDTO>(
+                    metricInput.databaseName,
+                    "MetricMainQuery",
+                    mapOf("tableName" to metricInput.tableName)
                 )
             ).thenAnswer {
                 val database: String = it.getArgument(0) as String
@@ -305,8 +300,7 @@ class TableUnusedIndexMetricTest {
             for (metricConfig in listOf(
                 TestHelper.metricConfigWithoutMainAndDbSizeQueries,
                 TestHelper.metricConfigWithoutQueries,
-                TestHelper.metricConfigWithoutMainQuery,
-                TestHelper.metricConfigWithEmptyStringMainQuery
+                TestHelper.metricConfigWithoutMainQuery
             )) {
                 try {
                     tableUnusedIndexMetric.getMetricResult(metricInput = metricInput, metricConfig = metricConfig)
