@@ -69,6 +69,7 @@ class QueryExecutor(val connection: Connection) {
             row.add(it.timestamp.toString())
             row.add(it.metricId)
             row.add(it.databaseName)
+            row.add(it.source)
             row.add(SnorqlConstants.objectMapper.writeValueAsString(it.metricInput))
             row.add(SnorqlConstants.objectMapper.writeValueAsString(it.metricOutput))
             rows.add(row)
