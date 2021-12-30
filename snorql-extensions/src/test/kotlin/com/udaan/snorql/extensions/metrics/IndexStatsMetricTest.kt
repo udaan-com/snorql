@@ -1,11 +1,9 @@
-package com.udaan.snorql.extensions.accesscontrol.metrics
+package com.udaan.snorql.extensions.metrics
 
 import com.udaan.snorql.extensions.performance.metrics.IndexStatsMetric
-import com.udaan.snorql.extensions.performance.models.BlockedQueriesInput
 import com.udaan.snorql.extensions.performance.models.IndexStatDTO
 import com.udaan.snorql.extensions.performance.models.IndexStatInput
 import com.udaan.snorql.extensions.performance.models.IndexStatResult
-import com.udaan.snorql.extensions.storage.models.DbDTO
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.SQLMonitoringConnectionException
 import com.udaan.snorql.framework.models.IMetricRecommendation

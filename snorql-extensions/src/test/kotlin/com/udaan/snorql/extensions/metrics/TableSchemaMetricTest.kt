@@ -1,17 +1,21 @@
-package com.udaan.snorql.extensions.accesscontrol.metrics
+package com.udaan.snorql.extensions.metrics
 
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.whenever
+import com.udaan.snorql.extensions.TestHelper
 import com.udaan.snorql.extensions.storage.metrics.TableSchemaMetric
 import com.udaan.snorql.extensions.storage.models.TableSchemaDTO
 import com.udaan.snorql.extensions.storage.models.TableSchemaInput
 import com.udaan.snorql.extensions.storage.models.TableSchemaResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.SQLMonitoringConnectionException
+import com.udaan.snorql.framework.metric.Connection
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.MetricOutput
 import com.udaan.snorql.framework.models.MetricPeriod
+import junit.framework.Assert
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
@@ -131,6 +135,7 @@ class TableSchemaMetricTest {
             for (metricOutput in metricOutputList) {
                 try {
                     tableSchemaMetric.getMetricResponseMetadata(metricInput = metricInput, metricOutput = metricOutput)
+                    Assert.fail("Test did not throw an Exception: \nMetric Input: $metricInput\nMetric Config: $metricOutput")
                 } catch (e: SQLMonitoringConfigException) {
                     continue
                 } catch (e: Exception) {
@@ -155,6 +160,7 @@ class TableSchemaMetricTest {
             )) {
                 try {
                     tableSchemaMetric.getMetricResult(metricInput = metricInput, metricConfig = metricConfig)
+                    fail("Test did not throw an Exception: \nMetric Input: $metricInput\nMetric Config: $metricConfig")
                 } catch (e: SQLMonitoringConnectionException) {
                     continue
                 } catch (e: Exception) {
@@ -163,7 +169,8 @@ class TableSchemaMetricTest {
             }
         }
 
-        SqlMetricManager.setConnection(mock())
+        val mockConnection: Connection = mock()
+        SqlMetricManager.setConnection(mockConnection)
         val metricInputList = listOf(tableSchemaMetricInputRealTime1, tableSchemaMetricInputRealTime2, tableSchemaMetricInputRealTime3, tableSchemaMetricInputHistorical1, tableSchemaMetricInputHistorical2, tableSchemaMetricInputHistorical3)
         metricInputList.forEach { metricInput ->
             whenever(
@@ -237,9 +244,15 @@ class TableSchemaMetricTest {
 
         // Check for failing test cases throwing SQLMonitoringConfigException
         for (metricInput in listOf(tableSchemaMetricInputIncorrectMetricId, tableSchemaMetricInputEmptyMetricId)) {
-            for (metricConfig in listOf(TestHelper.metricConfigWithoutMainAndDbSizeQueries, TestHelper.metricConfigWithoutQueries, TestHelper.metricConfigWithoutMainQuery, TestHelper.metricConfigWithEmptyStringMainQuery)) {
+            for (metricConfig in listOf(
+                TestHelper.metricConfigWithoutMainAndDbSizeQueries,
+                TestHelper.metricConfigWithoutQueries,
+                TestHelper.metricConfigWithoutMainQuery,
+                TestHelper.metricConfigWithEmptyStringMainQuery
+            )) {
                 try {
                     tableSchemaMetric.getMetricResult(metricInput = metricInput, metricConfig = metricConfig)
+                    fail("Test did not throw an Exception: \nMetric Input: $metricInput\nMetric Config: $metricConfig")
                 } catch (e: SQLMonitoringConfigException) {
                     continue
                 } catch (e: Exception) {
@@ -247,6 +260,7 @@ class TableSchemaMetricTest {
                 }
             }
         }
+        reset(mockConnection)
     }
 
 }

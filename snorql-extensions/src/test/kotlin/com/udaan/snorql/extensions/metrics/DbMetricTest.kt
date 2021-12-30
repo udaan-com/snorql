@@ -1,7 +1,9 @@
-package com.udaan.snorql.extensions.accesscontrol.metrics
+package com.udaan.snorql.extensions.metrics
 
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.whenever
+import com.udaan.snorql.extensions.TestHelper
 import com.udaan.snorql.extensions.storage.metrics.DbMetric
 import com.udaan.snorql.extensions.storage.models.DbDTO
 import com.udaan.snorql.extensions.storage.models.DbInput
@@ -9,6 +11,7 @@ import com.udaan.snorql.extensions.storage.models.DbResult
 import com.udaan.snorql.extensions.storage.models.DbStorageSize
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.SQLMonitoringConnectionException
+import com.udaan.snorql.framework.metric.Connection
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.MetricOutput
@@ -205,8 +208,8 @@ class DbMetricTest {
                 }
             }
         }
-
-        SqlMetricManager.setConnection(mock())
+        val mockConnection: Connection = mock()
+        SqlMetricManager.setConnection(mockConnection)
         val databaseNames = listOf("randomDatabaseName1", "randomDatabaseName2", "randomDatabaseName3")
         databaseNames.forEach { databaseName ->
             whenever(
@@ -284,5 +287,6 @@ class DbMetricTest {
                 }
             }
         }
+        reset(mockConnection)
     }
 }

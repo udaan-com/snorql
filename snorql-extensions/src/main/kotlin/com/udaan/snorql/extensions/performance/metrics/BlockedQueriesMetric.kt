@@ -35,7 +35,7 @@ class BlockedQueriesMetric :
         val query =
             metricConfig.queries["main"]
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
-        val results = SqlMetricManager.queryExecutor.execute<BlockedQueriesDTO>(metricInput.databaseName, query)
+        val results = executeQuery<BlockedQueriesDTO>(metricInput.databaseName, query)
 
         for(result in results) {
             if(result.blockedBy != 0){
@@ -73,5 +73,13 @@ class BlockedQueriesMetric :
 
     override fun saveMetricResult(metricInput: MetricInput, result: IMetricResult) {
         TODO("Not yet implemented")
+    }
+
+    inline fun <reified T> executeQuery(
+        databaseName: String,
+        queryString: String,
+        params: Map<String, *> = mapOf<String, Any>()
+    ): List<T> {
+        return SqlMetricManager.queryExecutor.execute<T>(databaseName = databaseName, query = queryString)
     }
 }

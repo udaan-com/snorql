@@ -1,4 +1,4 @@
-package com.udaan.snorql.extensions.accesscontrol.metrics
+package com.udaan.snorql.extensions.metrics
 
 import com.udaan.snorql.extensions.storage.metrics.DbIndexMetric
 import com.udaan.snorql.extensions.storage.models.*

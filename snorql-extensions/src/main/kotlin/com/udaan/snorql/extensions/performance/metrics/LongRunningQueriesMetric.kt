@@ -37,7 +37,7 @@ class LongRunningQueriesMetric :
             metricConfig.queries["main"]
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
         val paramMap = mapOf("elapsedTimeParam" to metricInput.elapsedTime)
-        val result = SqlMetricManager.queryExecutor.execute<LongRunningQueryDTO>(metricInput.databaseName, query,paramMap)
+        val result = executeQuery<LongRunningQueryDTO>(metricInput.databaseName, query,paramMap)
         return LongRunningResult(result)
     }
 
@@ -58,5 +58,13 @@ class LongRunningQueriesMetric :
 
     override fun saveMetricResult(metricInput: MetricInput, result: IMetricResult) {
         TODO("Not yet implemented")
+    }
+
+    inline fun <reified T> executeQuery(
+        databaseName: String,
+        queryString: String,
+        params: Map<String, *> = mapOf<String, Any>()
+    ): List<T> {
+        return SqlMetricManager.queryExecutor.execute<T>(databaseName = databaseName, query = queryString)
     }
 }

@@ -1,5 +1,6 @@
-package com.udaan.snorql.extensions.accesscontrol.metrics
+package com.udaan.snorql.extensions.metrics
 
+import com.udaan.snorql.extensions.TestHelper
 import com.udaan.snorql.extensions.performance.metrics.LongRunningQueriesMetric
 import com.udaan.snorql.extensions.performance.models.LongRunningResult
 import com.udaan.snorql.extensions.performance.models.LongRunningInput
@@ -7,7 +8,6 @@ import com.udaan.snorql.extensions.performance.models.LongRunningQueryDTO
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.SQLMonitoringConnectionException
 import com.udaan.snorql.framework.models.IMetricRecommendation
-import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricOutput
 import com.udaan.snorql.framework.models.MetricPeriod
 import org.junit.Test
@@ -145,7 +145,10 @@ class LongRunningQueryModelTest {
     fun testGetMetricResult() {
         // Testing for SQLMonitoringConnectionException
         for (metricInput in listOf(longRunningQueriesInput1, longRunningQueriesInput2)) {
-            for (metricConfig in listOf(TestHelper.metricConfigWithMainAndDbSizeQueries, TestHelper.metricConfigWithEmptyStringMainQuery)) {
+            for (metricConfig in listOf(
+                TestHelper.metricConfigWithMainAndDbSizeQueries,
+                TestHelper.metricConfigWithEmptyStringMainQuery
+            )) {
                 try {
                     longRunningQueriesMetric.getMetricResult(metricInput, metricConfig)
                     fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")

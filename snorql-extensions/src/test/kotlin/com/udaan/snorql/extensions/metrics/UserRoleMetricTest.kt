@@ -1,5 +1,7 @@
-package com.udaan.snorql.extensions.accesscontrol.metrics
+package com.udaan.snorql.extensions.metrics
 
+import com.udaan.snorql.extensions.TestHelper
+import com.udaan.snorql.extensions.accesscontrol.metrics.UserRoleMetric
 import com.udaan.snorql.extensions.accesscontrol.models.UserRoleDTO
 import com.udaan.snorql.extensions.accesscontrol.models.UserRoleInput
 import com.udaan.snorql.extensions.accesscontrol.models.UserRoleResult
@@ -121,7 +123,10 @@ class UserRoleMetricTest {
     fun testGetMetricResult() {
         // Testing for SQLMonitoringConnectionException
         for (metricInput in listOf(userRoleMetricInput1, userRoleMetricInput2)) {
-            for (metricConfig in listOf(TestHelper.metricConfigWithMainAndDbSizeQueries, TestHelper.metricConfigWithEmptyStringMainQuery)) {
+            for (metricConfig in listOf(
+                TestHelper.metricConfigWithMainAndDbSizeQueries,
+                TestHelper.metricConfigWithEmptyStringMainQuery
+            )) {
                 try {
                     userRoleMetric.getMetricResult(metricInput, metricConfig)
                     fail("No exception: \n thrown for metricInput = $metricInput \nmetricConfig = $metricConfig")

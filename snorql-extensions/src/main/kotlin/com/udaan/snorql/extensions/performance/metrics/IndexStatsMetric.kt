@@ -40,7 +40,7 @@ class IndexStatsMetric :
         // adding the stat params here
         val paramMap = mapOf("tableName" to metricInput.tableName, "indexName" to metricInput.indexName)
 
-        val result = SqlMetricManager.queryExecutor.execute<IndexStatDTO>(metricInput.databaseName, query, paramMap)
+        val result = executeQuery<IndexStatDTO>(metricInput.databaseName, query, paramMap)
             return IndexStatResult(result)
     }
 
@@ -61,5 +61,13 @@ class IndexStatsMetric :
 
     override fun saveMetricResult(metricInput: MetricInput, result: IMetricResult) {
         TODO("Not yet implemented")
+    }
+
+    inline fun <reified T> executeQuery(
+        databaseName: String,
+        queryString: String,
+        params: Map<String, *> = mapOf<String, Any>()
+    ): List<T> {
+        return SqlMetricManager.queryExecutor.execute<T>(databaseName = databaseName, query = queryString)
     }
 }

@@ -1,13 +1,16 @@
-package com.udaan.snorql.extensions.accesscontrol.metrics
+package com.udaan.snorql.extensions.metrics
 
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.whenever
+import com.udaan.snorql.extensions.TestHelper
 import com.udaan.snorql.extensions.storage.metrics.PVSMetric
 import com.udaan.snorql.extensions.storage.models.PVSDTO
 import com.udaan.snorql.extensions.storage.models.PVSInput
 import com.udaan.snorql.extensions.storage.models.PVSResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.SQLMonitoringConnectionException
+import com.udaan.snorql.framework.metric.Connection
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.MetricOutput
@@ -125,6 +128,7 @@ class PVSMetricTest {
             for (metricOutput in metricOutputList) {
                 try {
                     pvsMetric.getMetricResponseMetadata(metricInput = metricInput, metricOutput = metricOutput)
+                    fail("Test did not throw an Exception: \nMetric Input: $metricInput\nMetric Config: $metricOutput")
                 } catch (e: SQLMonitoringConfigException) {
                     continue
                 } catch (e: Exception) {
@@ -149,6 +153,7 @@ class PVSMetricTest {
             )) {
                 try {
                     pvsMetric.getMetricResult(metricInput = metricInput, metricConfig = metricConfig)
+                    fail("Test did not throw an Exception: \nMetric Input: $metricInput\nMetric Config: $metricConfig")
                 } catch (e: SQLMonitoringConnectionException) {
                     continue
                 } catch (e: Exception) {
@@ -157,7 +162,8 @@ class PVSMetricTest {
             }
         }
 
-        SqlMetricManager.setConnection(mock())
+        val mockConnection: Connection = mock()
+        SqlMetricManager.setConnection(mockConnection)
         val databaseNames = listOf("randomDatabaseName1", "randomDatabaseName2", "randomDatabaseName3")
         databaseNames.forEach { databaseName ->
             whenever(
@@ -214,9 +220,10 @@ class PVSMetricTest {
                 TestHelper.metricConfigWithMainAndDbSizeQueries
             )
         )
-        println(pvsMetric.getMetricResult(
+        println(
+            pvsMetric.getMetricResult(
             pvsMetricInputHistorical1,
-            TestHelper.metricConfigWithMainAndDbSizeQueries
+                TestHelper.metricConfigWithMainAndDbSizeQueries
         ))
         assertEquals(
             pvsMetricResultSingleResult,
@@ -235,9 +242,15 @@ class PVSMetricTest {
 
         // Check for failing test cases throwing SQLMonitoringConfigException
         for (metricInput in listOf(pvsMetricInputIncorrectMetricId, pvsMetricInputEmptyMetricId)) {
-            for (metricConfig in listOf(TestHelper.metricConfigWithoutMainAndDbSizeQueries, TestHelper.metricConfigWithoutQueries, TestHelper.metricConfigWithoutMainQuery, TestHelper.metricConfigWithEmptyStringMainQuery)) {
+            for (metricConfig in listOf(
+                TestHelper.metricConfigWithoutMainAndDbSizeQueries,
+                TestHelper.metricConfigWithoutQueries,
+                TestHelper.metricConfigWithoutMainQuery,
+                TestHelper.metricConfigWithEmptyStringMainQuery
+            )) {
                 try {
                     pvsMetric.getMetricResult(metricInput = metricInput, metricConfig = metricConfig)
+                    fail("Test did not throw an Exception: \nMetric Input: $metricInput\nMetric Config: $metricConfig")
                 } catch (e: SQLMonitoringConfigException) {
                     continue
                 } catch (e: Exception) {
@@ -245,5 +258,6 @@ class PVSMetricTest {
                 }
             }
         }
+        reset(mockConnection)
     }
 }

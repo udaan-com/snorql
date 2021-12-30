@@ -1,13 +1,16 @@
-package com.udaan.snorql.extensions.accesscontrol.metrics
+package com.udaan.snorql.extensions.metrics
 
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.whenever
+import com.udaan.snorql.extensions.TestHelper
 import com.udaan.snorql.extensions.storage.metrics.TableUnusedIndexMetric
 import com.udaan.snorql.extensions.storage.models.TableUnusedIndexDTO
 import com.udaan.snorql.extensions.storage.models.TableUnusedIndexInput
 import com.udaan.snorql.extensions.storage.models.TableUnusedIndexResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.SQLMonitoringConnectionException
+import com.udaan.snorql.framework.metric.Connection
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.MetricOutput
@@ -205,6 +208,7 @@ class TableUnusedIndexMetricTest {
             )) {
                 try {
                     tableUnusedIndexMetric.getMetricResult(metricInput = metricInput, metricConfig = metricConfig)
+                    fail("Test did not throw an Exception for:\nMetric Input: $metricInput\nMetric Config: $metricConfig")
                 } catch (e: SQLMonitoringConnectionException) {
                     continue
                 } catch (e: Exception) {
@@ -213,7 +217,8 @@ class TableUnusedIndexMetricTest {
             }
         }
 
-        SqlMetricManager.setConnection(mock())
+        val mockConnection: Connection = mock()
+        SqlMetricManager.setConnection(mockConnection)
         val metricInputList = listOf(
             tableUnusedIndexMetricInputRealTime1,
             tableUnusedIndexMetricInputRealTime2,
@@ -305,6 +310,7 @@ class TableUnusedIndexMetricTest {
             )) {
                 try {
                     tableUnusedIndexMetric.getMetricResult(metricInput = metricInput, metricConfig = metricConfig)
+                    fail("Test did not throw an Exception for: \nMetric Input: $metricInput\nMetric Config: $metricConfig")
                 } catch (e: SQLMonitoringConfigException) {
                     continue
                 } catch (e: Exception) {
@@ -312,5 +318,6 @@ class TableUnusedIndexMetricTest {
                 }
             }
         }
+        reset(mockConnection)
     }
 }

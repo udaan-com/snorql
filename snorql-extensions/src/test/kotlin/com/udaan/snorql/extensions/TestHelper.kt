@@ -1,13 +1,11 @@
-package com.udaan.snorql.extensions.accesscontrol.metrics
+package com.udaan.snorql.extensions
 
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.udaan.snorql.framework.metric.Connection
 import com.udaan.snorql.framework.metric.QueryExecutor
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.MetricConfig
-import org.mockito.ArgumentMatchers
 
 object TestHelper {
 

@@ -1,13 +1,16 @@
-package com.udaan.snorql.extensions.accesscontrol.metrics
+package com.udaan.snorql.extensions.metrics
 
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.whenever
+import com.udaan.snorql.extensions.TestHelper
 import com.udaan.snorql.extensions.storage.metrics.TableMetric
 import com.udaan.snorql.extensions.storage.models.TableDTO
 import com.udaan.snorql.extensions.storage.models.TableInput
 import com.udaan.snorql.extensions.storage.models.TableResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.SQLMonitoringConnectionException
+import com.udaan.snorql.framework.metric.Connection
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.MetricOutput
@@ -123,6 +126,7 @@ class TableMetricTest {
             for (metricOutput in metricOutputList) {
                 try {
                     tableMetric.getMetricResponseMetadata(metricInput = metricInput, metricOutput = metricOutput)
+                    fail("Test did not throw an Exception: \nMetric Input: $metricInput\nMetric Config: $metricOutput")
                 } catch (e: SQLMonitoringConfigException) {
                     continue
                 } catch (e: Exception) {
@@ -147,6 +151,7 @@ class TableMetricTest {
             )) {
                 try {
                     tableMetric.getMetricResult(metricInput = metricInput, metricConfig = metricConfig)
+                    fail("Test did not throw an Exception: \nMetric Input: $metricInput\nMetric Config: $metricConfig")
                 } catch (e: SQLMonitoringConnectionException) {
                     continue
                 } catch (e: Exception) {
@@ -155,7 +160,8 @@ class TableMetricTest {
             }
         }
 
-        SqlMetricManager.setConnection(mock())
+        val mockConnection: Connection = mock()
+        SqlMetricManager.setConnection(mockConnection)
         val metricInputList = listOf(tableMetricInputRealTime1, tableMetricInputRealTime2, tableMetricInputRealTime3, tableMetricInputHistorical1, tableMetricInputHistorical2, tableMetricInputHistorical3)
         metricInputList.forEach { metricInput ->
             whenever(
@@ -229,9 +235,15 @@ class TableMetricTest {
 
         // Check for failing test cases throwing SQLMonitoringConfigException
         for (metricInput in listOf(tableMetricInputIncorrectMetricId, tableMetricInputEmptyMetricId)) {
-            for (metricConfig in listOf(TestHelper.metricConfigWithoutMainAndDbSizeQueries, TestHelper.metricConfigWithoutQueries, TestHelper.metricConfigWithoutMainQuery, TestHelper.metricConfigWithEmptyStringMainQuery)) {
+            for (metricConfig in listOf(
+                TestHelper.metricConfigWithoutMainAndDbSizeQueries,
+                TestHelper.metricConfigWithoutQueries,
+                TestHelper.metricConfigWithoutMainQuery,
+                TestHelper.metricConfigWithEmptyStringMainQuery
+            )) {
                 try {
                     tableMetric.getMetricResult(metricInput = metricInput, metricConfig = metricConfig)
+                    fail("Test did not throw an Exception: \nMetric Input: $metricInput\nMetric Config: $metricConfig")
                 } catch (e: SQLMonitoringConfigException) {
                     continue
                 } catch (e: Exception) {
@@ -239,5 +251,6 @@ class TableMetricTest {
                 }
             }
         }
+        reset(mockConnection)
     }
 }
