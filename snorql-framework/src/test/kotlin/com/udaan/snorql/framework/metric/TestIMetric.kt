@@ -1,8 +1,10 @@
 package com.udaan.snorql.framework.metric
 
 import com.udaan.snorql.framework.models.*
+import junit.framework.Assert.assertNotNull
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 data class DemoDTO(
     val demoField1: String,
@@ -56,13 +58,15 @@ class TestIMetric : IMetric<DemoInput, DemoResult, DemoRecommendation> {
         databaseName = "DemoDatabaseName2"
     )
 
+    private val demoResult1 = DemoResult(listOf(demoDTO1))
+
     private val metricOutput1 = MetricOutput(
         result = DemoResult(listOf(demoDTO1, demoDTO2)),
         recommendation = null
     ) // DemoRecommendation(listOf("Recommendation String 1", "Recommendation String 2"))
 
     private val metricOutput2 = MetricOutput(
-        result = DemoResult(listOf(demoDTO1)),
+        result = demoResult1,
         recommendation = null
     )
 
@@ -110,5 +114,11 @@ class TestIMetric : IMetric<DemoInput, DemoResult, DemoRecommendation> {
     fun testGetMetricResponse() {
         assertEquals(metricResponse1, getMetricResponse(metricInput1))
         assertEquals(metricResponse2, getMetricResponse(metricInput2))
+    }
+
+    @Test
+    fun testGetMetricRecommendations() {
+        assertNotNull(getMetricRecommendations(metricInput1, demoResult1))
+        assertNotNull(getMetricRecommendations(metricInput2, demoResult1))
     }
 }
