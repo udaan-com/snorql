@@ -24,7 +24,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.udaan.snorql.extensions.TestHelper
 import com.udaan.snorql.extensions.performance.models.*
 import com.udaan.snorql.framework.SQLMonitoringConfigException
-import com.udaan.snorql.framework.SQLMonitoringConnectionException
 import com.udaan.snorql.framework.metric.Connection
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
@@ -54,19 +53,48 @@ class BlockedQueriesMetricTest {
         BlockedQueriesInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName2")
     private val blockedQueriesInput3 =
         BlockedQueriesInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName3")
-    private val blockedQueriesInput5 =
+    private val blockedQueriesInput4 =
+        BlockedQueriesInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName4")
+    private val blockedQueriesIncorrectMetricIdInput =
         BlockedQueriesInput(
             metricId = "randomMetricID",
             metricPeriod = MetricPeriod.REAL_TIME,
             databaseName = "randomDatabaseName"
         )
-    private val blockedQueriesInput4 =
+    private val blockedQueriesEmptyStringMetricIdInput =
         BlockedQueriesInput(metricId = "", metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName")
 
     // Random blocked queries
+    private val blockedQuery2 = BlockedQueriesDTO(
+        sessionId = 4321,
+        status = "Running",
+        blockedBy = 0,
+        waitType = null,
+        waitResource = null,
+        waitTime = "48 seconds",
+        cpuTime = 66,
+        logicalReads = 34,
+        reads = 45,
+        writes = 55,
+        elapsedTime = "34 seconds",
+        queryText = "SELECT randomColumn FROM randomTable",
+        storedProc = "Some stored procedure",
+        command = "Some random command",
+        loginName = "Login Name",
+        hostName = "Some Host Name",
+        programName = "Some Program name",
+        hostProcessId = 345,
+        lastRequestEndTime = "78 seconds ago",
+        loginTime = "22:45:59",
+        openTransactionCount = 1,
+        batchText = "Some batch text",
+        blockingThese = "1234",
+        inputBuffer = "Some input buffer",
+        blockingTree = mutableListOf()
+    )
     private val blockedQuery1 = BlockedQueriesDTO(
         sessionId = 1234,
-        status = "Running",
+        status = "Blocked",
         blockedBy = 4321,
         waitType = null,
         waitResource = null,
@@ -88,13 +116,13 @@ class BlockedQueriesMetricTest {
         openTransactionCount = 1,
         batchText = "Some batch text",
         blockingThese = null,
-        inputBuffer = "Some input buffer"
+        inputBuffer = "Some input buffer",
+        blockingTree = mutableListOf()
     )
-
-    private val blockedQuery2 = BlockedQueriesDTO(
+    private val blockedQuery2WithTree = BlockedQueriesDTO(
         sessionId = 4321,
         status = "Running",
-        blockedBy = 1234,
+        blockedBy = 0,
         waitType = null,
         waitResource = null,
         waitTime = "48 seconds",
@@ -114,14 +142,14 @@ class BlockedQueriesMetricTest {
         loginTime = "22:45:59",
         openTransactionCount = 1,
         batchText = "Some batch text",
-        blockingThese = null,
+        blockingThese = "1234",
         inputBuffer = "Some input buffer",
         blockingTree = mutableListOf(blockedQuery1)
     )
 
     // Blocked Query Results
-    private val blockedQueryResult1 = BlockedQueriesResult(listOf(blockedQuery1, blockedQuery2))
-    private val blockedQueryResult2 = BlockedQueriesResult(listOf(blockedQuery1))
+    private val blockedQueryResult1 = BlockedQueriesResult(listOf(blockedQuery2WithTree))
+    private val blockedQueryResult2 = BlockedQueriesResult(listOf(blockedQuery2))
     private val blockedQueryResult3 = BlockedQueriesResult(listOf()) // No queries in result
 
     // Active Query Metric Outputs
@@ -162,8 +190,8 @@ class BlockedQueriesMetricTest {
         )
 
         for (metricInput in listOf(
-            blockedQueriesInput5,
-            blockedQueriesInput4
+            blockedQueriesIncorrectMetricIdInput,
+            blockedQueriesEmptyStringMetricIdInput
         )) {
             for (metricOutput in listOf(metricOutput1, metricOutput2, metricOutput3)) {
                 try {
@@ -179,11 +207,6 @@ class BlockedQueriesMetricTest {
                 }
             }
         }
-    }
-
-    @Test
-    fun testGenerateBlockingTree() {
-
     }
 
     @Test
@@ -205,7 +228,7 @@ class BlockedQueriesMetricTest {
                 }
             }
         }
-        
+
         val mockConnection: Connection = mock()
         SqlMetricManager.setConnection(mockConnection)
         val databaseNames = listOf("randomDatabaseName1", "randomDatabaseName2", "randomDatabaseName3")
@@ -220,13 +243,16 @@ class BlockedQueriesMetricTest {
                 val query: String = it.getArgument(1) as String
                 when {
                     (database == "randomDatabaseName1") -> {
-                        listOf<BlockedQueriesDTO>(blockedQuery1, blockedQuery2)
+                        listOf<BlockedQueriesDTO>(blockedQuery2, blockedQuery1)
                     }
                     (database == "randomDatabaseName2") -> {
-                        listOf(blockedQuery1)
+                        listOf(blockedQuery2)
                     }
                     (database == "randomDatabaseName3") -> {
                         listOf<BlockedQueriesDTO>()
+                    }
+                    (database == "randomDatabaseName4") -> {
+                        listOf<BlockedQueriesDTO>(blockedQuery1)
                     }
                     else -> {
                         throw IllegalArgumentException("Arguments does not match: Database Name: $database; Query: $query")
@@ -235,32 +261,32 @@ class BlockedQueriesMetricTest {
             }
         }
 
-        // Write Test for Generate Blocking Tree and mock the function
+        assertEquals(
+            blockedQueryResult1, blockedQueriesMetric.getMetricResult(
+                blockedQueriesInput1,
+                TestHelper.metricConfigWithMainAndDbSizeQueries
+            )
+        )
 
-//        assertEquals(blockedQueryResult1, blockedQueriesMetric.getMetricResult(blockedQueriesInput1,
-//            TestHelper.metricConfigWithMainAndDbSizeQueries
-//        ))
-//        assertEquals(blockedQueryResult2, blockedQueriesMetric.getMetricResult(blockedQueriesInput2,
-//            TestHelper.metricConfigWithMainAndDbSizeQueries
-//        ))
-//        assertEquals(blockedQueryResult3, blockedQueriesMetric.getMetricResult(blockedQueriesInput3,
-//            TestHelper.metricConfigWithMainAndDbSizeQueries
-//        ))
+        assertEquals(
+            blockedQueryResult2, blockedQueriesMetric.getMetricResult(
+                blockedQueriesInput2,
+                TestHelper.metricConfigWithMainAndDbSizeQueries
+            )
+        )
 
-        for (metricInput in listOf(blockedQueriesInput1, blockedQueriesInput2)) {
-            for (metricConfig in listOf(
-                TestHelper.metricConfigWithMainAndDbSizeQueries,
-                TestHelper.metricConfigWithEmptyStringMainQuery
-            )) {
-                try {
-                    blockedQueriesMetric.getMetricResult(metricInput, metricConfig)
-                    fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")
-                } catch (e: SQLMonitoringConnectionException) {
-                    continue
-                } catch (e: Exception) {
-                    fail("Test failing with Exception: $e\nMetric Input: $metricInput\nMetric Config: $metricConfig")
-                }
-            }
-        }
+        assertEquals(
+            blockedQueryResult3, blockedQueriesMetric.getMetricResult(
+                blockedQueriesInput3,
+                TestHelper.metricConfigWithMainAndDbSizeQueries
+            )
+        )
+
+        assertEquals(
+            blockedQueryResult3, blockedQueriesMetric.getMetricResult(
+                blockedQueriesInput4,
+                TestHelper.metricConfigWithMainAndDbSizeQueries
+            )
+        )
     }
 }

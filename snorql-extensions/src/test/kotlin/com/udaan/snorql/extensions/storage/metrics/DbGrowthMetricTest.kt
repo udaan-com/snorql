@@ -19,13 +19,16 @@
 
 package com.udaan.snorql.extensions.storage.metrics
 
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
+import com.udaan.snorql.extensions.TestHelper
 import com.udaan.snorql.extensions.storage.models.DbGrowthDTO
 import com.udaan.snorql.extensions.storage.models.DbGrowthInput
 import com.udaan.snorql.extensions.storage.models.DbGrowthResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
-import com.udaan.snorql.framework.SQLMonitoringConnectionException
+import com.udaan.snorql.framework.metric.Connection
+import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
-import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricOutput
 import com.udaan.snorql.framework.models.MetricPeriod
 import org.junit.Test
@@ -48,64 +51,36 @@ class DbGrowthMetricTest {
         ).queries["main"]
 
     // DB Growth Metric Inputs
-    private val dbGrowthInput1 =
+    private val dbGrowthHistoricalInput1 =
         DbGrowthInput(
             metricPeriod = MetricPeriod.HISTORICAL,
-            databaseName = "randomDatabaseName",
-            dbNameForGrowth = "randomDBName"
+            databaseName = "randomDatabaseName1",
+            dbNameForGrowth = "randomDBName1"
         )
-    private val dbGrowthInput2 =
+    private val dbGrowthRealTimeInput2 =
         DbGrowthInput(
             metricPeriod = MetricPeriod.REAL_TIME,
-            databaseName = "randomDatabaseName",
-            dbNameForGrowth = "randomDBName"
+            databaseName = "randomDatabaseName2",
+            dbNameForGrowth = "randomDBName2"
         )
-    private val dbGrowthInput3 =
+    private val dbGrowthRealTimeInput3 =
+        DbGrowthInput(
+            metricPeriod = MetricPeriod.REAL_TIME,
+            databaseName = "randomDatabaseName3",
+            dbNameForGrowth = "randomDBName3"
+        )
+    private val dbGrowthIncorrectMetricIdInput =
         DbGrowthInput(
             metricId = "incorrectMetricID", metricPeriod = MetricPeriod.REAL_TIME,
             databaseName = "randomDatabaseName",
             dbNameForGrowth = "randomDBName"
         )
-    private val dbGrowthInput4 =
+    private val dbGrowthEmptyMetricIdInput =
         DbGrowthInput(
             metricId = "", metricPeriod = MetricPeriod.REAL_TIME,
             databaseName = "randomDatabaseName",
             dbNameForGrowth = "randomDBName"
         )
-
-    // Configurations
-    private val metricConfig1 = MetricConfig(     // "main" query not defined in config
-        queries = mapOf("notMain" to "SELECT randomColumn from randomTable"),
-        supportsHistorical = false,
-        supportsRealTime = true,
-        isParameterized = false,
-        referenceDoc = "",
-        description = ""
-    )
-    private val metricConfig2 = MetricConfig(     // empty queries map (no queries defined in config)
-        queries = mapOf(),
-        supportsHistorical = false,
-        supportsRealTime = true,
-        isParameterized = false,
-        referenceDoc = "",
-        description = ""
-    )
-    private val metricConfig3 = MetricConfig(              // "main" query defined
-        queries = mapOf("main" to "SELECT randomColumn from randomTable"),
-        supportsHistorical = false,
-        supportsRealTime = true,
-        isParameterized = false,
-        referenceDoc = "",
-        description = ""
-    )
-    private val metricConfig4 = MetricConfig(               // empty "main" query
-        queries = mapOf("main" to ""),
-        supportsHistorical = false,
-        supportsRealTime = true,
-        isParameterized = false,
-        referenceDoc = "",
-        description = ""
-    )
 
     // DB Growth Metrics
     private val dbGrowthMetric1 = DbGrowthDTO(startTime = "22:08:19", endTime = "22:10:44", storageInMegabytes = "84MB")
@@ -114,15 +89,15 @@ class DbGrowthMetricTest {
     private val dbGrowthMetric4 = DbGrowthDTO(startTime = "21:08:19", endTime = "23:10:48", storageInMegabytes = "99MB")
 
     // DB Growth Results
-    private val dbGrowthResult1 =
+    private val dbGrowthMultipleResult =
         DbGrowthResult(listOf(dbGrowthMetric1, dbGrowthMetric2, dbGrowthMetric3, dbGrowthMetric4))
-    private val dbGrowthResult2 = DbGrowthResult(listOf(dbGrowthMetric1))
-    private val dbGrowthResult3 = DbGrowthResult(listOf())
+    private val dbGrowthSingleResult = DbGrowthResult(listOf(dbGrowthMetric1))
+    private val dbGrowthEmptyResult = DbGrowthResult(listOf())
 
     // Metric outputs
-    private val metricOutput1 = MetricOutput<DbGrowthResult, IMetricRecommendation>(dbGrowthResult1, null)
-    private val metricOutput2 = MetricOutput<DbGrowthResult, IMetricRecommendation>(dbGrowthResult2, null)
-    private val metricOutput3 = MetricOutput<DbGrowthResult, IMetricRecommendation>(dbGrowthResult3, null)
+    private val metricOutput1 = MetricOutput<DbGrowthResult, IMetricRecommendation>(dbGrowthMultipleResult, null)
+    private val metricOutput2 = MetricOutput<DbGrowthResult, IMetricRecommendation>(dbGrowthSingleResult, null)
+    private val metricOutput3 = MetricOutput<DbGrowthResult, IMetricRecommendation>(dbGrowthEmptyResult, null)
 
     @Test
     fun testGetMetricResponseMetadata() {
@@ -134,47 +109,47 @@ class DbGrowthMetricTest {
         assertEquals(
             expected = expectedOutput1,
             dbGrowthMetric.getMetricResponseMetadata(
-                dbGrowthInput1,
+                dbGrowthHistoricalInput1,
                 metricOutput1
             )
         )
         assertEquals(
             expected = expectedOutput1,
             dbGrowthMetric.getMetricResponseMetadata(
-                dbGrowthInput1,
+                dbGrowthHistoricalInput1,
                 metricOutput2
             )
         )
         assertEquals(
             expected = expectedOutput1,
             dbGrowthMetric.getMetricResponseMetadata(
-                dbGrowthInput1,
+                dbGrowthHistoricalInput1,
                 metricOutput3
             )
         )
         assertEquals(
             expected = expectedOutput1,
             dbGrowthMetric.getMetricResponseMetadata(
-                dbGrowthInput2,
+                dbGrowthRealTimeInput2,
                 metricOutput1
             )
         )
         assertEquals(
             expected = expectedOutput1,
             dbGrowthMetric.getMetricResponseMetadata(
-                dbGrowthInput2,
+                dbGrowthRealTimeInput2,
                 metricOutput2
             )
         )
         assertEquals(
             expected = expectedOutput1,
             dbGrowthMetric.getMetricResponseMetadata(
-                dbGrowthInput2,
+                dbGrowthRealTimeInput2,
                 metricOutput3
             )
         )
 
-        for (metricInput in listOf(dbGrowthInput3, dbGrowthInput4)) {
+        for (metricInput in listOf(dbGrowthIncorrectMetricIdInput, dbGrowthEmptyMetricIdInput)) {
             for (metricOutput in listOf(metricOutput1, metricOutput2)) {
                 try {
                     dbGrowthMetric.getMetricResponseMetadata(metricInput, metricOutput)
@@ -190,10 +165,57 @@ class DbGrowthMetricTest {
 
     @Test
     fun testGetMetricResult() {
-        // TODO: success case
+        val mockConnection: Connection = mock()
+        SqlMetricManager.setConnection(mockConnection)
+        val metricInputList = listOf(
+            dbGrowthHistoricalInput1, dbGrowthRealTimeInput2, dbGrowthRealTimeInput3
+        )
+        metricInputList.forEach { metricInput ->
+            whenever(
+                SqlMetricManager.queryExecutor.execute<DbGrowthDTO>(
+                    metricInput.databaseName,
+                    "MetricMainQuery",
+                    mapOf("databaseName" to metricInput.dbNameForGrowth)
+                )
+            ).thenAnswer {
+                val database: String = it.getArgument(0) as String
+                val query: String = it.getArgument(1) as String
+                when {
+                    (database == "randomDatabaseName1") -> {
+                        listOf<DbGrowthDTO>(dbGrowthMetric1, dbGrowthMetric2, dbGrowthMetric3, dbGrowthMetric4)
+                    }
+                    (database == "randomDatabaseName2") -> {
+                        listOf<DbGrowthDTO>(dbGrowthMetric1)
+                    }
+                    (database == "randomDatabaseName3") -> {
+                        listOf<DbGrowthDTO>()
+                    }
+                    else -> {
+                        throw IllegalArgumentException("Arguments does not match: Database Name: $database; Query: $query")
+                    }
+                }
+            }
+        }
+
+        assertEquals(
+            dbGrowthMultipleResult,
+            dbGrowthMetric.getMetricResult(dbGrowthHistoricalInput1, TestHelper.metricConfigWithMainAndDbSizeQueries)
+        )
+        assertEquals(
+            dbGrowthSingleResult,
+            dbGrowthMetric.getMetricResult(dbGrowthRealTimeInput2, TestHelper.metricConfigWithMainAndDbSizeQueries)
+        )
+        assertEquals(
+            dbGrowthEmptyResult,
+            dbGrowthMetric.getMetricResult(dbGrowthRealTimeInput3, TestHelper.metricConfigWithMainAndDbSizeQueries)
+        )
+
         // Testing for SQLMonitoringConfigException
-        for (metricInput in listOf(dbGrowthInput3, dbGrowthInput4)) {
-            for (metricConfig in listOf(metricConfig1, metricConfig2)) {
+        for (metricInput in listOf(dbGrowthIncorrectMetricIdInput, dbGrowthEmptyMetricIdInput)) {
+            for (metricConfig in listOf(
+                TestHelper.metricConfigWithoutMainQuery,
+                TestHelper.metricConfigWithoutQueries
+            )) {
                 try {
                     dbGrowthMetric.getMetricResult(metricInput, metricConfig)
                     fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")

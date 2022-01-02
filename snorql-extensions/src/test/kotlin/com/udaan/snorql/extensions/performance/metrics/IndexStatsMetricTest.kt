@@ -19,11 +19,15 @@
 
 package com.udaan.snorql.extensions.performance.metrics
 
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
+import com.udaan.snorql.extensions.TestHelper
 import com.udaan.snorql.extensions.performance.models.IndexStatDTO
 import com.udaan.snorql.extensions.performance.models.IndexStatInput
 import com.udaan.snorql.extensions.performance.models.IndexStatResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
-import com.udaan.snorql.framework.SQLMonitoringConnectionException
+import com.udaan.snorql.framework.metric.Connection
+import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricOutput
@@ -36,32 +40,51 @@ class IndexStatsMetricTest {
     companion object {
         val indexStatsMetric = IndexStatsMetric()
     }
-    
+
     // Index Stat Metric Main Query String
     private val indexStatMetricMainQuery: String? =
-        indexStatsMetric.getMetricConfig(IndexStatInput(metricPeriod = MetricPeriod.REAL_TIME,
-            databaseName = "randomDatabaseName",
-            indexName = "randomIndexName",
-            tableName = "randomTableName").metricId).queries["main"]
+        indexStatsMetric.getMetricConfig(
+            IndexStatInput(
+                metricPeriod = MetricPeriod.REAL_TIME,
+                databaseName = "randomDatabaseName",
+                indexName = "randomIndexName",
+                tableName = "randomTableName"
+            ).metricId
+        ).queries["main"]
 
     // Index Stats Metric Inputs
     private val indexStatsInput1 =
-        IndexStatInput(metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName",
-            tableName = "randomTableName", indexName = "randomIndexName")
+        IndexStatInput(
+            metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName1",
+            tableName = "randomTableName1", indexName = "randomIndexName1"
+        )
     private val indexStatsInput2 =
-        IndexStatInput(metricPeriod = MetricPeriod.REAL_TIME,
-            databaseName = "randomDatabaseName",
-            tableName = "randomTableName",
-            indexName = "randomIndexName")
+        IndexStatInput(
+            metricPeriod = MetricPeriod.REAL_TIME,
+            databaseName = "randomDatabaseName2",
+            tableName = "randomTableName2",
+            indexName = "randomIndexName2"
+        )
     private val indexStatsInput3 =
-        IndexStatInput(metricId = "incorrectMetricId",
+        IndexStatInput(
+            metricPeriod = MetricPeriod.REAL_TIME,
+            databaseName = "randomDatabaseName3",
+            tableName = "randomTableName3",
+            indexName = "randomIndexName3"
+        )
+    private val indexStatsInputIncorrectMetricId =
+        IndexStatInput(
+            metricId = "incorrectMetricId",
             metricPeriod = MetricPeriod.HISTORICAL,
             databaseName = "randomDatabaseName",
             tableName = "randomTableName",
-            indexName = "randomIndexName")
-    private val indexStatsInput4 =
-        IndexStatInput(metricId = "", metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName",
-            tableName = "randomTableName", indexName = "randomIndexName")
+            indexName = "randomIndexName"
+        )
+    private val indexStatsInputEmptyStringMetricId =
+        IndexStatInput(
+            metricId = "", metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName",
+            tableName = "randomTableName", indexName = "randomIndexName"
+        )
 
     // Metric configs
     private val metricConfig1 = MetricConfig(    // "main" query not defined in config
@@ -74,22 +97,6 @@ class IndexStatsMetricTest {
     )
     private val metricConfig2 = MetricConfig(    // empty queries map (no queries defined in config)
         queries = mapOf(),
-        supportsHistorical = false,
-        supportsRealTime = true,
-        isParameterized = false,
-        referenceDoc = "",
-        description = ""
-    )
-    private val metricConfig3 = MetricConfig(    // "main" query defined
-        queries = mapOf("main" to "SELECT randomColumn from randomTable"),
-        supportsHistorical = false,
-        supportsRealTime = true,
-        isParameterized = false,
-        referenceDoc = "",
-        description = ""
-    )
-    private val metricConfig4 = MetricConfig(    // empty "main" query
-        queries = mapOf("main" to ""),
         supportsHistorical = false,
         supportsRealTime = true,
         isParameterized = false,
@@ -112,7 +119,8 @@ class IndexStatsMetricTest {
         persistedSamplePercent = 33
     )
     private val indexStats2 =
-        IndexStatDTO(name = null,
+        IndexStatDTO(
+            name = null,
             updated = null,
             rows = null,
             rowsSampled = null,
@@ -142,26 +150,50 @@ class IndexStatsMetricTest {
             "referenceDocumentation" to "",
             "description" to ""
         )
-        assertEquals(expected = expectedOutput1,
-            indexStatsMetric.getMetricResponseMetadata(indexStatsInput1,
-                metricOutput1))
-        assertEquals(expected = expectedOutput1,
-            indexStatsMetric.getMetricResponseMetadata(indexStatsInput1,
-                metricOutput2))
-        assertEquals(expected = expectedOutput1,
-            indexStatsMetric.getMetricResponseMetadata(indexStatsInput1,
-                metricOutput3))
-        assertEquals(expected = expectedOutput1,
-            indexStatsMetric.getMetricResponseMetadata(indexStatsInput2,
-                metricOutput1))
-        assertEquals(expected = expectedOutput1,
-            indexStatsMetric.getMetricResponseMetadata(indexStatsInput2,
-                metricOutput2))
-        assertEquals(expected = expectedOutput1,
-            indexStatsMetric.getMetricResponseMetadata(indexStatsInput2,
-                metricOutput3))
+        assertEquals(
+            expected = expectedOutput1,
+            indexStatsMetric.getMetricResponseMetadata(
+                indexStatsInput1,
+                metricOutput1
+            )
+        )
+        assertEquals(
+            expected = expectedOutput1,
+            indexStatsMetric.getMetricResponseMetadata(
+                indexStatsInput1,
+                metricOutput2
+            )
+        )
+        assertEquals(
+            expected = expectedOutput1,
+            indexStatsMetric.getMetricResponseMetadata(
+                indexStatsInput1,
+                metricOutput3
+            )
+        )
+        assertEquals(
+            expected = expectedOutput1,
+            indexStatsMetric.getMetricResponseMetadata(
+                indexStatsInput2,
+                metricOutput1
+            )
+        )
+        assertEquals(
+            expected = expectedOutput1,
+            indexStatsMetric.getMetricResponseMetadata(
+                indexStatsInput2,
+                metricOutput2
+            )
+        )
+        assertEquals(
+            expected = expectedOutput1,
+            indexStatsMetric.getMetricResponseMetadata(
+                indexStatsInput2,
+                metricOutput3
+            )
+        )
 
-        for (metricInput in listOf(indexStatsInput3, indexStatsInput4)) {
+        for (metricInput in listOf(indexStatsInputIncorrectMetricId, indexStatsInputEmptyStringMetricId)) {
             for (metricOutput in listOf(metricOutput1, metricOutput2)) {
                 try {
                     indexStatsMetric.getMetricResponseMetadata(metricInput, metricOutput)
@@ -178,7 +210,6 @@ class IndexStatsMetricTest {
 
     @Test
     fun testGetMetricResult() {
-        // TODO: success case
         // Testing for SQLMonitoringConfigException
         for (metricInput in listOf(indexStatsInput1, indexStatsInput2)) {
             for (metricConfig in listOf(metricConfig1, metricConfig2)) {
@@ -192,5 +223,50 @@ class IndexStatsMetricTest {
                 }
             }
         }
+
+        val mockConnection: Connection = mock()
+        SqlMetricManager.setConnection(mockConnection)
+        val metricInputList = listOf(
+            indexStatsInput1, indexStatsInput2, indexStatsInput3
+        )
+        metricInputList.forEach { metricInput ->
+            whenever(
+                SqlMetricManager.queryExecutor.execute<IndexStatDTO>(
+                    databaseName = metricInput.databaseName,
+                    query = "MetricMainQuery",
+                    mapOf("tableName" to metricInput.tableName, "indexName" to metricInput.indexName)
+                )
+            ).thenAnswer {
+                val database: String = it.getArgument(0) as String
+                val query: String = it.getArgument(1) as String
+                when {
+                    (database == "randomDatabaseName1") -> {
+                        listOf(indexStats1, indexStats2)
+                    }
+                    (database == "randomDatabaseName2") -> {
+                        listOf(indexStats2)
+                    }
+                    (database == "randomDatabaseName3") -> {
+                        listOf<IndexStatDTO>()
+                    }
+                    else -> {
+                        throw IllegalArgumentException("Arguments does not match: Database Name: $database; Query: $query")
+                    }
+                }
+            }
+        }
+        assertEquals(
+            indexStatResult1,
+            indexStatsMetric.getMetricResult(indexStatsInput1, TestHelper.metricConfigWithMainAndDbSizeQueries)
+        )
+        assertEquals(
+            indexStatResult2,
+            indexStatsMetric.getMetricResult(indexStatsInput2, TestHelper.metricConfigWithMainAndDbSizeQueries)
+        )
+        assertEquals(
+            indexStatResult3,
+            indexStatsMetric.getMetricResult(indexStatsInput3, TestHelper.metricConfigWithMainAndDbSizeQueries
+            )
+        )
     }
 }

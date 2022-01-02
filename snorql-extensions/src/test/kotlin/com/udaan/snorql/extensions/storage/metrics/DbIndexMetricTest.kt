@@ -19,11 +19,14 @@
 
 package com.udaan.snorql.extensions.storage.metrics
 
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
+import com.udaan.snorql.extensions.TestHelper
 import com.udaan.snorql.extensions.storage.models.*
 import com.udaan.snorql.framework.SQLMonitoringConfigException
-import com.udaan.snorql.framework.SQLMonitoringConnectionException
+import com.udaan.snorql.framework.metric.Connection
+import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
-import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricOutput
 import com.udaan.snorql.framework.models.MetricPeriod
 import kotlin.test.assertEquals
@@ -41,47 +44,16 @@ class DbIndexMetricTest {
             databaseName = "randomDatabaseName").metricId).queries["main"]
 
     // DB Index Metric Inputs
-    private val dbIndexInput1 =
-        DbIndexInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName")
-    private val dbIndexInput2 =
-        DbIndexInput(metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName")
-    private val dbIndexInput3 =
+    private val dbIndexRealTimeInput1 =
+        DbIndexInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName1")
+    private val dbIndexHistoricalInput2 =
+        DbIndexInput(metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName2")
+    private val dbIndexHistoricalInput3 =
+        DbIndexInput(metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName3")
+    private val dbIndexIncorrectMetricIdInput =
         DbIndexInput(metricId = "incorrectMetricID", metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName")
-    private val dbIndexInput4 =
+    private val dbIndexEmptyMetricIdInput =
         DbIndexInput(metricId = "", metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName")
-
-    private val metricConfig1 = MetricConfig(
-        queries = mapOf("notMain" to "SELECT randomColumn from randomTable"),
-        supportsHistorical = false,
-        supportsRealTime = true,
-        isParameterized = false,
-        referenceDoc = "",
-        description = ""
-    )
-    private val metricConfig2 = MetricConfig(
-        queries = mapOf(),
-        supportsHistorical = false,
-        supportsRealTime = true,
-        isParameterized = false,
-        referenceDoc = "",
-        description = ""
-    )
-    private val metricConfig3 = MetricConfig(
-        queries = mapOf("main" to "SELECT randomColumn from randomTable"),
-        supportsHistorical = false,
-        supportsRealTime = true,
-        isParameterized = false,
-        referenceDoc = "",
-        description = ""
-    )
-    private val metricConfig4 = MetricConfig(
-        queries = mapOf("main" to ""),
-        supportsHistorical = false,
-        supportsRealTime = true,
-        isParameterized = false,
-        referenceDoc = "",
-        description = ""
-    )
 
     // DB Index Metrics
     private val dbIndexMetric1 = DbIndexDTO(rows = "344 rows",
@@ -98,15 +70,15 @@ class DbIndexMetricTest {
         usedSpaceMB = "34MB")
 
     // DB Index Results
-    private val dbIndexResult1 =
+    private val dbIndexMultipleResult =
         DbIndexResult(listOf(dbIndexMetric1, dbIndexMetric2))
-    private val dbIndexResult2 = DbIndexResult(listOf(dbIndexMetric1))
-    private val dbIndexResult3 = DbIndexResult(listOf())
+    private val dbIndexSingleResult = DbIndexResult(listOf(dbIndexMetric1))
+    private val dbIndexEmptyResult = DbIndexResult(listOf())
 
     // Metric outputs
-    private val metricOutput1 = MetricOutput<DbIndexResult, IMetricRecommendation>(dbIndexResult1, null)
-    private val metricOutput2 = MetricOutput<DbIndexResult, IMetricRecommendation>(dbIndexResult2, null)
-    private val metricOutput3 = MetricOutput<DbIndexResult, IMetricRecommendation>(dbIndexResult3, null)
+    private val metricOutput1 = MetricOutput<DbIndexResult, IMetricRecommendation>(dbIndexMultipleResult, null)
+    private val metricOutput2 = MetricOutput<DbIndexResult, IMetricRecommendation>(dbIndexSingleResult, null)
+    private val metricOutput3 = MetricOutput<DbIndexResult, IMetricRecommendation>(dbIndexEmptyResult, null)
 
     @Test
     fun testGetMetricResponseMetadata() {
@@ -116,25 +88,25 @@ class DbIndexMetricTest {
             "description" to ""
         )
         assertEquals(expected = expectedOutput1,
-            dbIndexMetric.getMetricResponseMetadata(dbIndexInput1,
+            dbIndexMetric.getMetricResponseMetadata(dbIndexRealTimeInput1,
                 metricOutput1))
         assertEquals(expected = expectedOutput1,
-            dbIndexMetric.getMetricResponseMetadata(dbIndexInput1,
+            dbIndexMetric.getMetricResponseMetadata(dbIndexRealTimeInput1,
                 metricOutput2))
         assertEquals(expected = expectedOutput1,
-            dbIndexMetric.getMetricResponseMetadata(dbIndexInput1,
+            dbIndexMetric.getMetricResponseMetadata(dbIndexRealTimeInput1,
                 metricOutput3))
         assertEquals(expected = expectedOutput1,
-            dbIndexMetric.getMetricResponseMetadata(dbIndexInput2,
+            dbIndexMetric.getMetricResponseMetadata(dbIndexHistoricalInput2,
                 metricOutput1))
         assertEquals(expected = expectedOutput1,
-            dbIndexMetric.getMetricResponseMetadata(dbIndexInput2,
+            dbIndexMetric.getMetricResponseMetadata(dbIndexHistoricalInput2,
                 metricOutput2))
         assertEquals(expected = expectedOutput1,
-            dbIndexMetric.getMetricResponseMetadata(dbIndexInput2,
+            dbIndexMetric.getMetricResponseMetadata(dbIndexHistoricalInput2,
                 metricOutput3))
 
-        for (metricInput in listOf(dbIndexInput3, dbIndexInput4)) {
+        for (metricInput in listOf(dbIndexIncorrectMetricIdInput, dbIndexEmptyMetricIdInput)) {
             for (metricOutput in listOf(metricOutput1, metricOutput2)) {
                 try {
                     dbIndexMetric.getMetricResponseMetadata(metricInput, metricOutput)
@@ -150,11 +122,53 @@ class DbIndexMetricTest {
 
     @Test
     fun testGetMetricResult() {
-        // TODO: success case
+        val mockConnection: Connection = mock()
+        SqlMetricManager.setConnection(mockConnection)
+        val metricInputList = listOf(
+            dbIndexRealTimeInput1, dbIndexHistoricalInput2, dbIndexHistoricalInput3
+        )
+        metricInputList.forEach { metricInput ->
+            whenever(
+                SqlMetricManager.queryExecutor.execute<DbIndexDTO>(
+                    metricInput.databaseName,
+                    "MetricMainQuery"
+                )
+            ).thenAnswer {
+                val database: String = it.getArgument(0) as String
+                val query: String = it.getArgument(1) as String
+                when {
+                    (database == "randomDatabaseName1") -> {
+                        listOf<DbIndexDTO>(dbIndexMetric1, dbIndexMetric2)
+                    }
+                    (database == "randomDatabaseName2") -> {
+                        listOf<DbIndexDTO>(dbIndexMetric1)
+                    }
+                    (database == "randomDatabaseName3") -> {
+                        listOf<DbIndexDTO>()
+                    }
+                    else -> {
+                        throw IllegalArgumentException("Arguments does not match: Database Name: $database; Query: $query")
+                    }
+                }
+            }
+        }
+
+        assertEquals(
+            dbIndexMultipleResult,
+            dbIndexMetric.getMetricResult(dbIndexRealTimeInput1, TestHelper.metricConfigWithMainAndDbSizeQueries)
+        )
+        assertEquals(
+            dbIndexSingleResult,
+            dbIndexMetric.getMetricResult(dbIndexHistoricalInput2, TestHelper.metricConfigWithMainAndDbSizeQueries)
+        )
+        assertEquals(
+            dbIndexEmptyResult,
+            dbIndexMetric.getMetricResult(dbIndexHistoricalInput3, TestHelper.metricConfigWithMainAndDbSizeQueries)
+        )
 
         // Testing for SQLMonitoringConfigException
-        for (metricInput in listOf(dbIndexInput1, dbIndexInput2)) {
-            for (metricConfig in listOf(metricConfig1, metricConfig2)) {
+        for (metricInput in listOf(dbIndexRealTimeInput1, dbIndexHistoricalInput2)) {
+            for (metricConfig in listOf(TestHelper.metricConfigWithoutMainQuery, TestHelper.metricConfigWithoutQueries)) {
                 try {
                     dbIndexMetric.getMetricResult(metricInput, metricConfig)
                     fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")
