@@ -30,7 +30,6 @@ import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.Connection
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
-import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricOutput
 import com.udaan.snorql.framework.models.MetricPeriod
 import org.junit.Test
@@ -116,56 +115,15 @@ class ActiveQueriesMetricTest {
         openTransactionCount = 1
     )
 
-    // Active Query Configs
-    // "main" query not defined in config
-    private val metricConfig1 = MetricConfig(
-        queries = mapOf("notMain" to "SELECT randomColumn from randomTable"),
-        supportsHistorical = false,
-        supportsRealTime = true,
-        isParameterized = false,
-        referenceDoc = "",
-        description = ""
-    )
-
-    // empty queries map (no queries defined in config)
-    private val metricConfig2 = MetricConfig(
-        queries = mapOf(),
-        supportsHistorical = false,
-        supportsRealTime = true,
-        isParameterized = false,
-        referenceDoc = "",
-        description = ""
-    )
-
-    // "main" query defined
-    private val metricConfig3 = MetricConfig(
-        queries = mapOf("main" to "SELECT randomColumn from randomTable"),
-        supportsHistorical = false,
-        supportsRealTime = true,
-        isParameterized = false,
-        referenceDoc = "",
-        description = ""
-    )
-
-    // empty "main" query
-    private val metricConfig4 = MetricConfig(
-        queries = mapOf("main" to ""),
-        supportsHistorical = false,
-        supportsRealTime = true,
-        isParameterized = false,
-        referenceDoc = "",
-        description = ""
-    )
-
     // Active Query Results
-    private val activeQueryResult1 = ActiveQueryResult(listOf(activeQuery1, activeQuery2))
-    private val activeQueryResult2 = ActiveQueryResult(listOf(activeQuery1))
-    private val activeQueryResult3 = ActiveQueryResult(listOf()) // No queries in result
+    private val activeQueryMultipleResult = ActiveQueryResult(listOf(activeQuery1, activeQuery2))
+    private val activeQuerySingleResult = ActiveQueryResult(listOf(activeQuery1))
+    private val activeQueryEmptyResult = ActiveQueryResult(listOf()) // No queries in result
 
     // Active Query Metric Outputs
-    private val metricOutput1 = MetricOutput<ActiveQueryResult, IMetricRecommendation>(activeQueryResult1, null)
-    private val metricOutput2 = MetricOutput<ActiveQueryResult, IMetricRecommendation>(activeQueryResult2, null)
-    private val metricOutput3 = MetricOutput<ActiveQueryResult, IMetricRecommendation>(activeQueryResult3, null)
+    private val metricMultipleOutput = MetricOutput<ActiveQueryResult, IMetricRecommendation>(activeQueryMultipleResult, null)
+    private val metricSingleOutput = MetricOutput<ActiveQueryResult, IMetricRecommendation>(activeQuerySingleResult, null)
+    private val metricEmptyOutput = MetricOutput<ActiveQueryResult, IMetricRecommendation>(activeQueryEmptyResult, null)
 
     @Test
     fun testGetMetricResponseMetadata() {
@@ -176,7 +134,7 @@ class ActiveQueriesMetricTest {
         )
 
         for (metricInput in listOf(activeQueriesInput1, activeQueriesInput2)) {
-            for (metricOutput in listOf(metricOutput1, metricOutput2, metricOutput3)) {
+            for (metricOutput in listOf(metricMultipleOutput, metricSingleOutput, metricEmptyOutput)) {
                 assertEquals(
                     expected = expectedOutput1,
                     activeQueriesMetric.getMetricResponseMetadata(metricInput, metricOutput)
@@ -189,7 +147,7 @@ class ActiveQueriesMetricTest {
             activeQueriesInput3,
             activeQueriesInput4
         )) {
-            for (metricOutput in listOf(metricOutput1, metricOutput2, metricOutput3)) {
+            for (metricOutput in listOf(metricMultipleOutput, metricSingleOutput, metricEmptyOutput)) {
                 try {
                     activeQueriesMetric.getMetricResponseMetadata(
                         metricInput = metricInput,
@@ -209,7 +167,10 @@ class ActiveQueriesMetricTest {
     fun testGetMetricResult() {
         // Testing for SQLMonitoringConfigException
         for (metricInput in listOf(activeQueriesInput1, activeQueriesInput2)) {
-            for (metricConfig in listOf(metricConfig1, metricConfig2)) {
+            for (metricConfig in listOf(
+                TestHelper.metricConfigWithEmptyStringMainQuery,
+                TestHelper.metricConfigWithoutMainQuery
+            )) {
                 try {
                     activeQueriesMetric.getMetricResult(
                         metricInput = metricInput,
@@ -253,15 +214,15 @@ class ActiveQueriesMetricTest {
             }
         }
         assertEquals(
-            activeQueryResult1,
+            activeQueryMultipleResult,
             activeQueriesMetric.getMetricResult(activeQueriesInput1, TestHelper.metricConfigWithMainAndDbSizeQueries)
         )
         assertEquals(
-            activeQueryResult2,
+            activeQuerySingleResult,
             activeQueriesMetric.getMetricResult(activeQueriesInput2, TestHelper.metricConfigWithMainAndDbSizeQueries)
         )
         assertEquals(
-            activeQueryResult3,
+            activeQueryEmptyResult,
             activeQueriesMetric.getMetricResult(activeQueriesInput5, TestHelper.metricConfigWithMainAndDbSizeQueries)
         )
 

@@ -29,7 +29,6 @@ import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.Connection
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
-import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricOutput
 import com.udaan.snorql.framework.models.MetricPeriod
 import org.junit.Test
@@ -74,9 +73,9 @@ class UserRoleMetricTest {
     private val userRoleResultEmpty = UserRoleResult(listOf()) // Empty result
 
     // User Role Outputs
-    private val metricOutput1 = MetricOutput<UserRoleResult, IMetricRecommendation>(userRoleResultMultiple, null)
-    private val metricOutput2 = MetricOutput<UserRoleResult, IMetricRecommendation>(userRoleResultSingle, null)
-    private val metricOutput3 = MetricOutput<UserRoleResult, IMetricRecommendation>(userRoleResultEmpty, null)
+    private val metricMultipleResultOutput = MetricOutput<UserRoleResult, IMetricRecommendation>(userRoleResultMultiple, null)
+    private val metricSingleResultOutput = MetricOutput<UserRoleResult, IMetricRecommendation>(userRoleResultSingle, null)
+    private val metricEmptyResultOutput = MetricOutput<UserRoleResult, IMetricRecommendation>(userRoleResultEmpty, null)
 
     @Test
     fun testGetMetricResponseMetadata() {
@@ -87,31 +86,31 @@ class UserRoleMetricTest {
         )
         assertEquals(
             expected = expectedOutput1,
-            userRoleMetric.getMetricResponseMetadata(userRoleMetricInputRealTime1, metricOutput1)
+            userRoleMetric.getMetricResponseMetadata(userRoleMetricInputRealTime1, metricMultipleResultOutput)
         )
         assertEquals(
             expected = expectedOutput1,
-            userRoleMetric.getMetricResponseMetadata(userRoleMetricInputRealTime1, metricOutput2)
+            userRoleMetric.getMetricResponseMetadata(userRoleMetricInputRealTime1, metricSingleResultOutput)
         )
         assertEquals(
             expected = expectedOutput1,
-            userRoleMetric.getMetricResponseMetadata(userRoleMetricInputRealTime1, metricOutput3)
+            userRoleMetric.getMetricResponseMetadata(userRoleMetricInputRealTime1, metricEmptyResultOutput)
         )
         assertEquals(
             expected = expectedOutput1,
-            userRoleMetric.getMetricResponseMetadata(userRoleMetricInputHistorical2, metricOutput1)
+            userRoleMetric.getMetricResponseMetadata(userRoleMetricInputHistorical2, metricMultipleResultOutput)
         )
         assertEquals(
             expected = expectedOutput1,
-            userRoleMetric.getMetricResponseMetadata(userRoleMetricInputHistorical2, metricOutput2)
+            userRoleMetric.getMetricResponseMetadata(userRoleMetricInputHistorical2, metricSingleResultOutput)
         )
         assertEquals(
             expected = expectedOutput1,
-            userRoleMetric.getMetricResponseMetadata(userRoleMetricInputHistorical2, metricOutput3)
+            userRoleMetric.getMetricResponseMetadata(userRoleMetricInputHistorical2, metricEmptyResultOutput)
         )
 
         for (metricInput in listOf(userRoleMetricInputIncorrectMetricId, userRoleMetricInputEmptyMetricId)) {
-            for (metricOutput in listOf(metricOutput1, metricOutput2)) {
+            for (metricOutput in listOf(metricMultipleResultOutput, metricSingleResultOutput)) {
                 try {
                     userRoleMetric.getMetricResponseMetadata(metricInput, metricOutput)
                     fail("Exception not thrown for \nmetricInput = $metricInput \nmetricOutput = $metricOutput")

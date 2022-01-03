@@ -148,14 +148,14 @@ class BlockedQueriesMetricTest {
     )
 
     // Blocked Query Results
-    private val blockedQueryResult1 = BlockedQueriesResult(listOf(blockedQuery2WithTree))
-    private val blockedQueryResult2 = BlockedQueriesResult(listOf(blockedQuery2))
-    private val blockedQueryResult3 = BlockedQueriesResult(listOf()) // No queries in result
+    private val blockedQueryMultipleResult = BlockedQueriesResult(listOf(blockedQuery2WithTree))
+    private val blockedQuerySingleResult = BlockedQueriesResult(listOf(blockedQuery2))
+    private val blockedQueryEmptyResult = BlockedQueriesResult(listOf()) // No queries in result
 
     // Active Query Metric Outputs
-    private val metricOutput1 = MetricOutput<BlockedQueriesResult, IMetricRecommendation>(blockedQueryResult1, null)
-    private val metricOutput2 = MetricOutput<BlockedQueriesResult, IMetricRecommendation>(blockedQueryResult2, null)
-    private val metricOutput3 = MetricOutput<BlockedQueriesResult, IMetricRecommendation>(blockedQueryResult3, null)
+    private val metricMultipleOutput = MetricOutput<BlockedQueriesResult, IMetricRecommendation>(blockedQueryMultipleResult, null)
+    private val metricSingleOutput = MetricOutput<BlockedQueriesResult, IMetricRecommendation>(blockedQuerySingleResult, null)
+    private val metricEmptyOutput = MetricOutput<BlockedQueriesResult, IMetricRecommendation>(blockedQueryEmptyResult, null)
 
     @Test
     fun testGetMetricResponseMetadata() {
@@ -166,34 +166,34 @@ class BlockedQueriesMetricTest {
         )
         assertEquals(
             expected = expectedOutput1,
-            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput1, metricOutput1)
+            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput1, metricMultipleOutput)
         )
         assertEquals(
             expected = expectedOutput1,
-            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput1, metricOutput2)
+            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput1, metricSingleOutput)
         )
         assertEquals(
             expected = expectedOutput1,
-            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput1, metricOutput3)
+            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput1, metricEmptyOutput)
         )
         assertEquals(
             expected = expectedOutput1,
-            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput2, metricOutput1)
+            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput2, metricMultipleOutput)
         )
         assertEquals(
             expected = expectedOutput1,
-            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput2, metricOutput2)
+            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput2, metricSingleOutput)
         )
         assertEquals(
             expected = expectedOutput1,
-            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput2, metricOutput3)
+            blockedQueriesMetric.getMetricResponseMetadata(blockedQueriesInput2, metricEmptyOutput)
         )
 
         for (metricInput in listOf(
             blockedQueriesIncorrectMetricIdInput,
             blockedQueriesEmptyStringMetricIdInput
         )) {
-            for (metricOutput in listOf(metricOutput1, metricOutput2, metricOutput3)) {
+            for (metricOutput in listOf(metricMultipleOutput, metricSingleOutput, metricEmptyOutput)) {
                 try {
                     blockedQueriesMetric.getMetricResponseMetadata(
                         metricInput = metricInput,
@@ -262,28 +262,28 @@ class BlockedQueriesMetricTest {
         }
 
         assertEquals(
-            blockedQueryResult1, blockedQueriesMetric.getMetricResult(
+            blockedQueryMultipleResult, blockedQueriesMetric.getMetricResult(
                 blockedQueriesInput1,
                 TestHelper.metricConfigWithMainAndDbSizeQueries
             )
         )
 
         assertEquals(
-            blockedQueryResult2, blockedQueriesMetric.getMetricResult(
+            blockedQuerySingleResult, blockedQueriesMetric.getMetricResult(
                 blockedQueriesInput2,
                 TestHelper.metricConfigWithMainAndDbSizeQueries
             )
         )
 
         assertEquals(
-            blockedQueryResult3, blockedQueriesMetric.getMetricResult(
+            blockedQueryEmptyResult, blockedQueriesMetric.getMetricResult(
                 blockedQueriesInput3,
                 TestHelper.metricConfigWithMainAndDbSizeQueries
             )
         )
 
         assertEquals(
-            blockedQueryResult3, blockedQueriesMetric.getMetricResult(
+            blockedQueryEmptyResult, blockedQueriesMetric.getMetricResult(
                 blockedQueriesInput4,
                 TestHelper.metricConfigWithMainAndDbSizeQueries
             )

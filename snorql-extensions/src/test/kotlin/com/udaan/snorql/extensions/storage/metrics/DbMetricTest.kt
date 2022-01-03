@@ -133,10 +133,6 @@ class DbMetricTest {
     private val incorrectMetricInputList =
         listOf<DbInput>(dbMetricInputWithIncorrectMetricId, dbMetricInputWithEmptyMetricId)
 
-    // Correct Metric Inputs
-    private val correctMetricInputList =
-        listOf<DbInput>(dbMetricInputHistorical, dbMetricInputRealTime1, dbMetricInputRealTime2, dbMetricInputRealTime3)
-
     // Incorrect metric configs
     private val incorrectMetricConfigList =
         listOf(
@@ -145,11 +141,6 @@ class DbMetricTest {
             TestHelper.metricConfigWithoutQueries,
             TestHelper.metricConfigWithoutDbSizeQuery
         )
-
-    // Correct metric configs
-    private val correctMetricConfigList =
-        listOf(TestHelper.metricConfigWithMainAndDbSizeQueries, TestHelper.metricConfigWithoutDbSizeQuery)
-
 
     @Test
     fun testGetMetricResponseMetadata() {

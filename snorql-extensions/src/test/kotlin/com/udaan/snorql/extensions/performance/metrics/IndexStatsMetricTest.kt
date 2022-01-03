@@ -134,14 +134,14 @@ class IndexStatsMetricTest {
         )
 
     // Index Stat Results
-    private val indexStatResult1 = IndexStatResult(listOf(indexStats1, indexStats2)) // Multiple stats in result
-    private val indexStatResult2 = IndexStatResult(listOf(indexStats2))
-    private val indexStatResult3 = IndexStatResult(listOf()) // empty result
+    private val indexStatMultipleResult = IndexStatResult(listOf(indexStats1, indexStats2)) // Multiple stats in result
+    private val indexStatSingleResult = IndexStatResult(listOf(indexStats2))
+    private val indexStatEmptyResult = IndexStatResult(listOf()) // empty result
 
     // Index Stat Output
-    private val metricOutput1 = MetricOutput<IndexStatResult, IMetricRecommendation>(indexStatResult1, null)
-    private val metricOutput2 = MetricOutput<IndexStatResult, IMetricRecommendation>(indexStatResult2, null)
-    private val metricOutput3 = MetricOutput<IndexStatResult, IMetricRecommendation>(indexStatResult3, null)
+    private val metricMultipleOutput = MetricOutput<IndexStatResult, IMetricRecommendation>(indexStatMultipleResult, null)
+    private val metricSingleOutput = MetricOutput<IndexStatResult, IMetricRecommendation>(indexStatSingleResult, null)
+    private val metricEmptyOutput = MetricOutput<IndexStatResult, IMetricRecommendation>(indexStatEmptyResult, null)
 
     @Test
     fun testGetMetricResponseMetadata() {
@@ -154,47 +154,47 @@ class IndexStatsMetricTest {
             expected = expectedOutput1,
             indexStatsMetric.getMetricResponseMetadata(
                 indexStatsInput1,
-                metricOutput1
+                metricMultipleOutput
             )
         )
         assertEquals(
             expected = expectedOutput1,
             indexStatsMetric.getMetricResponseMetadata(
                 indexStatsInput1,
-                metricOutput2
+                metricSingleOutput
             )
         )
         assertEquals(
             expected = expectedOutput1,
             indexStatsMetric.getMetricResponseMetadata(
                 indexStatsInput1,
-                metricOutput3
+                metricEmptyOutput
             )
         )
         assertEquals(
             expected = expectedOutput1,
             indexStatsMetric.getMetricResponseMetadata(
                 indexStatsInput2,
-                metricOutput1
+                metricMultipleOutput
             )
         )
         assertEquals(
             expected = expectedOutput1,
             indexStatsMetric.getMetricResponseMetadata(
                 indexStatsInput2,
-                metricOutput2
+                metricSingleOutput
             )
         )
         assertEquals(
             expected = expectedOutput1,
             indexStatsMetric.getMetricResponseMetadata(
                 indexStatsInput2,
-                metricOutput3
+                metricEmptyOutput
             )
         )
 
         for (metricInput in listOf(indexStatsInputIncorrectMetricId, indexStatsInputEmptyStringMetricId)) {
-            for (metricOutput in listOf(metricOutput1, metricOutput2)) {
+            for (metricOutput in listOf(metricMultipleOutput, metricSingleOutput)) {
                 try {
                     indexStatsMetric.getMetricResponseMetadata(metricInput, metricOutput)
                     fail("Exception not thrown for \nmetricInput = $metricInput \nmetricOutput = $metricOutput")
@@ -256,15 +256,15 @@ class IndexStatsMetricTest {
             }
         }
         assertEquals(
-            indexStatResult1,
+            indexStatMultipleResult,
             indexStatsMetric.getMetricResult(indexStatsInput1, TestHelper.metricConfigWithMainAndDbSizeQueries)
         )
         assertEquals(
-            indexStatResult2,
+            indexStatSingleResult,
             indexStatsMetric.getMetricResult(indexStatsInput2, TestHelper.metricConfigWithMainAndDbSizeQueries)
         )
         assertEquals(
-            indexStatResult3,
+            indexStatEmptyResult,
             indexStatsMetric.getMetricResult(indexStatsInput3, TestHelper.metricConfigWithMainAndDbSizeQueries
             )
         )
