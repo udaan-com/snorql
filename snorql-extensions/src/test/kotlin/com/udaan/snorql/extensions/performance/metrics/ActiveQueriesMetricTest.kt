@@ -168,7 +168,7 @@ class ActiveQueriesMetricTest {
         // Testing for SQLMonitoringConfigException
         for (metricInput in listOf(activeQueriesInput1, activeQueriesInput2)) {
             for (metricConfig in listOf(
-                TestHelper.metricConfigWithEmptyStringMainQuery,
+                TestHelper.metricConfigWithoutMainAndDbSizeQueries,
                 TestHelper.metricConfigWithoutMainQuery
             )) {
                 try {

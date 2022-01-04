@@ -20,42 +20,15 @@
 package com.udaan.snorql.extensions
 
 import com.udaan.snorql.extensions.accesscontrol.AccessControlEnums
-import com.udaan.snorql.extensions.accesscontrol.metrics.UserRoleMetric
 import com.udaan.snorql.extensions.performance.PerformanceEnums
-import com.udaan.snorql.extensions.performance.metrics.ActiveDDLMetric
-import com.udaan.snorql.extensions.performance.metrics.ActiveQueriesMetric
-import com.udaan.snorql.extensions.performance.metrics.BlockedQueriesMetric
-import com.udaan.snorql.extensions.performance.metrics.IndexStatsMetric
-import com.udaan.snorql.extensions.performance.metrics.LongRunningQueriesMetric
-import com.udaan.snorql.extensions.performance.models.BlockedQueriesInput
-import com.udaan.snorql.extensions.performance.models.BlockedQueriesResult
 import com.udaan.snorql.extensions.storage.StorageEnums
-import com.udaan.snorql.extensions.storage.metrics.DbGrowthMetric
-import com.udaan.snorql.extensions.storage.metrics.DbIndexMetric
-import com.udaan.snorql.extensions.storage.metrics.DbMetric
-import com.udaan.snorql.extensions.storage.metrics.DbTableMetric
-import com.udaan.snorql.extensions.storage.metrics.PVSMetric
-import com.udaan.snorql.extensions.storage.metrics.TableMetric
-import com.udaan.snorql.extensions.storage.metrics.TableSchemaMetric
-import com.udaan.snorql.extensions.storage.metrics.TableUnusedIndexMetric
-import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
-import com.udaan.snorql.framework.models.IMetricRecommendation
-import io.mockk.MockKObjectScope
-import io.mockk.Ordering
-import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import io.mockk.verify
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatchers
-import org.mockito.Mockito.any
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.times
-import kotlin.test.assertEquals
 
 class SQLCommonMetricTest {
     @Before
@@ -89,6 +62,5 @@ class SQLCommonMetricTest {
     @After
     fun afterTests() {
         unmockkAll()
-        // or unmockkObject(ObjBeingMocked)
     }
 }

@@ -1,37 +1,11 @@
 package com.udaan.snorql.framework.models
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import junit.framework.Assert.assertEquals
 import org.junit.Test
-import java.lang.Exception
 import kotlin.test.fail
 
 class TestConfiguration {
-
-    private val CONFIG_FILE_LOCATION = "/sql-monitoring-conf.json"
-
-    private val objectMapper: ObjectMapper
-        get() {
-            return jacksonObjectMapper().configure(
-                DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-                false
-            ).registerKotlinModule()
-        }
-
-//    private val configuration: Configuration by lazy {
-//        val file = SqlMetricManager::class.java.getResource(CONFIG_FILE_LOCATION).readText()
-//        if (file.isNotEmpty()) {
-//            val typeRef = object : TypeReference<Map<String, MetricConfig>>() {}
-//            Configuration(objectMapper.readValue(file, typeRef))
-//        } else {
-//            SqlMetricManager.logger.warn("SQL monitoring configuration file [${CONFIG_FILE_LOCATION}] not found in classpath")
-//            Configuration(mapOf())
-//        }
-//    }
 
     private val activeQueriesMetricId = "performance_activeQueries"
     private val longRunningQueriesMetricId = "performance_longRunningQueries"

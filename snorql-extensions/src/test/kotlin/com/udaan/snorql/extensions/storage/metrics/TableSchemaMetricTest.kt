@@ -27,7 +27,6 @@ import com.udaan.snorql.extensions.storage.models.TableSchemaDTO
 import com.udaan.snorql.extensions.storage.models.TableSchemaInput
 import com.udaan.snorql.extensions.storage.models.TableSchemaResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
-import com.udaan.snorql.framework.SQLMonitoringConnectionException
 import com.udaan.snorql.framework.metric.Connection
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation

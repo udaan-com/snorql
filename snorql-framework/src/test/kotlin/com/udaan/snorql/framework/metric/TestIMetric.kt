@@ -1,10 +1,11 @@
 package com.udaan.snorql.framework.metric
 
+import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.models.*
 import junit.framework.Assert.assertNotNull
 import org.junit.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNull
+import kotlin.test.fail
 
 data class DemoDTO(
     val demoField1: String,
@@ -102,14 +103,6 @@ class TestIMetric : IMetric<DemoInput, DemoResult, DemoRecommendation> {
         return mapOf("Metadata1" to "MetadataValue1")
     }
 
-    override fun getMetricConfig(metricId: String): MetricConfig {
-        return if (metricId == metricInput1.metricId) {
-            metricConfig1
-        } else {
-            metricConfig2
-        }
-    }
-
     @Test
     fun testGetMetricResponse() {
         assertEquals(metricResponse1, getMetricResponse(metricInput1))
@@ -120,5 +113,23 @@ class TestIMetric : IMetric<DemoInput, DemoResult, DemoRecommendation> {
     fun testGetMetricRecommendations() {
         assertNotNull(getMetricRecommendations(metricInput1, demoResult1))
         assertNotNull(getMetricRecommendations(metricInput2, demoResult1))
+    }
+
+    @Test
+    fun testGetMetricConfig() {
+        // Added a demo metric configuration in test sql-monitoring-conf.json
+        assertEquals(metricConfig1, getMetricConfig(metricInput1.metricId))
+        assertEquals(metricConfig2, getMetricConfig(metricInput2.metricId))
+
+        // Failing Test Case - When configuration does not exist in sql-monitoring-conf.json
+        val doesNotExistMetricId = "doesNotExistMetricConfig"
+        try {
+            getMetricConfig(doesNotExistMetricId)
+            fail("Exception not thrown by getMetricConfig for metricId: $doesNotExistMetricId")
+        } catch (e: SQLMonitoringConfigException) {
+            assertEquals("Config against metric id $doesNotExistMetricId not found", e.message)
+        } catch (e: Exception) {
+            fail("Unexpected exception thrown by getMetricConfig for metricId:$doesNotExistMetricId")
+        }
     }
 }

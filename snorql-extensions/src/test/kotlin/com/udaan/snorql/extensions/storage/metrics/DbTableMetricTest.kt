@@ -23,9 +23,10 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.whenever
 import com.udaan.snorql.extensions.TestHelper
-import com.udaan.snorql.extensions.storage.models.*
+import com.udaan.snorql.extensions.storage.models.DbTableDTO
+import com.udaan.snorql.extensions.storage.models.DbTableInput
+import com.udaan.snorql.extensions.storage.models.DbTableResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
-import com.udaan.snorql.framework.SQLMonitoringConnectionException
 import com.udaan.snorql.framework.metric.Connection
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation

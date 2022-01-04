@@ -28,7 +28,6 @@ import com.udaan.snorql.extensions.storage.models.DbInput
 import com.udaan.snorql.extensions.storage.models.DbResult
 import com.udaan.snorql.extensions.storage.models.DbStorageSize
 import com.udaan.snorql.framework.SQLMonitoringConfigException
-import com.udaan.snorql.framework.SQLMonitoringConnectionException
 import com.udaan.snorql.framework.metric.Connection
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation

@@ -142,7 +142,7 @@ class ActiveDDLMetricTest {
         // Testing for SQLMonitoringConfigException
         for (metricInput in listOf(activeDDLInput1, activeDDLInput2, activeDDLIncorrectMetricIdInput, activeDDLEmptyStringMetricIdInput)) {
             for (metricConfig in listOf(
-                TestHelper.metricConfigWithEmptyStringMainQuery,
+                TestHelper.metricConfigWithoutMainAndDbSizeQueries,
                 TestHelper.metricConfigWithoutMainQuery
             )) {
                 try {
