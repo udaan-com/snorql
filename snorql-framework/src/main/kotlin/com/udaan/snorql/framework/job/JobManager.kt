@@ -1,3 +1,22 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package com.udaan.snorql.framework.job
 
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -27,8 +46,8 @@ object JobManager {
 
     private val objectMapper: ObjectMapper = SnorqlConstants.objectMapper
 
-    private fun startScheduler(){
-         try {
+    private fun startScheduler() {
+        try {
             scheduler.start()
 
         } catch (e: Exception) {
@@ -74,9 +93,12 @@ object JobManager {
         endAt: Timestamp?,
     ): Boolean {
         val jobName: String = metricInput.metricId // jobName = metricId (Therefore, for each metric, there is a job
-        val triggerName: String = metricInput.metricId.plus("_").plus(metricInput.databaseName)
+        val triggerName: String =
+            metricInput.metricId.plus("_").plus(metricInput.databaseName).plus("_")
+                .plus(SnorqlConstants.objectMapper.writeValueAsString(metricInput).hashCode())
         val jobDataMap = JobDataMap()
-        jobDataMap["metricInput"] = objectMapper.writeValueAsString(metricInput) // gson.toJson(metricInput).toString() // Use Jackson
+        jobDataMap["metricInput"] =
+            objectMapper.writeValueAsString(metricInput) // gson.toJson(metricInput).toString() // Use Jackson
         jobDataMap["inputClass"] = metricInput::class.java.name
         val jobKey = JobKey(jobName, SnorqlConstants.MONITORING_GROUP_NAME)
         val triggerKey = TriggerKey(triggerName, SnorqlConstants.MONITORING_GROUP_NAME)
@@ -92,9 +114,11 @@ object JobManager {
                     .withIdentity(triggerName, SnorqlConstants.MONITORING_GROUP_NAME)
 //                    .startAt(startFrom)
                     .usingJobData(jobDataMap)
-                    .withSchedule(SimpleScheduleBuilder.simpleSchedule()
-                        .withIntervalInSeconds(intervalInSeconds)
-                        .repeatForever())
+                    .withSchedule(
+                        SimpleScheduleBuilder.simpleSchedule()
+                            .withIntervalInSeconds(intervalInSeconds)
+                            .repeatForever()
+                    )
                     .endAt(endAt)
                     .build()
             triggerJob(job, trigger)
@@ -107,9 +131,11 @@ object JobManager {
                     .forJob(job)
 //                    .startAt(startFrom)
                     .usingJobData(jobDataMap)
-                    .withSchedule(SimpleScheduleBuilder.simpleSchedule()
-                        .withIntervalInSeconds(intervalInSeconds)
-                        .repeatForever())
+                    .withSchedule(
+                        SimpleScheduleBuilder.simpleSchedule()
+                            .withIntervalInSeconds(intervalInSeconds)
+                            .repeatForever()
+                    )
                     .endAt(endAt)
                     .build()
                 triggerJob(job = null, trigger = trigger)
@@ -119,9 +145,11 @@ object JobManager {
                     .forJob(job)
 //                        .startAt(startFrom)
                     .usingJobData(jobDataMap)
-                    .withSchedule(SimpleScheduleBuilder.simpleSchedule()
-                        .withIntervalInSeconds(intervalInSeconds)
-                        .repeatForever())
+                    .withSchedule(
+                        SimpleScheduleBuilder.simpleSchedule()
+                            .withIntervalInSeconds(intervalInSeconds)
+                            .repeatForever()
+                    )
                     .endAt(endAt)
                     .build()
                 replaceTrigger(triggerKey, newTrigger)
@@ -130,7 +158,8 @@ object JobManager {
     }
 
     fun getAllMonitoringTriggers(): List<Trigger> {
-        val allTriggerKeys = scheduler.getTriggerKeys(GroupMatcher.anyGroup()) // groupEquals(SnorqlConstants.MONITORING_GROUP_NAME))
+        val allTriggerKeys =
+            scheduler.getTriggerKeys(GroupMatcher.anyGroup()) // groupEquals(SnorqlConstants.MONITORING_GROUP_NAME))
         val triggersList = mutableListOf<Trigger>()
         allTriggerKeys.forEach { triggerKey ->
             run {
