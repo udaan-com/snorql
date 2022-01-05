@@ -48,11 +48,11 @@ abstract class MetricInput {
  * @constructor Create Metric configuration object
  */
 data class MetricConfig(val queries: Map<String, String>,
-                        val supportsHistorical: Boolean,
-                        val supportsRealTime: Boolean,
-                        val isParameterized: Boolean,
-                        val referenceDoc: String,
-                        val description: String)
+        val supportsHistorical: Boolean,
+        val supportsRealTime: Boolean,
+        val isParameterized: Boolean,
+        val referenceDoc: List<String>,
+        val description: String)
 
 /**
  * Metric output model class
