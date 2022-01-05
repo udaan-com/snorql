@@ -19,6 +19,8 @@
 
 package com.udaan.snorql.framework.metric
 
+import com.udaan.snorql.framework.job.model.HistoricalDatabaseSchemaDTO
+
 /**
  * Connection
  *
@@ -51,4 +53,11 @@ interface Connection {
         columns: List<String>,
         rows: List<List<Any>>,
     )
+
+    /**
+     * Get data saved by snorql
+     *
+     * @param storageBucketId
+     */
+    fun getHistoricalData(storageBucketId: String, metricId: String, databaseName: String): List<HistoricalDatabaseSchemaDTO>
 }

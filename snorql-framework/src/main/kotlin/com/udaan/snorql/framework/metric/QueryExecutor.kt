@@ -57,6 +57,11 @@ class QueryExecutor(val connection: Connection) {
         connection.storeData(storageBucketId, columns, rows)
     }
 
+    fun fetchHistoricalData(metricId: String, databaseName: String): List<HistoricalDatabaseSchemaDTO> {
+        val storageBucketId: String = SnorqlConstants.HISTORICAL_DATA_BUCKET_ID
+        return connection.getHistoricalData(storageBucketId, metricId, databaseName)
+    }
+
     fun persistHistoricalData(
         storageId: String,
         historicalDataList: List<HistoricalDatabaseSchemaDTO>,
@@ -70,8 +75,10 @@ class QueryExecutor(val connection: Connection) {
             row.add(it.metricId)
             row.add(it.databaseName)
             row.add(it.source)
-            row.add(SnorqlConstants.objectMapper.writeValueAsString(it.metricInput))
-            row.add(SnorqlConstants.objectMapper.writeValueAsString(it.metricOutput))
+            row.add(it.metricInput)
+            row.add(it.metricOutput)
+            // row.add(SnorqlConstants.objectMapper.writeValueAsString(it.metricInput))
+            // row.add(SnorqlConstants.objectMapper.writeValueAsString(it.metricOutput))
             rows.add(row)
         }
         connection.storeData(storageId, columns, rows.toList())

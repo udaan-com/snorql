@@ -1,9 +1,11 @@
 package com.udaan.snorql.framework.job
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.udaan.snorql.framework.job.model.HistoricalDatabaseSchemaDTO
 import com.udaan.snorql.framework.job.model.JobTriggerConfig
 import com.udaan.snorql.framework.job.model.QuartzProperties
 import com.udaan.snorql.framework.job.model.RecordingJobConfigOutline
+import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
@@ -56,6 +58,13 @@ object JobManager {
             print("Unable to add data recording: $e")
             false
         }
+    }
+
+    /**
+     * Fetch historical data for a metricId and databaseName
+     */
+    fun getHistoricalData(metricId: String, databaseName: String): List<HistoricalDatabaseSchemaDTO> {
+        return SqlMetricManager.queryExecutor.fetchHistoricalData(metricId, databaseName)
     }
 
     private fun <T : MetricInput, O : IMetricResult, V : IMetricRecommendation> configureJobAndTrigger(

@@ -105,8 +105,8 @@ data class HistoricalDatabaseSchemaDTO(
     val metricId: String,
     val databaseName: String,
     val source: String,
-    val metricInput: MetricInput,
-    val metricOutput: MetricOutput<out IMetricResult, out IMetricRecommendation>
+    val metricInput: String,
+    val metricOutput: String
 )
 
 data class ActualQueryDTO(
