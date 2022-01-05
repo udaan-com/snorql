@@ -59,7 +59,7 @@ interface IMetric<in T : MetricInput, O : IMetricResult, R : IMetricRecommendati
         return null
     }
 
-    abstract fun getMetricResult(
+    fun getMetricResult(
         metricInput: T,
         metricConfig: MetricConfig
     ): O
