@@ -7,7 +7,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -20,15 +20,19 @@
 package com.udaan.snorql.framework.metric
 
 class QueryExecutor(val connection: Connection) {
-    inline fun <reified T> execute(databaseName:String,query: String,
-            params: Map<String, *> = mapOf<String, Any>()): List<T> {
+    inline fun <reified T> execute(
+        databaseName: String, query: String,
+        params: Map<String, *> = mapOf<String, Any>()
+    ): List<T> {
         return connection.run(databaseName, query, T::class.java, params)
     }
 
-    fun persistData(databaseName:String,tableName: String,
-            columns: List<String>,
-            rows: List<List<Any>>) {
-        connection.storeData(databaseName,tableName, columns, rows)
+    fun persistData(
+        databaseName: String, tableName: String,
+        columns: List<String>,
+        rows: List<List<Any>>
+    ) {
+        connection.storeData(databaseName, tableName, columns, rows)
     }
 
 }

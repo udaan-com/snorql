@@ -7,7 +7,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -98,7 +98,7 @@ class DbMetricTest {
     )
 
     // DB Metric Inputs
-    private val dbMetricInputHistorical =
+    private val dbMetricInputHistorical1 =
         DbInput(metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName1", dbName = "randomDbName1")
     private val dbMetricInputRealTime1 =
         DbInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName1", dbName = "randomDbName1")
@@ -150,15 +150,15 @@ class DbMetricTest {
         )
         assertEquals(
             expected = expectedOutput1,
-            dbMetric.getMetricResponseMetadata(dbMetricInputHistorical, metricOutputMultipleResults)
+            dbMetric.getMetricResponseMetadata(dbMetricInputHistorical1, metricOutputMultipleResults)
         )
         assertEquals(
             expected = expectedOutput1,
-            dbMetric.getMetricResponseMetadata(dbMetricInputHistorical, metricOutputSingleResult)
+            dbMetric.getMetricResponseMetadata(dbMetricInputHistorical1, metricOutputSingleResult)
         )
         assertEquals(
             expected = expectedOutput1,
-            dbMetric.getMetricResponseMetadata(dbMetricInputHistorical, metricOutputEmptyResult)
+            dbMetric.getMetricResponseMetadata(dbMetricInputHistorical1, metricOutputEmptyResult)
         )
         assertEquals(
             expected = expectedOutput1,
@@ -195,12 +195,12 @@ class DbMetricTest {
         val mockConnection: Connection = mock()
         SqlMetricManager.setConnection(mockConnection)
         val databaseNames = listOf("randomDatabaseName1", "randomDatabaseName2", "randomDatabaseName3")
-        databaseNames.forEach { databaseName ->
+        val metricInputList =
+            listOf(dbMetricInputRealTime1, dbMetricInputRealTime2, dbMetricInputRealTime3, dbMetricInputHistorical1)
+        metricInputList.forEach { metricInput ->
             whenever(
                 SqlMetricManager.queryExecutor.execute<DbDTO>(
-                    databaseName, // "randomDatabaseName1", // "randomDatabaseName1",
-                    "MetricMainQuery",
-                    // params = any()// "MetricMainQuery" // "MetricMainQuery"
+                    databaseName = metricInput.databaseName, query = "MetricMainQuery"
                 )
             ).thenAnswer {
                 val database: String = it.getArgument(0) as String
@@ -222,9 +222,10 @@ class DbMetricTest {
             }
 
             whenever(
-                dbMetric.executeQuery<Int>(
-                    databaseName = databaseName,
-                    queryString = "dbSizeQueryString"
+                SqlMetricManager.queryExecutor.execute<Int>(
+                    databaseName = metricInput.databaseName,
+                    query = "dbSizeQueryString",
+                    params = mapOf("databaseName" to metricInput.dbName)
                 )
             ).thenAnswer {
                 val database: String = it.getArgument(0) as String

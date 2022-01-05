@@ -7,7 +7,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -25,6 +25,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.udaan.snorql.extensions.TestHelper
 import com.udaan.snorql.extensions.storage.models.TableUnusedIndexDTO
 import com.udaan.snorql.extensions.storage.models.TableUnusedIndexInput
+import com.udaan.snorql.extensions.storage.models.TableUnusedIndexRecommendation
 import com.udaan.snorql.extensions.storage.models.TableUnusedIndexResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.Connection
@@ -71,6 +72,15 @@ class TableUnusedIndexMetricTest {
         userUpdates = 12,
         columnName = "ColumnName2"
     )
+    private val tableUnusedIndexNoSeeksResult = TableUnusedIndexDTO(
+        objectName = "ObjectName2",
+        indexName = "IndexName2",
+        userSeeks = 0,
+        userScans = 0,
+        userLookups = 0,
+        userUpdates = 12,
+        columnName = "ColumnName2"
+    )
 
     // Table Schema Metric Inputs
     private val tableUnusedIndexMetricInputHistorical1 =
@@ -109,6 +119,12 @@ class TableUnusedIndexMetricTest {
             databaseName = "randomDatabaseName3",
             tableName = "randomTableName3"
         )
+    private val tableUnusedIndexMetricInputRequiredRecommendationRealTime =
+        TableUnusedIndexInput(
+            metricPeriod = MetricPeriod.REAL_TIME,
+            databaseName = "randomDatabaseName3",
+            tableName = "randomTableName3"
+        )
     private val tableUnusedIndexMetricInputIncorrectMetricId = TableUnusedIndexInput(
         metricId = "incorrectId",
         metricPeriod = MetricPeriod.REAL_TIME,
@@ -128,6 +144,8 @@ class TableUnusedIndexMetricTest {
         TableUnusedIndexResult(listOf(tableUnusedIndexResult1, tableUnusedIndexResult2))
     private val tableUnusedIndexMetricResultSingleResult = TableUnusedIndexResult(listOf(tableUnusedIndexResult1))
     private val tableUnusedIndexMetricResultEmptyResult = TableUnusedIndexResult(listOf()) // empty result
+    private val tableUnusedIndexMetricResultWithNoUserSeeksMultipleResults =
+        TableUnusedIndexResult(listOf(tableUnusedIndexResult1, tableUnusedIndexNoSeeksResult))
 
     // Table Schema Metric Output
     private val metricOutputMultipleResults =
@@ -209,6 +227,24 @@ class TableUnusedIndexMetricTest {
             }
         }
     }
+
+//    @Test
+//    fun testGetMetricRecommendation() {
+//        assertEquals(
+//            TableUnusedIndexRecommendation(listOf()),
+//            tableUnusedIndexMetric.getMetricRecommendations(
+//                metricInput = tableUnusedIndexMetricInputRealTime1,
+//                metricResult = tableUnusedIndexMetricResultMultipleResults
+//            )
+//        )
+//
+//        assertEquals(
+//            TableUnusedIndexRecommendation(listOf("IndexName2")), tableUnusedIndexMetric.getMetricRecommendations(
+//                metricInput = tableUnusedIndexMetricInputRealTime1,
+//                metricResult = tableUnusedIndexMetricResultWithNoUserSeeksMultipleResults
+//            )
+//        )
+//    }
 
     @Test
     fun testGetMetricResult() {

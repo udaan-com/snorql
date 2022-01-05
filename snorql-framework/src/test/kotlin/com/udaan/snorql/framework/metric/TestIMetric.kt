@@ -24,6 +24,7 @@ import com.udaan.snorql.framework.models.*
 import junit.framework.Assert.assertNotNull
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 import kotlin.test.fail
 
 data class DemoDTO(
@@ -82,16 +83,16 @@ class TestIMetric : IMetric<DemoInput, DemoResult, DemoRecommendation> {
 
     private val metricOutput1 = MetricOutput(
         result = DemoResult(listOf(demoDTO1, demoDTO2)),
-        recommendation = null
+        recommendation = getMetricRecommendations(metricInput1, getMetricResult(metricInput1, metricConfig1))
     ) // DemoRecommendation(listOf("Recommendation String 1", "Recommendation String 2"))
 
     private val metricOutput2 = MetricOutput(
         result = demoResult1,
-        recommendation = null
+        recommendation = getMetricRecommendations(metricInput2, getMetricResult(metricInput2, metricConfig2))
     )
 
-    private val metricResponse1 = MetricResponse(metricInput1, metricOutput1, mapOf("Metadata1" to "MetadataValue1"))
-    private val metricResponse2 = MetricResponse(metricInput2, metricOutput2, mapOf("Metadata1" to "MetadataValue1"))
+    private val metricResponse1 = MetricResponse(metricInput1, metricOutput1, null) // mapOf("Metadata1" to "MetadataValue1"))
+    private val metricResponse2 = MetricResponse(metricInput2, metricOutput2, null) // mapOf("Metadata1" to "MetadataValue1"))
 
     override fun saveMetricResult(metricInput: MetricInput, result: IMetricResult) {
         TODO("Not yet implemented")
@@ -111,16 +112,16 @@ class TestIMetric : IMetric<DemoInput, DemoResult, DemoRecommendation> {
         }
     }
 
-    override fun getMetricRecommendations(metricInput: DemoInput, metricResult: DemoResult): DemoRecommendation {
-        return DemoRecommendation(listOf("Recommendation String 1", "Recommendation String 2"))
-    }
+//    override fun getMetricRecommendations(metricInput: DemoInput, metricResult: DemoResult): DemoRecommendation {
+//        return DemoRecommendation(listOf("Recommendation String 1", "Recommendation String 2"))
+//    }
 
-    override fun getMetricResponseMetadata(
-        metricInput: DemoInput,
-        metricOutput: MetricOutput<DemoResult, DemoRecommendation>
-    ): Map<String, Any>? {
-        return mapOf("Metadata1" to "MetadataValue1")
-    }
+//    override fun getMetricResponseMetadata(
+//        metricInput: DemoInput,
+//        metricOutput: MetricOutput<DemoResult, DemoRecommendation>
+//    ): Map<String, Any>? {
+//        return mapOf("Metadata1" to "MetadataValue1")
+//    }
 
     @Test
     fun testGetMetricResponse() {
@@ -130,8 +131,16 @@ class TestIMetric : IMetric<DemoInput, DemoResult, DemoRecommendation> {
     @Test
     fun testGetMetricRecommendations() {
         // Testing Recommendations
-        assertNotNull(getMetricRecommendations(metricInput1, demoResult1))
-        assertNotNull(getMetricRecommendations(metricInput2, demoResult1))
+        assertNull(getMetricRecommendations(metricInput1, demoResult1))
+        assertNull(getMetricRecommendations(metricInput2, demoResult1))
+//        assertNotNull(getMetricRecommendations(metricInput1, demoResult1))
+//        assertNotNull(getMetricRecommendations(metricInput2, demoResult1))
+    }
+
+    @Test
+    fun testGetMetricResponseMetadata() {
+        assertNull(getMetricResponseMetadata(metricInput1, metricOutput1))
+        assertNull(getMetricResponseMetadata(metricInput2, metricOutput2))
     }
 
     @Test
