@@ -53,8 +53,8 @@ class MonitoringJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommenda
                 metricId = metricInput.metricId,
                 databaseName = metricInput.databaseName,
                 source = SnorqlConstants.MONITORING_GROUP_NAME,
-                metricInput = metricInput,
-                metricOutput = metricOutput
+                metricInput = SnorqlConstants.objectMapper.writeValueAsString(metricInput), // metricInput,
+                metricOutput = SnorqlConstants.objectMapper.writeValueAsString(metricOutput) // metricOutput
             )
             val storageId = SnorqlConstants.HISTORICAL_DATA_BUCKET_ID
             SqlMetricManager.queryExecutor.persistHistoricalData(storageId, listOf(dataRecorded))
