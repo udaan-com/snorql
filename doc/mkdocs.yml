@@ -3,7 +3,7 @@ site_name: snorql
 # Meta tags (placed in header)
 site_description: snorql is a SQL monitoring tool
 site_author: udaan.com
-site_url: https://github.com/lakshmi-udaan/demo-github-actions
+site_url: https://github.com/udaan-com/snorql
 
 # Repository (add link to repository on each page)
 repo_name: snorql
