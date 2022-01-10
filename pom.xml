@@ -176,35 +176,6 @@
                             </execution>
                         </executions>
                     </plugin>
-
-<!--                    <plugin>-->
-<!--                        <groupId>org.jetbrains.dokka</groupId>-->
-<!--                        <artifactId>dokka-maven-plugin</artifactId>-->
-<!--                        <version>1.4.20</version>-->
-<!--                        <executions>-->
-<!--                            <execution>-->
-<!--                                <phase>pre-site</phase>-->
-<!--                                <goals>-->
-<!--                                    <goal>dokka</goal>-->
-<!--                                </goals>-->
-<!--                            </execution>-->
-<!--                        </executions>-->
-<!--                        <configuration>-->
-
-<!--                            <sourceDirectories>-->
-<!--                                <dir>snorql-framework/src/main/kotlin</dir>-->
-<!--                                <dir>snorql-extensions/src/main/kotlin</dir>-->
-<!--                            </sourceDirectories>-->
-<!--                            <dokkaPlugins>-->
-<!--                                <plugin>-->
-<!--                                    <groupId>org.jetbrains.dokka</groupId>-->
-<!--                                    <artifactId>kotlin-as-java-plugin</artifactId>-->
-<!--                                    <version>1.4.20</version>-->
-<!--                                </plugin>-->
-<!--                            </dokkaPlugins>-->
-<!--                        </configuration>-->
-<!--                    </plugin>-->
-
                 </plugins>
             </build>
         </profile>
