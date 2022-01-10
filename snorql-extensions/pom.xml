@@ -172,7 +172,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <outputDir>${project.parent.basedir}/docs/snorql-extensions</outputDir>
+                    <outputDir>${project.parent.basedir}/doc/docs/snorql-extensions</outputDir>
                 </configuration>
             </plugin>
         </plugins>
