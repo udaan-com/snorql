@@ -20,18 +20,16 @@
 package com.udaan.snorql.framework.metric
 
 /**
- * Connection
- *
- * @constructor Create empty Connection
+ * Connection interface implemented by user to define methods required for snorql to interact with user's database
  */
 interface Connection {
     /**
      * Run binds to <T> by executing a query using a databaseName instance
      *
-     * @param T
+     * @param T mapping model class
      * @param databaseName database name to create instance
      * @param query execute the query
-     * @param mapClass
+     * @param mapClass mapping class
      * @param params parameters for metric
      * @return
      */
@@ -40,12 +38,12 @@ interface Connection {
                 params: Map<String, *> = emptyMap<String, String>()): List<T>
 
     /**
-     * Store data
+     * Store data into user's database
      *
-     * @param databaseName
-     * @param tableName
-     * @param columns
-     * @param rows
+     * @param databaseName name of database to store data in
+     * @param tableName name of table to store data in
+     * @param columns list of column names
+     * @param rows list of rows of data to be stored
      */
     fun storeData(databaseName:String, tableName: String,
                   columns: List<String>,

@@ -1,0 +1,25 @@
+name: Readme
+
+on:
+  push:
+    paths:
+      - 'doc/**'
+
+jobs:
+  generate-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run script file
+        run: |
+          chmod +x ./scripts/populate-readme.sh
+          ./scripts/populate-readme.sh
+        shell: bash
+      - name: Get the current branch name
+        shell: bash
+        run: echo "::set-output name=branch::${GITHUB_REF#refs/heads/}"
+        id: currentref
+      - uses: mikeal/publish-to-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH_NAME: ${{ steps.currentref.outputs.branch }}

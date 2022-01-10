@@ -12,7 +12,6 @@ jobs:
         with:
           fetch-depth: 1
           ref: ${{ github.head_ref }}
-
       - name: detekt
         uses: alaegin/Detekt-Action@v1.18.1.2
         with:
