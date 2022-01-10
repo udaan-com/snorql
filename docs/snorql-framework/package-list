@@ -1,7 +1,0 @@
-$dokka.format:javadoc-v1
-$dokka.linkExtension:html
-
-com.udaan.snorql.framework
-com.udaan.snorql.framework.metric
-com.udaan.snorql.framework.models
-

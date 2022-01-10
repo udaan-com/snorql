@@ -152,7 +152,7 @@
                 <version>1.4.20</version>
                 <executions>
                     <execution>
-                        <phase>compile</phase>
+                        <phase>pre-site</phase>
                         <goals>
                             <goal>javadocJar</goal>
                         </goals>
@@ -172,7 +172,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <outputDir>${project.basedir}/src/docs/dokka</outputDir>
+                    <outputDir>${project.parent.basedir}/doc/docs/snorql-extensions</outputDir>
                 </configuration>
             </plugin>
         </plugins>
