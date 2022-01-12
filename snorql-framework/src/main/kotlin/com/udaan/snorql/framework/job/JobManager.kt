@@ -32,6 +32,7 @@ import com.udaan.snorql.framework.models.SnorqlConstants
 import org.quartz.*
 import org.quartz.impl.StdSchedulerFactory
 import org.quartz.impl.matchers.GroupMatcher
+import java.sql.Date
 import java.sql.Timestamp
 
 object JobManager {
@@ -82,8 +83,14 @@ object JobManager {
     /**
      * Fetch historical data for a metricId and databaseName
      */
-    fun getHistoricalData(metricId: String, databaseName: String): List<HistoricalDatabaseSchemaDTO> {
-        return SqlMetricManager.queryExecutor.fetchHistoricalData(metricId, databaseName)
+    fun getHistoricalData(
+        metricId: String,
+        databaseName: String,
+        pageNumber: Int,
+        pageSize: Int,
+        params: Map<String, *> = mapOf<String, String>()
+    ): List<HistoricalDatabaseSchemaDTO> {
+        return SqlMetricManager.queryExecutor.fetchHistoricalData(metricId, databaseName, pageNumber, pageSize, params)
     }
 
     private fun <T : MetricInput, O : IMetricResult, V : IMetricRecommendation> configureJobAndTrigger(

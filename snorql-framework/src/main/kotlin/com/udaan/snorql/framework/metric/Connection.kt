@@ -7,7 +7,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -35,9 +35,11 @@ interface Connection {
      * @param params parameters for metric
      * @return
      */
-    fun <T> run(databaseName:String, query: String,
-                mapClass: Class<T>,
-                params: Map<String, *> = emptyMap<String, String>()): List<T>
+    fun <T> run(
+        databaseName: String, query: String,
+        mapClass: Class<T>,
+        params: Map<String, *> = emptyMap<String, String>()
+    ): List<T>
 
     /**
      * Store data into user's database
@@ -57,5 +59,12 @@ interface Connection {
      *
      * @param storageBucketId
      */
-    fun getHistoricalData(storageBucketId: String, metricId: String, databaseName: String): List<HistoricalDatabaseSchemaDTO>
+    fun getHistoricalData(
+        storageBucketId: String,
+        metricId: String,
+        databaseName: String,
+        pageNumber: Int,
+        pageSize: Int,
+        params: Map<String, *> = emptyMap<String, String>()
+    ): List<HistoricalDatabaseSchemaDTO>
 }
