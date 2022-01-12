@@ -7,7 +7,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -21,6 +21,7 @@ package com.udaan.snorql.framework.metric
 
 import com.udaan.snorql.framework.job.model.HistoricalDatabaseSchemaDTO
 import com.udaan.snorql.framework.models.SnorqlConstants
+import java.sql.Timestamp
 
 /**
  * Query executor
@@ -38,8 +39,10 @@ class QueryExecutor(val connection: Connection) {
      * @param params
      * @return
      */
-    inline fun <reified T> execute(databaseName:String, query: String,
-                                   params: Map<String, *> = mapOf<String, Any>()): List<T> {
+    inline fun <reified T> execute(
+        databaseName: String, query: String,
+        params: Map<String, *> = mapOf<String, Any>()
+    ): List<T> {
         return connection.run(databaseName, query, T::class.java, params)
     }
 
@@ -51,15 +54,23 @@ class QueryExecutor(val connection: Connection) {
      * @param columns
      * @param rows
      */
-    fun persistData(storageBucketId: String,
-                    columns: List<String>,
-                    rows: List<List<Any>>) {
+    fun persistData(
+        storageBucketId: String,
+        columns: List<String>,
+        rows: List<List<Any>>
+    ) {
         connection.storeData(storageBucketId, columns, rows)
     }
 
-    fun fetchHistoricalData(metricId: String, databaseName: String): List<HistoricalDatabaseSchemaDTO> {
+    fun fetchHistoricalData(
+        metricId: String,
+        databaseName: String,
+        pageNumber: Int,
+        pageSize: Int,
+        params: Map<String, *> = emptyMap<String, String>()
+    ): List<HistoricalDatabaseSchemaDTO> {
         val storageBucketId: String = SnorqlConstants.HISTORICAL_DATA_BUCKET_ID
-        return connection.getHistoricalData(storageBucketId, metricId, databaseName)
+        return connection.getHistoricalData(storageBucketId, metricId, databaseName, pageNumber, pageSize, params)
     }
 
     fun persistHistoricalData(
@@ -86,18 +97,22 @@ class QueryExecutor(val connection: Connection) {
     }
 
     fun persistJobConfigData(metricId: String, databaseName: String, triggerName: String): Boolean {
-        println("""Following data has been saved in the database: 
+        println(
+            """Following data has been saved in the database: 
             |1. Metric ID: $metricId 
             |2. Database Name: $databaseName
-            |3. Trigger Key: $triggerName""".trimMargin())
+            |3. Trigger Key: $triggerName""".trimMargin()
+        )
         return true
     }
 
     fun removeFromDatabase(metricId: String, databaseName: String, triggerName: String): Boolean {
-        println("""Following data has been removed from the database: 
+        println(
+            """Following data has been removed from the database: 
             |1. Metric ID: $metricId 
             |2. Database Name: $databaseName
-            |3. Trigger Key: $triggerName""".trimMargin())
+            |3. Trigger Key: $triggerName""".trimMargin()
+        )
         return true
     }
 }
