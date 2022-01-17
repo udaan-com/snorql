@@ -109,7 +109,7 @@ class PVSMetricTest {
     fun testGetMetricResponseMetadata() {
         val expectedOutput1 = mapOf<String, Any?>(
             "underlyingQueries" to listOf(pvsMetricMainQuery),
-            "referenceDocumentation" to "",
+            "referenceDocumentation" to listOf<String>(),
             "description" to ""
         )
         assertEquals(

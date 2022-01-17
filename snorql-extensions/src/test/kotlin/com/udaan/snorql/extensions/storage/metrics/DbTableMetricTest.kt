@@ -32,7 +32,6 @@ import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.MetricOutput
 import com.udaan.snorql.framework.models.MetricPeriod
-import junit.framework.Assert.assertEquals
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
@@ -112,7 +111,7 @@ class DbTableMetricTest {
     fun testGetMetricResponseMetadata() {
         val expectedOutput1 = mapOf<String, Any?>(
             "underlyingQueries" to listOf(dbTableMetricMainQuery),
-            "referenceDocumentation" to "",
+            "referenceDocumentation" to listOf<String>(),
             "description" to ""
         )
         assertEquals(
@@ -166,22 +165,20 @@ class DbTableMetricTest {
         databaseNames.forEach { databaseName ->
             whenever(
                 SqlMetricManager.queryExecutor.execute<DbTableDTO>(
-                    databaseName, // "randomDatabaseName1", // "randomDatabaseName1",
-                    "MetricMainQuery",
-                    // params = any()// "MetricMainQuery" // "MetricMainQuery"
+                    databaseName, "MetricMainQuery",
                 )
             ).thenAnswer {
                 val database: String = it.getArgument(0) as String
                 val query: String = it.getArgument(1) as String
                 when {
                     (database == "randomDatabaseName1") -> {
-                        listOf<DbTableDTO>(randomDbTableMetric1, randomDbTableMetric2)
+                        listOf(randomDbTableMetric1, randomDbTableMetric2)
                     }
                     (database == "randomDatabaseName2") -> {
                         listOf(randomDbTableMetric1)
                     }
                     (database == "randomDatabaseName3") -> {
-                        listOf<DbTableDTO>()
+                        listOf()
                     }
                     else -> {
                         throw IllegalArgumentException("Arguments does not match: Database Name: $database; Query: $query")
@@ -190,39 +187,26 @@ class DbTableMetricTest {
             }
         }
 
-        assertEquals(
-            dbTableMetricResultMultipleResults,
-            dbTableMetric.getMetricResult(dbTableMetricInputRealTime1, TestHelper.metricConfigWithMainAndDbSizeQueries)
-        )
-        assertEquals(
-            dbTableMetricResultSingleResult,
-            dbTableMetric.getMetricResult(dbTableMetricInputRealTime2, TestHelper.metricConfigWithMainAndDbSizeQueries)
-        )
-        assertEquals(
-            dbTableMetricResultEmptyResult,
-            dbTableMetric.getMetricResult(dbTableMetricInputRealTime3, TestHelper.metricConfigWithMainAndDbSizeQueries)
-        )
-        assertEquals(
-            dbTableMetricResultMultipleResults,
-            dbTableMetric.getMetricResult(
-                dbTableMetricInputHistorical1,
-                TestHelper.metricConfigWithMainAndDbSizeQueries
+        listOf(dbTableMetricInputHistorical1, dbTableMetricInputRealTime1).forEach { dbTableInput ->
+            assertEquals(
+                dbTableMetricResultMultipleResults,
+                dbTableMetric.getMetricResult(dbTableInput, TestHelper.metricConfigWithMainAndDbSizeQueries)
             )
-        )
-        assertEquals(
-            dbTableMetricResultSingleResult,
-            dbTableMetric.getMetricResult(
-                dbTableMetricInputHistorical2,
-                TestHelper.metricConfigWithMainAndDbSizeQueries
+        }
+
+        listOf(dbTableMetricInputHistorical2, dbTableMetricInputRealTime2).forEach { dbTableInput ->
+            assertEquals(
+                dbTableMetricResultSingleResult,
+                dbTableMetric.getMetricResult(dbTableInput, TestHelper.metricConfigWithMainAndDbSizeQueries)
             )
-        )
-        assertEquals(
-            dbTableMetricResultEmptyResult,
-            dbTableMetric.getMetricResult(
-                dbTableMetricInputHistorical3,
-                TestHelper.metricConfigWithMainAndDbSizeQueries
+        }
+
+        listOf(dbTableMetricInputHistorical3, dbTableMetricInputRealTime3).forEach { dbTableInput ->
+            assertEquals(
+                dbTableMetricResultEmptyResult,
+                dbTableMetric.getMetricResult(dbTableInput, TestHelper.metricConfigWithMainAndDbSizeQueries)
             )
-        )
+        }
 
         // Check for failing test cases throwing SQLMonitoringConfigException
         for (metricInput in listOf(dbTableMetricInputIncorrectMetricId, dbTableMetricInputEmptyMetricId)) {

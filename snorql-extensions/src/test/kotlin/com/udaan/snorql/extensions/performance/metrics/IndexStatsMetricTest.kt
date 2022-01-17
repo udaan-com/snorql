@@ -148,7 +148,7 @@ class IndexStatsMetricTest {
     fun testGetMetricResponseMetadata() {
         val expectedOutput1 = mapOf(
             "underlyingQueries" to listOf(indexStatMetricMainQuery),
-            "referenceDocumentation" to "",
+            "referenceDocumentation" to listOf<String>(),
             "description" to ""
         )
         assertEquals(

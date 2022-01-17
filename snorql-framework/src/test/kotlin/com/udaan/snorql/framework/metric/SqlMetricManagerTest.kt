@@ -69,8 +69,6 @@ class SqlMetricManagerTest {
     @Test
     fun testLogger() {
         SqlMetricManager.logger.warn("This is a warning")
-
-
     }
 
     @Test
@@ -115,7 +113,6 @@ class SqlMetricManagerTest {
 
         // Using queryExecutor with a connection instance
         assertEquals(mockConnection, SqlMetricManager.queryExecutor.connection)
-
         reset(mockConnection)
     }
 

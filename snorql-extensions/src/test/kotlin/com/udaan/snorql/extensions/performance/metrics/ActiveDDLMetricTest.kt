@@ -110,7 +110,7 @@ class ActiveDDLMetricTest {
         // Expected getMetricResponseMetadata output 1
         val expectedOutput1 = mapOf<String, Any?>(
             "underlyingQueries" to listOf(activeDDLMetricMainQuery),
-            "referenceDocumentation" to "",
+            "referenceDocumentation" to listOf<String>(),
             "description" to ""
         )
 

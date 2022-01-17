@@ -6,7 +6,7 @@
     "supportsHistorical": true,
     "supportsRealTime": true,
     "isParameterized": false,
-    "referenceDoc": "SomeReferenceDoc",
+    "referenceDoc": ["SomeReferenceDoc"],
     "description": "Some Description"
   }
 }

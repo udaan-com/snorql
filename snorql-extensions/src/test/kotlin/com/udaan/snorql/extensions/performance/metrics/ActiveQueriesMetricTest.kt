@@ -131,7 +131,7 @@ class ActiveQueriesMetricTest {
     fun testGetMetricResponseMetadata() {
         val expectedOutput1 = mapOf<String, Any?>(
             "underlyingQueries" to listOf(activeQueriesMetricMainQuery),
-            "referenceDocumentation" to "",
+            "referenceDocumentation" to listOf<String>(),
             "description" to ""
         )
 

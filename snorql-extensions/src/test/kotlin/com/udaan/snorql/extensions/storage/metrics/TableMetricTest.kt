@@ -136,7 +136,7 @@ class TableMetricTest {
     fun testGetMetricResponseMetadata() {
         val expectedOutput1 = mapOf<String, Any?>(
             "underlyingQueries" to listOf(tableMetricMainQuery),
-            "referenceDocumentation" to "https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-spaceused-transact-sql?view=sql-server-ver15#examples",
+            "referenceDocumentation" to listOf<String>("https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-spaceused-transact-sql?view=sql-server-ver15#examples"),
             "description" to "Displaying disk space information about a table"
         )
         assertEquals(

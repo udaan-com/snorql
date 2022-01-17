@@ -164,7 +164,7 @@ class BlockedQueriesMetricTest {
     fun testGetMetricResponseMetadata() {
         val expectedOutput1 = mapOf<String, Any?>(
             "underlyingQueries" to listOf(blockedQueriesMetricMainQuery),
-            "referenceDocumentation" to "",
+            "referenceDocumentation" to listOf<String>(),
             "description" to ""
         )
         assertEquals(

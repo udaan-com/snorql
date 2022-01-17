@@ -96,7 +96,7 @@ class DbIndexMetricTest {
     fun testGetMetricResponseMetadata() {
         val expectedOutput1 = mapOf(
             "underlyingQueries" to listOf(dbIndexMetricMainQuery),
-            "referenceDocumentation" to "",
+            "referenceDocumentation" to listOf<String>(),
             "description" to ""
         )
         assertEquals(

@@ -145,7 +145,7 @@ class LongRunningQueriesMetricTest {
     fun testGetMetricResponseMetadata() {
         val expectedOutput1 = mapOf(
             "underlyingQueries" to listOf(longRunningQueryMetricMainQuery),
-            "referenceDocumentation" to "",
+            "referenceDocumentation" to listOf<String>(),
             "description" to ""
         )
         assertEquals(
