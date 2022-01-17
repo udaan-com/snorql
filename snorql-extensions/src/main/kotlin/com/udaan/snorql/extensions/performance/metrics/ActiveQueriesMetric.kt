@@ -27,6 +27,14 @@ import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.*
 
+/**
+ * Class which implements Active Queries Metric
+ *
+ * <p>The active queries metric fetches the active queries for the
+ * specified database along with other metadata.</p>
+ *
+ * @constructor Create Active queries metric
+ */
 class ActiveQueriesMetric :
     IMetric<ActiveQueryInput, ActiveQueryResult, IMetricRecommendation> {
 

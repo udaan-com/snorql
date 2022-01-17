@@ -21,15 +21,52 @@ package com.udaan.snorql.extensions.storage
 
 import com.udaan.snorql.framework.IMtericId
 
+/**
+ * Storage metric ids enum class
+ *
+ * @property metricId id of metric in context
+ * @constructor Create Storage metric enums
+ */
 enum class StorageEnums(private val metricId:String): IMtericId {
 
+    /**
+     * Database
+     */
     DB("db"),
+
+    /**
+     * Database Tables metric id
+     */
     DB_TABLES("dbTables"),
+
+    /**
+     * Database Index metric id
+     */
     DB_INDEX("dbIndex"),
+
+    /**
+     * Database Growth metric id
+     */
     DB_GROWTH("dbGrowth"),
+
+    /**
+     * Table metric id
+     */
     TABLE("table"),
+
+    /**
+     * Table Unused Index metric id
+     */
     TABLE_UNUSED_INDEX("tableUnusedIndex"),
+
+    /**
+     * Persistent version store metric id
+     */
     PVS("pvs"),
+
+    /**
+     * Table schema metric id
+     */
     TABLE_SCHEMA("tableSchema");
 
     override fun getId(): String {

@@ -31,6 +31,13 @@ import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricOutput
 
+/**
+ * [TableSchemaMetric] implements the Table Schema Metric
+ *
+ * Table Schema Metric fetches the schema for the table in context
+ *
+ * @constructor Create Table schema metric
+ */
 class TableSchemaMetric:
     IMetric<TableSchemaInput, TableSchemaResult, IMetricRecommendation> {
 

@@ -31,6 +31,14 @@ import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricOutput
 
+/**
+ * Class implementing the Database Index Metric
+ *
+ * Database index metric fetches index statistics like table name, index name, number of rows, total space, used space for
+ * all the indexes in the specified database.
+ *
+ * @constructor Create database index metric
+ */
 class DbIndexMetric :
     IMetric<DbIndexInput, DbIndexResult, IMetricRecommendation> {
 

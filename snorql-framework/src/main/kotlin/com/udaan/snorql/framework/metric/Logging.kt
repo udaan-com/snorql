@@ -23,7 +23,9 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import kotlin.reflect.full.companionObject
 
-// Return logger for Java class, if companion object fix the name
+/**
+ * Return logger for Java class, if companion object fix the name
+ */
 private fun <T: Any> logger(forClass: Class<T>): Logger {
 
     fun Logger.debug(s: () -> String) {
@@ -33,7 +35,9 @@ private fun <T: Any> logger(forClass: Class<T>): Logger {
     return LoggerFactory.getLogger(unwrapCompanionClass(forClass).name)
 }
 
-// unwrap companion class to enclosing class given a Java Class
+/**
+ * unwrap companion class to enclosing class given a Java Class
+ */
 private fun <T: Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
     return if (ofClass.enclosingClass != null && ofClass.enclosingClass.kotlin.companionObject?.java == ofClass) {
         ofClass.enclosingClass
@@ -42,7 +46,12 @@ private fun <T: Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
     }
 }
 
-// return a lazy logger property delegate for enclosing class
+/**
+ * Function to return a lazy logger property delegate for enclosing class
+ *
+ * @param R enclosing class
+ * @return lazy logger property delegate for enclosing class
+ */
 fun <R : Any> R.logger(): Lazy<Logger> {
     return lazy { logger(this.javaClass) }
 }

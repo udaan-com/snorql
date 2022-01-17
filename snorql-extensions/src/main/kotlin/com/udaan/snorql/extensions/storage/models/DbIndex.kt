@@ -25,13 +25,15 @@ import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 
 /**
- * Data class for Data transfer object of db index
- * @param [rows]
- * @param [indexName]
- * @param [tableName]
- * @param [totalSpaceMB]
- * @param [usedSpaceMB]
- * @param [unusedSpaceMB]
+ * Model class to hold Database index statistics for Database Index Metric
+ *
+ * @property rows number of rows indexed
+ * @property indexName name of the index
+ * @property tableName name of the table which has this index
+ * @property totalSpaceMB total space allotted to the index
+ * @property usedSpaceMB used space by the index
+ * @property unusedSpaceMB used space by the index
+ * @constructor Create Database Index Metric model
  */
 data class DbIndexDTO(
     val rows: String,
@@ -42,9 +44,23 @@ data class DbIndexDTO(
     val unusedSpaceMB: String
 )
 
+/**
+ * Model class to hold input for Database Index Metric
+ *
+ * @property metricId id of DatabaseIndexMetric
+ * @property metricPeriod metric period
+ * @property databaseName name of database on which metric is used
+ * @constructor Create empty Db index input
+ */
 data class DbIndexInput(
     override val metricId: String = StorageEnums.DB_INDEX.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String,
 ) : MetricInput()
 
+/**
+ * Model class to hold result for Database Index Metric
+ *
+ * @property queryList list of database index statistics wrapped in [DbIndexDTO]
+ * @constructor Create empty Db index result
+ */
 data class DbIndexResult(val queryList: List<DbIndexDTO>) : IMetricResult()

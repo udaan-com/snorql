@@ -25,6 +25,14 @@ import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.*
 
+/**
+ * Class which implements the Database Index Statistics metric
+ *
+ * <p>The index stats metric can be used to obtain statistics for all
+ * indexes defined for each table in a database.</p>
+ *
+ * @constructor Create Index stats metric
+ */
 class IndexStatsMetric :
     IMetric<IndexStatInput, IndexStatResult, IMetricRecommendation> {
 

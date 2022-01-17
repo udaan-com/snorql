@@ -54,6 +54,15 @@ object SqlMetricManager {
         }
     }
 
+    /**
+     * Set snorql connection instance to the user's database connection
+     *
+     * It is called by the user to provide user's database connection instance to snorql.
+     * This connection instance will be used by snorql to execute queries to fetch data
+     * for the metrics
+     *
+     * @param connection user's database connection instance
+     */
     fun setConnection(connection: Connection) {
         SqlMetricManager.connection = connection
     }
@@ -64,12 +73,34 @@ object SqlMetricManager {
                     ?: throw SQLMonitoringConnectionException("Connection is null. Cannot get QueryExecutor instance.")
         }
 
+    /**
+     * Map metric instance against metric id in [metricIdToMetricMap]
+     *
+     * [metricIdToMetricMap] is a map of metric id to metric instance
+     *
+     * @param metricId id of the metric
+     * @param instance instance of the metric
+     */
     fun addMetric(metricId: String,
-            instance: IMetric<*, *, *>
+                  instance: IMetric<*, *, *>
     ) {
         metricIdToMetricMap[metricId] = instance
     }
 
+    /**
+     * Get metric response. Includes input, result, recommendations (if enabled)
+     * and additional metadata.
+     *
+     * The user can use `getMetric` function with appropriate inputs
+     * to generate the metric response.
+     *
+     * @param T Wrapper class for metric input
+     * @param O Wrapper class for metric result
+     * @param V Wrapper class for metric recommendation
+     * @param metricId id of the metric to use
+     * @param metricInput input for the metric triggered
+     * @return metric response wrapped in MetricResponse
+     */
     fun <T : MetricInput, O : IMetricResult, V : IMetricRecommendation> getMetric(metricId: String,
                                                                                   metricInput: T): MetricResponse<*, *> {
         val instance =

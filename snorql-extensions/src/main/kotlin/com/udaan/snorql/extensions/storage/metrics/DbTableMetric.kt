@@ -31,6 +31,14 @@ import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricOutput
 
+/**
+ * Class implementing the Database Tables Metric
+ *
+ * Database tables metric fetches table statistics like table name, number of rows, total space, used space and unused
+ * space for all the tables in the specified database.
+ *
+ * @constructor Create Database table metric
+ */
 class DbTableMetric :
     IMetric<DbTableInput, DbTableResult, IMetricRecommendation> {
 

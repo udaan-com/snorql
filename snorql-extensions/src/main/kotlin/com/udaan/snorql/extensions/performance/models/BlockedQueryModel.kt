@@ -26,32 +26,35 @@ import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 
 
-class BlockedQueryModel{
-
-}
 /**
- * Data class for Data transfer object of azure_databases_mapping
- * @param [sessionId]
- * @param [status]
- * @param [blockedBy]
- * @param [waitType]
- * @param [waitResource]
- * @param [waitTime]
- * @param [cpuTime]
- * @param [logicalReads]
- * @param [reads]
- * @param [writes]
- * @param [elapsedTime]
- * @param [queryText]
- * @param [storedProc]
- * @param [command]
- * @param [loginName]
- * @param [hostName]
- * @param [programName]
- * @param [hostProcessId]
- * @param [lastRequestEndTime]
- * @param [loginTime]
- * @param [openTransactionCount]
+ * Wrapper class to hold blocked query with metadata for Blocked Query metric
+ *
+ * @property sessionId session id of the query
+ * @property blockedBy query blocker (if query is blocked)
+ * @property blockingThese queries being blocked by the active query
+ * @property batchText
+ * @property inputBuffer
+ * @property loginName
+ * @property status status of the active query
+ * @property waitType type of wait (if query is in waiting state)
+ * @property waitResource resource for which query is waiting (if query is in waiting state)
+ * @property waitTime time for which the query has been waiting
+ * @property cpuTime cpu time utilized by the query
+ * @property logicalReads logical reads performed by the query
+ * @property reads read operations performed by the query
+ * @property writes write operations performed by the query
+ * @property hostName name of host on which query is getting executed
+ * @property programName program name on which query is running
+ * @property hostProcessId id of query process on host
+ * @property loginTime login time
+ * @property blockingTree hierarchical representation of queries blocked by active query
+ * @property lastRequestEndTime last request end time
+ * @property openTransactionCount number of transactions open by active query
+ * @property command command
+ * @property elapsedTime time elapsed since execution of active query started
+ * @property queryText actual active query string
+ * @property storedProc stored procedure
+ * @constructor Create Blocked query wrapper
  */
 data class BlockedQueriesDTO(
     val sessionId: Int,
@@ -81,10 +84,27 @@ data class BlockedQueriesDTO(
     val storedProc: String?
 )
 
+/**
+ * Wrapper to hold blocked queries metric input
+ *
+ * @property metricId id of blocked queries metric
+ * @property metricPeriod
+ * @property databaseName database on which metric is used
+ * @constructor Create Blocked queries metric input
+ */
 data class BlockedQueriesInput(
     override val metricId: String = PerformanceEnums.BLOCKED_QUERIES.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String
 
 ) : MetricInput()
 
+/**
+ * Wrapper class for Blocked queries metric result
+ *
+ * <p>Result of blocked queries metric is a list of Blocked Queries with metadata
+ * which are wrapped using [BlockedQueriesDTO]</p>
+ *
+ * @property queryList list of bloacked queries wrapped in [BlockedQueriesDTO]
+ * @constructor Create Blocked queries metric result
+ */
 data class BlockedQueriesResult(val queryList: List<BlockedQueriesDTO>) : IMetricResult()

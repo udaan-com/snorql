@@ -19,6 +19,21 @@
 
 package com.udaan.snorql.framework.models
 
+/**
+ * Metric period enums
+ *
+ * Metric Periods defines the type of data that the metric must query on. There are two kinds of data supported:
+ * 1. Real Time Data
+ * 2. Historical Data
+ */
 enum class MetricPeriod {
-    REAL_TIME, HISTORICAL
+    /**
+     * [REAL_TIME] enum stands for Real Time data
+     */
+    REAL_TIME,
+
+    /**
+     * [HISTORICAL] stands for historical recorded data
+     */
+    HISTORICAL
 }

@@ -26,6 +26,14 @@ import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.*
 import com.udaan.snorql.extensions.accesscontrol.models.*
 
+/**
+ * User role metric class is the implementation of user role metric
+ *
+ * <p>The user role metric can be used to get the user roles defined for the database.
+ * User role metric returns the name, privileges and type of user role.</p>
+ *
+ * @constructor Create user role metric
+ */
 class UserRoleMetric :
     IMetric<UserRoleInput, UserRoleResult, IMetricRecommendation> {
 

@@ -21,12 +21,37 @@ package com.udaan.snorql.extensions.performance
 
 import com.udaan.snorql.framework.IMtericId
 
+/**
+ * Performance metric enums
+ *
+ * @property metricId id of performance metric in context
+ * @constructor Create Performance enums
+ */
 enum class PerformanceEnums(private val metricId:String):IMtericId {
 
+    /**
+     * Active Queries Metric ID mapping
+     */
     ACTIVE_QUERIES("activeQueries"),
+
+    /**
+     * Long Running Queries Metric ID mapping
+     */
     LONG_RUNNING_QUERIES("longRunningQueries"),
+
+    /**
+     * Blocked Queries Metric ID mapping
+     */
     BLOCKED_QUERIES("blockedQueries"),
+
+    /**
+     * Index Stats Metric ID mapping
+     */
     INDEX_STATS("indexStats"),
+
+    /**
+     * Active DDL Queries Metric ID mapping
+     */
     ACTIVE_DDL("activeDDL");
 
     override fun getId(): String {
