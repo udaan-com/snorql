@@ -92,7 +92,7 @@ class IndexStatsMetricTest {
         supportsHistorical = false,
         supportsRealTime = true,
         isParameterized = false,
-        referenceDoc = "",
+        referenceDoc = listOf<String>(""),
         description = ""
     )
     private val metricConfig2 = MetricConfig(    // empty queries map (no queries defined in config)
@@ -100,7 +100,7 @@ class IndexStatsMetricTest {
         supportsHistorical = false,
         supportsRealTime = true,
         isParameterized = false,
-        referenceDoc = "",
+        referenceDoc = listOf<String>(""),
         description = ""
     )
 
@@ -139,7 +139,8 @@ class IndexStatsMetricTest {
     private val indexStatEmptyResult = IndexStatResult(listOf()) // empty result
 
     // Index Stat Output
-    private val metricMultipleOutput = MetricOutput<IndexStatResult, IMetricRecommendation>(indexStatMultipleResult, null)
+    private val metricMultipleOutput =
+        MetricOutput<IndexStatResult, IMetricRecommendation>(indexStatMultipleResult, null)
     private val metricSingleOutput = MetricOutput<IndexStatResult, IMetricRecommendation>(indexStatSingleResult, null)
     private val metricEmptyOutput = MetricOutput<IndexStatResult, IMetricRecommendation>(indexStatEmptyResult, null)
 
@@ -265,7 +266,8 @@ class IndexStatsMetricTest {
         )
         assertEquals(
             indexStatEmptyResult,
-            indexStatsMetric.getMetricResult(indexStatsInput3, TestHelper.metricConfigWithMainAndDbSizeQueries
+            indexStatsMetric.getMetricResult(
+                indexStatsInput3, TestHelper.metricConfigWithMainAndDbSizeQueries
             )
         )
     }

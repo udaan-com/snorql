@@ -36,14 +36,14 @@ class StorageEnumsTest {
         assertNotNull(StorageEnums.TABLE_SCHEMA)
         assertNotNull(StorageEnums.TABLE_UNUSED_INDEX)
 
-        assertEquals("storage_db",StorageEnums.DB.getId())
-        assertEquals("storage_dbGrowth",StorageEnums.DB_GROWTH.getId())
-        assertEquals("storage_dbIndex",StorageEnums.DB_INDEX.getId())
-        assertEquals("storage_pvs",StorageEnums.PVS.getId())
-        assertEquals("storage_dbTables",StorageEnums.DB_TABLES.getId())
-        assertEquals("storage_table",StorageEnums.TABLE.getId())
-        assertEquals("storage_tableSchema",StorageEnums.TABLE_SCHEMA.getId())
-        assertEquals("storage_tableUnusedIndex",StorageEnums.TABLE_UNUSED_INDEX.getId())
+        assertEquals("storage_db", StorageEnums.DB.getId())
+        assertEquals("storage_dbGrowth", StorageEnums.DB_GROWTH.getId())
+        assertEquals("storage_dbIndex", StorageEnums.DB_INDEX.getId())
+        assertEquals("storage_pvs", StorageEnums.PVS.getId())
+        assertEquals("storage_dbTables", StorageEnums.DB_TABLES.getId())
+        assertEquals("storage_table", StorageEnums.TABLE.getId())
+        assertEquals("storage_tableSchema", StorageEnums.TABLE_SCHEMA.getId())
+        assertEquals("storage_tableUnusedIndex", StorageEnums.TABLE_UNUSED_INDEX.getId())
     }
 
 }

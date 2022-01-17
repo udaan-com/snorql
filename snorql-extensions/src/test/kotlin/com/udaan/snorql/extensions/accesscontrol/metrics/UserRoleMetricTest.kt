@@ -73,8 +73,10 @@ class UserRoleMetricTest {
     private val userRoleResultEmpty = UserRoleResult(listOf()) // Empty result
 
     // User Role Outputs
-    private val metricMultipleResultOutput = MetricOutput<UserRoleResult, IMetricRecommendation>(userRoleResultMultiple, null)
-    private val metricSingleResultOutput = MetricOutput<UserRoleResult, IMetricRecommendation>(userRoleResultSingle, null)
+    private val metricMultipleResultOutput =
+        MetricOutput<UserRoleResult, IMetricRecommendation>(userRoleResultMultiple, null)
+    private val metricSingleResultOutput =
+        MetricOutput<UserRoleResult, IMetricRecommendation>(userRoleResultSingle, null)
     private val metricEmptyResultOutput = MetricOutput<UserRoleResult, IMetricRecommendation>(userRoleResultEmpty, null)
 
     @Test

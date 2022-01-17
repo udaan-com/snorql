@@ -79,17 +79,41 @@ class TableSchemaMetricTest {
 
     // Table Schema Metric Inputs
     private val tableSchemaMetricInputHistorical1 =
-        TableSchemaInput(metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName1", tableName = "randomTableName1")
+        TableSchemaInput(
+            metricPeriod = MetricPeriod.HISTORICAL,
+            databaseName = "randomDatabaseName1",
+            tableName = "randomTableName1"
+        )
     private val tableSchemaMetricInputRealTime1 =
-        TableSchemaInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName1", tableName = "randomTableName1")
+        TableSchemaInput(
+            metricPeriod = MetricPeriod.REAL_TIME,
+            databaseName = "randomDatabaseName1",
+            tableName = "randomTableName1"
+        )
     private val tableSchemaMetricInputHistorical2 =
-        TableSchemaInput(metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName2", tableName = "randomTableName2")
+        TableSchemaInput(
+            metricPeriod = MetricPeriod.HISTORICAL,
+            databaseName = "randomDatabaseName2",
+            tableName = "randomTableName2"
+        )
     private val tableSchemaMetricInputRealTime2 =
-        TableSchemaInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName2", tableName = "randomTableName2")
+        TableSchemaInput(
+            metricPeriod = MetricPeriod.REAL_TIME,
+            databaseName = "randomDatabaseName2",
+            tableName = "randomTableName2"
+        )
     private val tableSchemaMetricInputHistorical3 =
-        TableSchemaInput(metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName3", tableName = "randomTableName3")
+        TableSchemaInput(
+            metricPeriod = MetricPeriod.HISTORICAL,
+            databaseName = "randomDatabaseName3",
+            tableName = "randomTableName3"
+        )
     private val tableSchemaMetricInputRealTime3 =
-        TableSchemaInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName3", tableName = "randomTableName3")
+        TableSchemaInput(
+            metricPeriod = MetricPeriod.REAL_TIME,
+            databaseName = "randomDatabaseName3",
+            tableName = "randomTableName3"
+        )
     private val tableSchemaMetricInputIncorrectMetricId = TableSchemaInput(
         metricId = "incorrectId",
         metricPeriod = MetricPeriod.REAL_TIME,
@@ -97,10 +121,16 @@ class TableSchemaMetricTest {
         tableName = "randomTableName1"
     )
     private val tableSchemaMetricInputEmptyMetricId =
-        TableSchemaInput(metricId = "", metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName1", tableName = "")
+        TableSchemaInput(
+            metricId = "",
+            metricPeriod = MetricPeriod.HISTORICAL,
+            databaseName = "randomDatabaseName1",
+            tableName = ""
+        )
 
     // Table Schema Metric Result
-    private val tableSchemaMetricResultMultipleResults = TableSchemaResult(listOf(tableSchemaResult1, tableSchemaResult2))
+    private val tableSchemaMetricResultMultipleResults =
+        TableSchemaResult(listOf(tableSchemaResult1, tableSchemaResult2))
     private val tableSchemaMetricResultSingleResult = TableSchemaResult(listOf(tableSchemaResult1))
     private val tableSchemaMetricResultEmptyResult = TableSchemaResult(listOf()) // empty result
 
@@ -166,7 +196,14 @@ class TableSchemaMetricTest {
     fun testGetMetricResult() {
         val mockConnection: Connection = mock()
         SqlMetricManager.setConnection(mockConnection)
-        val metricInputList = listOf(tableSchemaMetricInputRealTime1, tableSchemaMetricInputRealTime2, tableSchemaMetricInputRealTime3, tableSchemaMetricInputHistorical1, tableSchemaMetricInputHistorical2, tableSchemaMetricInputHistorical3)
+        val metricInputList = listOf(
+            tableSchemaMetricInputRealTime1,
+            tableSchemaMetricInputRealTime2,
+            tableSchemaMetricInputRealTime3,
+            tableSchemaMetricInputHistorical1,
+            tableSchemaMetricInputHistorical2,
+            tableSchemaMetricInputHistorical3
+        )
         metricInputList.forEach { metricInput ->
             whenever(
                 SqlMetricManager.queryExecutor.execute<TableSchemaDTO>(

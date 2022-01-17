@@ -22,7 +22,7 @@ package com.udaan.snorql.framework
 import org.junit.Test
 import kotlin.test.assertEquals
 
-enum class DemoEnums(private val metricId:String):IMtericId {
+enum class DemoEnums(private val metricId: String) : IMtericId {
 
     DEMO_ENUM1("demoEnum1"),
     DEMO_ENUM2("demoEnum2");

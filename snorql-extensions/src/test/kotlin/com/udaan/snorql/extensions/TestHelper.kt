@@ -34,7 +34,7 @@ object TestHelper {
             queries = mapOf("main" to "MetricMainQuery", "dbSize" to "dbSizeQueryString"),
             description = "randomDescription",
             isParameterized = true,
-            referenceDoc = "",
+            referenceDoc = listOf<String>(""),
             supportsHistorical = true,
             supportsRealTime = true
         )
@@ -43,7 +43,7 @@ object TestHelper {
             queries = mapOf("notMain" to "MetricMainQuery", "dbSize" to "dbSizeQueryString"),
             description = "randomDescription",
             isParameterized = true,
-            referenceDoc = "",
+            referenceDoc = listOf<String>(""),
             supportsHistorical = true,
             supportsRealTime = true
         )
@@ -52,7 +52,7 @@ object TestHelper {
             queries = mapOf("main" to "MetricMainQuery", "notDbSize" to "dbSizeQueryString"),
             description = "randomDescription",
             isParameterized = true,
-            referenceDoc = "",
+            referenceDoc = listOf<String>(""),
             supportsHistorical = true,
             supportsRealTime = true
         )
@@ -61,7 +61,7 @@ object TestHelper {
             queries = mapOf("notMain" to "MetricMainQuery", "notDbSize" to "dbSizeQueryString"),
             description = "randomDescription",
             isParameterized = true,
-            referenceDoc = "",
+            referenceDoc = listOf<String>(""),
             supportsHistorical = true,
             supportsRealTime = true
         )
@@ -70,7 +70,7 @@ object TestHelper {
             queries = mapOf(),
             description = "randomDescription",
             isParameterized = true,
-            referenceDoc = "",
+            referenceDoc = listOf<String>(""),
             supportsHistorical = true,
             supportsRealTime = true
         )
@@ -79,7 +79,7 @@ object TestHelper {
             queries = mapOf("main" to ""),
             description = "randomDescription",
             isParameterized = true,
-            referenceDoc = "",
+            referenceDoc = listOf<String>(""),
             supportsHistorical = true,
             supportsRealTime = true
         )

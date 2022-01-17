@@ -70,17 +70,41 @@ class TableMetricTest {
 
     // Table Metric Inputs
     private val tableMetricInputHistorical1 =
-        TableInput(metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName1", tableName = "randomTableName1")
+        TableInput(
+            metricPeriod = MetricPeriod.HISTORICAL,
+            databaseName = "randomDatabaseName1",
+            tableName = "randomTableName1"
+        )
     private val tableMetricInputRealTime1 =
-        TableInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName1", tableName = "randomTableName1")
+        TableInput(
+            metricPeriod = MetricPeriod.REAL_TIME,
+            databaseName = "randomDatabaseName1",
+            tableName = "randomTableName1"
+        )
     private val tableMetricInputHistorical2 =
-        TableInput(metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName2", tableName = "randomTableName2")
+        TableInput(
+            metricPeriod = MetricPeriod.HISTORICAL,
+            databaseName = "randomDatabaseName2",
+            tableName = "randomTableName2"
+        )
     private val tableMetricInputRealTime2 =
-        TableInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName2", tableName = "randomTableName2")
+        TableInput(
+            metricPeriod = MetricPeriod.REAL_TIME,
+            databaseName = "randomDatabaseName2",
+            tableName = "randomTableName2"
+        )
     private val tableMetricInputHistorical3 =
-        TableInput(metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName3", tableName = "randomTableName3")
+        TableInput(
+            metricPeriod = MetricPeriod.HISTORICAL,
+            databaseName = "randomDatabaseName3",
+            tableName = "randomTableName3"
+        )
     private val tableMetricInputRealTime3 =
-        TableInput(metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName3", tableName = "randomTableName3")
+        TableInput(
+            metricPeriod = MetricPeriod.REAL_TIME,
+            databaseName = "randomDatabaseName3",
+            tableName = "randomTableName3"
+        )
     private val tableMetricInputIncorrectMetricId = TableInput(
         metricId = "incorrectId",
         metricPeriod = MetricPeriod.REAL_TIME,
@@ -88,7 +112,12 @@ class TableMetricTest {
         tableName = "randomTableName1"
     )
     private val tableMetricInputEmptyMetricId =
-        TableInput(metricId = "", metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName1", tableName = "")
+        TableInput(
+            metricId = "",
+            metricPeriod = MetricPeriod.HISTORICAL,
+            databaseName = "randomDatabaseName1",
+            tableName = ""
+        )
 
     // Table Metric Result
     private val tableMetricResultMultipleResults = TableResult(listOf(tableResult1, tableResult2))
@@ -157,11 +186,18 @@ class TableMetricTest {
     fun testGetMetricResult() {
         val mockConnection: Connection = mock()
         SqlMetricManager.setConnection(mockConnection)
-        val metricInputList = listOf(tableMetricInputRealTime1, tableMetricInputRealTime2, tableMetricInputRealTime3, tableMetricInputHistorical1, tableMetricInputHistorical2, tableMetricInputHistorical3)
+        val metricInputList = listOf(
+            tableMetricInputRealTime1,
+            tableMetricInputRealTime2,
+            tableMetricInputRealTime3,
+            tableMetricInputHistorical1,
+            tableMetricInputHistorical2,
+            tableMetricInputHistorical3
+        )
         metricInputList.forEach { metricInput ->
             whenever(
                 SqlMetricManager.queryExecutor.execute<TableDTO>(
-                     metricInput.databaseName,
+                    metricInput.databaseName,
                     "MetricMainQuery",
                     mapOf("tableName" to metricInput.tableName)
                 )

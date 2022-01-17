@@ -38,10 +38,6 @@ class QueryExecutorTest {
         demoField2 = 2
     )
 
-    // reified test case possible?
-
-    // Udaan-commons
-
     @Before
     fun beforeTest() {
         mockkObject(SqlMetricManager)

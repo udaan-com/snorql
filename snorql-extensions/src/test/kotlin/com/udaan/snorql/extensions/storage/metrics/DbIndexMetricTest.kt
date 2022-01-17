@@ -40,8 +40,12 @@ class DbIndexMetricTest {
 
     // DB Index Metric Main Query
     private val dbIndexMetricMainQuery: String? =
-        dbIndexMetric.getMetricConfig(DbIndexInput(metricPeriod = MetricPeriod.REAL_TIME,
-            databaseName = "randomDatabaseName").metricId).queries["main"]
+        dbIndexMetric.getMetricConfig(
+            DbIndexInput(
+                metricPeriod = MetricPeriod.REAL_TIME,
+                databaseName = "randomDatabaseName"
+            ).metricId
+        ).queries["main"]
 
     // DB Index Metric Inputs
     private val dbIndexRealTimeInput1 =
@@ -51,23 +55,31 @@ class DbIndexMetricTest {
     private val dbIndexHistoricalInput3 =
         DbIndexInput(metricPeriod = MetricPeriod.HISTORICAL, databaseName = "randomDatabaseName3")
     private val dbIndexIncorrectMetricIdInput =
-        DbIndexInput(metricId = "incorrectMetricID", metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName")
+        DbIndexInput(
+            metricId = "incorrectMetricID",
+            metricPeriod = MetricPeriod.REAL_TIME,
+            databaseName = "randomDatabaseName"
+        )
     private val dbIndexEmptyMetricIdInput =
         DbIndexInput(metricId = "", metricPeriod = MetricPeriod.REAL_TIME, databaseName = "randomDatabaseName")
 
     // DB Index Metrics
-    private val dbIndexMetric1 = DbIndexDTO(rows = "344 rows",
+    private val dbIndexMetric1 = DbIndexDTO(
+        rows = "344 rows",
         indexName = "randomIndexName",
         tableName = "randomTableName",
         totalSpaceMB = "566MB",
         unusedSpaceMB = "120MB",
-        usedSpaceMB = "334MB")
-    private val dbIndexMetric2 = DbIndexDTO(rows = "344 rows",
+        usedSpaceMB = "334MB"
+    )
+    private val dbIndexMetric2 = DbIndexDTO(
+        rows = "344 rows",
         indexName = null,
         tableName = "randomTableName2",
         totalSpaceMB = "56MB",
         unusedSpaceMB = "22MB",
-        usedSpaceMB = "34MB")
+        usedSpaceMB = "34MB"
+    )
 
     // DB Index Results
     private val dbIndexMultipleResult =
@@ -87,24 +99,48 @@ class DbIndexMetricTest {
             "referenceDocumentation" to "",
             "description" to ""
         )
-        assertEquals(expected = expectedOutput1,
-            dbIndexMetric.getMetricResponseMetadata(dbIndexRealTimeInput1,
-                metricOutput1))
-        assertEquals(expected = expectedOutput1,
-            dbIndexMetric.getMetricResponseMetadata(dbIndexRealTimeInput1,
-                metricOutput2))
-        assertEquals(expected = expectedOutput1,
-            dbIndexMetric.getMetricResponseMetadata(dbIndexRealTimeInput1,
-                metricOutput3))
-        assertEquals(expected = expectedOutput1,
-            dbIndexMetric.getMetricResponseMetadata(dbIndexHistoricalInput2,
-                metricOutput1))
-        assertEquals(expected = expectedOutput1,
-            dbIndexMetric.getMetricResponseMetadata(dbIndexHistoricalInput2,
-                metricOutput2))
-        assertEquals(expected = expectedOutput1,
-            dbIndexMetric.getMetricResponseMetadata(dbIndexHistoricalInput2,
-                metricOutput3))
+        assertEquals(
+            expected = expectedOutput1,
+            dbIndexMetric.getMetricResponseMetadata(
+                dbIndexRealTimeInput1,
+                metricOutput1
+            )
+        )
+        assertEquals(
+            expected = expectedOutput1,
+            dbIndexMetric.getMetricResponseMetadata(
+                dbIndexRealTimeInput1,
+                metricOutput2
+            )
+        )
+        assertEquals(
+            expected = expectedOutput1,
+            dbIndexMetric.getMetricResponseMetadata(
+                dbIndexRealTimeInput1,
+                metricOutput3
+            )
+        )
+        assertEquals(
+            expected = expectedOutput1,
+            dbIndexMetric.getMetricResponseMetadata(
+                dbIndexHistoricalInput2,
+                metricOutput1
+            )
+        )
+        assertEquals(
+            expected = expectedOutput1,
+            dbIndexMetric.getMetricResponseMetadata(
+                dbIndexHistoricalInput2,
+                metricOutput2
+            )
+        )
+        assertEquals(
+            expected = expectedOutput1,
+            dbIndexMetric.getMetricResponseMetadata(
+                dbIndexHistoricalInput2,
+                metricOutput3
+            )
+        )
 
         for (metricInput in listOf(dbIndexIncorrectMetricIdInput, dbIndexEmptyMetricIdInput)) {
             for (metricOutput in listOf(metricOutput1, metricOutput2)) {
@@ -168,7 +204,10 @@ class DbIndexMetricTest {
 
         // Testing for SQLMonitoringConfigException
         for (metricInput in listOf(dbIndexRealTimeInput1, dbIndexHistoricalInput2)) {
-            for (metricConfig in listOf(TestHelper.metricConfigWithoutMainQuery, TestHelper.metricConfigWithoutQueries)) {
+            for (metricConfig in listOf(
+                TestHelper.metricConfigWithoutMainQuery,
+                TestHelper.metricConfigWithoutQueries
+            )) {
                 try {
                     dbIndexMetric.getMetricResult(metricInput, metricConfig)
                     fail("Exception not thrown for \nmetricInput = $metricInput \nmetricConfig = $metricConfig")

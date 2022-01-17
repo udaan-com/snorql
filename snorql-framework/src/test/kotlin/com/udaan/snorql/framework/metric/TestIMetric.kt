@@ -49,7 +49,7 @@ class TestIMetric : IMetric<DemoInput, DemoResult, DemoRecommendation> {
         supportsHistorical = true,
         supportsRealTime = true,
         isParameterized = false,
-        referenceDoc = "SomeReferenceDoc",
+        referenceDoc = listOf("SomeReferenceDoc"),
         description = "Some Description"
     )
 
@@ -58,7 +58,7 @@ class TestIMetric : IMetric<DemoInput, DemoResult, DemoRecommendation> {
         supportsHistorical = true,
         supportsRealTime = true,
         isParameterized = false,
-        referenceDoc = "SomeReferenceDoc",
+        referenceDoc = listOf("SomeReferenceDoc"),
         description = "Some Description"
     )
 
@@ -91,8 +91,10 @@ class TestIMetric : IMetric<DemoInput, DemoResult, DemoRecommendation> {
         recommendation = getMetricRecommendations(metricInput2, getMetricResult(metricInput2, metricConfig2))
     )
 
-    private val metricResponse1 = MetricResponse(metricInput1, metricOutput1, null) // mapOf("Metadata1" to "MetadataValue1"))
-    private val metricResponse2 = MetricResponse(metricInput2, metricOutput2, null) // mapOf("Metadata1" to "MetadataValue1"))
+    private val metricResponse1 =
+        MetricResponse(metricInput1, metricOutput1, null) // mapOf("Metadata1" to "MetadataValue1"))
+    private val metricResponse2 =
+        MetricResponse(metricInput2, metricOutput2, null) // mapOf("Metadata1" to "MetadataValue1"))
 
     override fun saveMetricResult(metricInput: MetricInput, result: IMetricResult) {
         TODO("Not yet implemented")

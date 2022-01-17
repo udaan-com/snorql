@@ -153,9 +153,12 @@ class BlockedQueriesMetricTest {
     private val blockedQueryEmptyResult = BlockedQueriesResult(listOf()) // No queries in result
 
     // Active Query Metric Outputs
-    private val metricMultipleOutput = MetricOutput<BlockedQueriesResult, IMetricRecommendation>(blockedQueryMultipleResult, null)
-    private val metricSingleOutput = MetricOutput<BlockedQueriesResult, IMetricRecommendation>(blockedQuerySingleResult, null)
-    private val metricEmptyOutput = MetricOutput<BlockedQueriesResult, IMetricRecommendation>(blockedQueryEmptyResult, null)
+    private val metricMultipleOutput =
+        MetricOutput<BlockedQueriesResult, IMetricRecommendation>(blockedQueryMultipleResult, null)
+    private val metricSingleOutput =
+        MetricOutput<BlockedQueriesResult, IMetricRecommendation>(blockedQuerySingleResult, null)
+    private val metricEmptyOutput =
+        MetricOutput<BlockedQueriesResult, IMetricRecommendation>(blockedQueryEmptyResult, null)
 
     @Test
     fun testGetMetricResponseMetadata() {

@@ -121,8 +121,10 @@ class ActiveQueriesMetricTest {
     private val activeQueryEmptyResult = ActiveQueryResult(listOf()) // No queries in result
 
     // Active Query Metric Outputs
-    private val metricMultipleOutput = MetricOutput<ActiveQueryResult, IMetricRecommendation>(activeQueryMultipleResult, null)
-    private val metricSingleOutput = MetricOutput<ActiveQueryResult, IMetricRecommendation>(activeQuerySingleResult, null)
+    private val metricMultipleOutput =
+        MetricOutput<ActiveQueryResult, IMetricRecommendation>(activeQueryMultipleResult, null)
+    private val metricSingleOutput =
+        MetricOutput<ActiveQueryResult, IMetricRecommendation>(activeQuerySingleResult, null)
     private val metricEmptyOutput = MetricOutput<ActiveQueryResult, IMetricRecommendation>(activeQueryEmptyResult, null)
 
     @Test

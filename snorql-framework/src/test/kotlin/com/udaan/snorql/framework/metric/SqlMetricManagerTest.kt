@@ -58,9 +58,8 @@ class SqlMetricManagerTest {
     )
 
     // Demo Metric Response
-    private val metricResponse1 = MetricResponse(metricInput1, metricOutput1, null) // mapOf("Metadata1" to "MetadataValue1"))
-
-    private val CONFIG_FILE_LOCATION = "/sql-monitoring-conf.json"
+    private val metricResponse1 =
+        MetricResponse(metricInput1, metricOutput1, null) // mapOf("Metadata1" to "MetadataValue1"))
 
     @Before
     fun beforeTests() {

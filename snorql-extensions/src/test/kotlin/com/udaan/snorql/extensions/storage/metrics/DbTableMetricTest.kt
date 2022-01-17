@@ -189,7 +189,7 @@ class DbTableMetricTest {
                 }
             }
         }
-        
+
         assertEquals(
             dbTableMetricResultMultipleResults,
             dbTableMetric.getMetricResult(dbTableMetricInputRealTime1, TestHelper.metricConfigWithMainAndDbSizeQueries)
@@ -204,19 +204,22 @@ class DbTableMetricTest {
         )
         assertEquals(
             dbTableMetricResultMultipleResults,
-            dbTableMetric.getMetricResult(dbTableMetricInputHistorical1,
+            dbTableMetric.getMetricResult(
+                dbTableMetricInputHistorical1,
                 TestHelper.metricConfigWithMainAndDbSizeQueries
             )
         )
         assertEquals(
             dbTableMetricResultSingleResult,
-            dbTableMetric.getMetricResult(dbTableMetricInputHistorical2,
+            dbTableMetric.getMetricResult(
+                dbTableMetricInputHistorical2,
                 TestHelper.metricConfigWithMainAndDbSizeQueries
             )
         )
         assertEquals(
             dbTableMetricResultEmptyResult,
-            dbTableMetric.getMetricResult(dbTableMetricInputHistorical3,
+            dbTableMetric.getMetricResult(
+                dbTableMetricInputHistorical3,
                 TestHelper.metricConfigWithMainAndDbSizeQueries
             )
         )

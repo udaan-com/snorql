@@ -41,7 +41,7 @@ class TestConfiguration {
         supportsHistorical = true,
         supportsRealTime = true,
         isParameterized = false,
-        referenceDoc = "",
+        referenceDoc = listOf<String>(""),
         description = ""
     )
 
@@ -52,7 +52,7 @@ class TestConfiguration {
         supportsHistorical = true,
         supportsRealTime = true,
         isParameterized = true,
-        referenceDoc = "",
+        referenceDoc = listOf<String>(""),
         description = ""
     )
 
@@ -61,7 +61,7 @@ class TestConfiguration {
         supportsHistorical = false,
         supportsRealTime = true,
         isParameterized = false,
-        referenceDoc = "",
+        referenceDoc = listOf<String>(""),
         description = ""
     )
 
@@ -73,7 +73,7 @@ class TestConfiguration {
         supportsHistorical = false,
         supportsRealTime = true,
         isParameterized = false,
-        referenceDoc = "https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-spaceused-transact-sql?view=sql-server-ver15#examples",
+        referenceDoc = listOf("https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-spaceused-transact-sql?view=sql-server-ver15#examples"),
         description = "Displaying updated space information about a database"
     )
 
@@ -82,7 +82,7 @@ class TestConfiguration {
         supportsHistorical = true,
         supportsRealTime = true,
         isParameterized = true,
-        referenceDoc = "https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-spaceused-transact-sql?view=sql-server-ver15#examples",
+        referenceDoc = listOf("https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-spaceused-transact-sql?view=sql-server-ver15#examples"),
         description = "Displaying disk space information about a table"
     )
 
@@ -91,7 +91,7 @@ class TestConfiguration {
         supportsHistorical = false,
         supportsRealTime = true,
         isParameterized = false,
-        referenceDoc = "",
+        referenceDoc = listOf<String>(""),
         description = ""
     )
 
