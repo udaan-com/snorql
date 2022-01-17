@@ -21,7 +21,6 @@ package com.udaan.snorql.framework.job
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.udaan.snorql.framework.job.model.HistoricalDatabaseSchemaDTO
-import com.udaan.snorql.framework.job.model.JobTriggerConfig
 import com.udaan.snorql.framework.job.model.QuartzProperties
 import com.udaan.snorql.framework.job.model.RecordingJobConfigOutline
 import com.udaan.snorql.framework.metric.SqlMetricManager
@@ -32,7 +31,6 @@ import com.udaan.snorql.framework.models.SnorqlConstants
 import org.quartz.*
 import org.quartz.impl.StdSchedulerFactory
 import org.quartz.impl.matchers.GroupMatcher
-import java.sql.Date
 import java.sql.Timestamp
 
 object JobManager {
