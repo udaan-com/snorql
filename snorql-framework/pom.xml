@@ -176,15 +176,28 @@
                 <version>1.4.20</version>
                 <executions>
                     <execution>
-                        <phase>compile</phase>
+                        <phase>pre-site</phase>
                         <goals>
                             <goal>dokka</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
-                    <outputDir>${project.basedir}/src/docs/dokka</outputDir>
+                    <outputDir>${project.parent.basedir}/doc/docs/snorql-framework</outputDir>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jetbrains.dokka</groupId>
+                <artifactId>dokka-maven-plugin</artifactId>
+                <version>1.4.20</version>
+                <executions>
+                    <execution>
+                        <phase>pre-site</phase>
+                        <goals>
+                            <goal>javadocJar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
