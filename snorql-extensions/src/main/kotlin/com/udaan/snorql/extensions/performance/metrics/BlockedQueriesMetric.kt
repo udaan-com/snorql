@@ -45,8 +45,8 @@ class BlockedQueriesMetric :
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
         val results = SqlMetricManager.queryExecutor.execute<BlockedQueriesDTO>(metricInput.databaseName, query)
 
-        for(result in results) {
-            if(result.blockedBy != 0){
+        for (result in results) {
+            if (result.blockedBy != 0) {
                 generateBlockingTree(result, results)
             }
         }
@@ -68,10 +68,9 @@ class BlockedQueriesMetric :
         return responseMetadata
     }
 
-    private fun generateBlockingTree(result:BlockedQueriesDTO, results:List<BlockedQueriesDTO>): BlockedQueriesDTO?{
-        if (result.blockedBy != 0){
-            if (!results.single { it.sessionId == result.blockedBy }.blockingTree.any{ it?.sessionId == result.sessionId})
-            {
+    private fun generateBlockingTree(result: BlockedQueriesDTO, results: List<BlockedQueriesDTO>): BlockedQueriesDTO? {
+        if (result.blockedBy != 0) {
+            if (!results.single { it.sessionId == result.blockedBy }.blockingTree.any { it?.sessionId == result.sessionId }) {
                 results.single { it.sessionId == result.blockedBy }.blockingTree.add(result)
             }
             generateBlockingTree(results.single { it.sessionId == result.blockedBy }, results)

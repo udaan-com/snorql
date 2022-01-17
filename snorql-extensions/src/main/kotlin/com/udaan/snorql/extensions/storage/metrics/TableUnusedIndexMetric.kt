@@ -51,7 +51,8 @@ class TableUnusedIndexMetric :
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
 
         val paramMap = mapOf("tableName" to metricInput.tableName) // adding the params here
-        val result = SqlMetricManager.queryExecutor.execute<TableUnusedIndexDTO>(metricInput.databaseName, query, paramMap)
+        val result =
+            SqlMetricManager.queryExecutor.execute<TableUnusedIndexDTO>(metricInput.databaseName, query, paramMap)
         return TableUnusedIndexResult(result)
     }
 
@@ -72,7 +73,7 @@ class TableUnusedIndexMetric :
         metricInput: TableUnusedIndexInput,
         metricResult: TableUnusedIndexResult
     ): TableUnusedIndexRecommendation? {
-        if(metricInput.recommendationRequired) {
+        if (metricInput.recommendationRequired) {
             val indexListToBeDropped: List<String> = metricResult.queryList
                 .filter { it.userSeeks == 0 && it.userLookups == 0 && it.userScans == 0 }
                 .map { it.indexName }

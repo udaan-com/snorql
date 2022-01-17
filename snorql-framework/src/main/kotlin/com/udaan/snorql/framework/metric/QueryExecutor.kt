@@ -35,8 +35,10 @@ class QueryExecutor(val connection: Connection) {
      * @param params parameters
      * @return list of rows wrapped in mapping model class [T]
      */
-    inline fun <reified T> execute(databaseName:String, query: String,
-                                   params: Map<String, *> = mapOf<String, Any>()): List<T> {
+    inline fun <reified T> execute(
+        databaseName: String, query: String,
+        params: Map<String, *> = mapOf<String, Any>()
+    ): List<T> {
         return connection.run(databaseName, query, T::class.java, params)
     }
 
@@ -48,10 +50,12 @@ class QueryExecutor(val connection: Connection) {
      * @param columns columns to be written
      * @param rows actual data rows to be written
      */
-    fun persistData(databaseName:String, tableName: String,
-                    columns: List<String>,
-                    rows: List<List<Any>>) {
-        connection.storeData(databaseName,tableName, columns, rows)
+    fun persistData(
+        databaseName: String, tableName: String,
+        columns: List<String>,
+        rows: List<List<Any>>
+    ) {
+        connection.storeData(databaseName, tableName, columns, rows)
     }
 
 }

@@ -77,7 +77,7 @@ interface IMetric<in T : MetricInput, O : IMetricResult, R : IMetricRecommendati
      */
     fun getMetricResponse(metricInput: T): MetricResponse<O, R> {
         val metricOutput = getMetricOutput(metricInput)
-       return MetricResponse<O, R>(
+        return MetricResponse<O, R>(
             metricInput,
             metricOutput,
             getMetricResponseMetadata(metricInput, metricOutput)

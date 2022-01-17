@@ -47,8 +47,8 @@ class ActiveQueriesMetric :
             metricConfig.queries["main"]
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
 
-            val result = SqlMetricManager.queryExecutor.execute<ActiveQueryDTO>(metricInput.databaseName, query)
-            return ActiveQueryResult(result)
+        val result = SqlMetricManager.queryExecutor.execute<ActiveQueryDTO>(metricInput.databaseName, query)
+        return ActiveQueryResult(result)
     }
 
     override fun getMetricResponseMetadata(

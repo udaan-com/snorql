@@ -49,7 +49,7 @@ class IndexStatsMetric :
         val paramMap = mapOf("tableName" to metricInput.tableName, "indexName" to metricInput.indexName)
 
         val result = SqlMetricManager.queryExecutor.execute<IndexStatDTO>(metricInput.databaseName, query, paramMap)
-            return IndexStatResult(result)
+        return IndexStatResult(result)
     }
 
     override fun getMetricResponseMetadata(

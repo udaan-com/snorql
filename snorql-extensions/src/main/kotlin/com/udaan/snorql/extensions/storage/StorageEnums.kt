@@ -27,7 +27,7 @@ import com.udaan.snorql.framework.IMtericId
  * @property metricId id of metric in context
  * @constructor Create Storage metric enums
  */
-enum class StorageEnums(private val metricId:String): IMtericId {
+enum class StorageEnums(private val metricId: String) : IMtericId {
 
     /**
      * Database

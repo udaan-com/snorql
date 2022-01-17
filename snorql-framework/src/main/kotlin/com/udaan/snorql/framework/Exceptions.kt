@@ -25,18 +25,18 @@ package com.udaan.snorql.framework
  *
  * @param message Error message string
  */
-class SQLMonitoringConfigException(message: String): Exception(message)
+class SQLMonitoringConfigException(message: String) : Exception(message)
 
 /**
  * Exception class when user supplied connection instance is not found, or unusable
  *
  * @param message Error message string
  */
-class SQLMonitoringConnectionException(message: String): Exception(message)
+class SQLMonitoringConnectionException(message: String) : Exception(message)
 
 /**
  * Exception class when snorql is unable to give metric response back to the user due to some error
  *
  * @param message Error message string
  */
-class SQLMonitoringException(message: String): Exception(message)
+class SQLMonitoringException(message: String) : Exception(message)
