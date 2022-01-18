@@ -1,4 +1,4 @@
-package com.udaan.snorql.framework.job.model
+package resources
 
 import java.util.*
 

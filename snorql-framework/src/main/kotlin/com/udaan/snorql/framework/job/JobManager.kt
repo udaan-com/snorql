@@ -21,8 +21,6 @@ package com.udaan.snorql.framework.job
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.udaan.snorql.framework.job.model.HistoricalDatabaseSchemaDTO
-import com.udaan.snorql.framework.job.model.JobTriggerConfig
-import com.udaan.snorql.framework.job.model.QuartzProperties
 import com.udaan.snorql.framework.job.model.RecordingJobConfigOutline
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
@@ -32,17 +30,19 @@ import com.udaan.snorql.framework.models.SnorqlConstants
 import org.quartz.*
 import org.quartz.impl.StdSchedulerFactory
 import org.quartz.impl.matchers.GroupMatcher
-import java.sql.Date
 import java.sql.Timestamp
+import java.util.*
 
 object JobManager {
 
-    private var schedulerFactory: StdSchedulerFactory = StdSchedulerFactory(QuartzProperties.prop)
+    private var schedulerFactory: StdSchedulerFactory = StdSchedulerFactory()
     private var scheduler: Scheduler = schedulerFactory.scheduler
 
-    fun initializeJobScheduler() {
-        schedulerFactory = StdSchedulerFactory(QuartzProperties.prop)
+    fun initializeJobScheduler(quartzProperties: Properties?) {
+        schedulerFactory = if (quartzProperties != null) StdSchedulerFactory(quartzProperties)
+        else StdSchedulerFactory()
         scheduler = schedulerFactory.scheduler
+        startScheduler()
     }
 
     private val objectMapper: ObjectMapper = SnorqlConstants.objectMapper
@@ -50,10 +50,8 @@ object JobManager {
     private fun startScheduler() {
         try {
             scheduler.start()
-
         } catch (e: Exception) {
             print("Scheduler start failed due to $e")
-
         }
     }
 
@@ -71,8 +69,9 @@ object JobManager {
             val intervalInSeconds = jobConfig.watchIntervalInSeconds
             val startFrom = jobConfig.startFrom
             val endAt = jobConfig.endAt
+            val description = jobConfig.description
             val configSuccess: Boolean =
-                configureJobAndTrigger<T, O, V>(metricInput, intervalInSeconds, startFrom, endAt)
+                configureJobAndTrigger<T, O, V>(metricInput, intervalInSeconds, startFrom, endAt, description)
             configSuccess
         } catch (e: Exception) {
             print("Unable to add data recording: $e")
@@ -98,6 +97,7 @@ object JobManager {
         intervalInSeconds: Int,
         startFrom: Timestamp?,
         endAt: Timestamp?,
+        description: String?
     ): Boolean {
         val jobName: String = metricInput.metricId // jobName = metricId (Therefore, for each metric, there is a job
         val triggerName: String =
@@ -119,6 +119,7 @@ object JobManager {
             val trigger: SimpleTrigger =
                 TriggerBuilder.newTrigger()
                     .withIdentity(triggerName, SnorqlConstants.MONITORING_GROUP_NAME)
+                    .withDescription(description)
 //                    .startAt(startFrom)
                     .usingJobData(jobDataMap)
                     .withSchedule(
@@ -135,6 +136,7 @@ object JobManager {
             if (!scheduler.checkExists(triggerKey)) {
                 val trigger: SimpleTrigger = TriggerBuilder.newTrigger()
                     .withIdentity(triggerName, SnorqlConstants.MONITORING_GROUP_NAME)
+                    .withDescription(description)
                     .forJob(job)
 //                    .startAt(startFrom)
                     .usingJobData(jobDataMap)
@@ -149,6 +151,7 @@ object JobManager {
             } else {
                 val newTrigger: SimpleTrigger = TriggerBuilder.newTrigger()
                     .withIdentity(triggerName, SnorqlConstants.MONITORING_GROUP_NAME)
+                    .withDescription(description)
                     .forJob(job)
 //                        .startAt(startFrom)
                     .usingJobData(jobDataMap)
@@ -164,23 +167,39 @@ object JobManager {
         }
     }
 
-    fun getAllMonitoringTriggers(): List<Trigger> {
+    fun getAllMonitoringTriggers(group: String, metricId: String, databaseName: String): List<Map<String, Any?>> {
         val allTriggerKeys =
-            scheduler.getTriggerKeys(GroupMatcher.anyGroup()) // groupEquals(SnorqlConstants.MONITORING_GROUP_NAME))
+            scheduler.getTriggerKeys(GroupMatcher.triggerGroupEquals(group)) // groupEquals(SnorqlConstants.MONITORING_GROUP_NAME))
         val triggersList = mutableListOf<Trigger>()
+        val triggerDetailsList: MutableList<Map<String, Any?>> = mutableListOf<Map<String, Any?>>()
         allTriggerKeys.forEach { triggerKey ->
             run {
                 val trigger = scheduler.getTrigger(triggerKey)
                 triggersList.add(trigger)
-                val triggerDetailsMap = mapOf<String, String?>(
+                val triggerDetailsMap = mutableMapOf<String, Any?>(
                     "triggerGroup" to trigger.key.group,
                     "triggerName" to trigger.key.name,
+                    "nextFireTime" to trigger.nextFireTime,
+                    "endTime" to trigger.endTime,
+                    "startTime" to trigger.startTime,
+                    "description" to trigger.description
                 )
-//                println("Trigger: $triggerDetailsMap")
+                val metricInputMap: Map<String, Any?> =
+                    objectMapper.readValue(
+                        trigger.jobDataMap["metricInput"] as String,
+                        Map::class.java
+                    ) as Map<String, Any?>
+                triggerDetailsMap.putAll(metricInputMap)
+                triggerDetailsList.add(triggerDetailsMap.toMap())
             }
         }
-//        println("All triggers printed")
-        return triggersList
+        triggerDetailsList.filter { triggerDetail ->
+            triggerDetail["metricId"] == metricId && triggerDetail["databaseName"] == databaseName
+        }
+        triggerDetailsList.forEach {
+            println("Element: $it")
+        }
+        return triggerDetailsList
     }
 
 //    fun removeAllTriggers() {
