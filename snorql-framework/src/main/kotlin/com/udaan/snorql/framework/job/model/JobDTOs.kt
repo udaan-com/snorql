@@ -20,6 +20,7 @@ abstract class RecordingJobConfigOutline {
     abstract val watchIntervalInSeconds: Int
     abstract val startFrom: Timestamp
     abstract val endAt: Timestamp?
+    abstract val description: String?
 }
 
 data class ActualMetricInput(
