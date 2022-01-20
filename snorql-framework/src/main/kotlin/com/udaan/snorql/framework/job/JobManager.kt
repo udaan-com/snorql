@@ -20,6 +20,7 @@
 package com.udaan.snorql.framework.job
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.udaan.snorql.framework.TriggerNotFoundException
 import com.udaan.snorql.framework.job.model.HistoricalDatabaseSchemaDTO
 import com.udaan.snorql.framework.job.model.RecordingJobConfigOutline
 import com.udaan.snorql.framework.metric.SqlMetricManager
@@ -70,8 +71,10 @@ object JobManager {
             val startFrom = jobConfig.startFrom
             val endAt = jobConfig.endAt
             val description = jobConfig.description
+            val configuredByName = jobConfig.configuredByName
+            val configuredByEmail = jobConfig.configuredByEmail
             val configSuccess: Boolean =
-                configureJobAndTrigger<T, O, V>(metricInput, intervalInSeconds, startFrom, endAt, description)
+                configureJobAndTrigger<T, O, V>(metricInput, intervalInSeconds, startFrom, endAt, description, configuredByName, configuredByEmail)
             configSuccess
         } catch (e: Exception) {
             print("Unable to add data recording: $e")
@@ -97,7 +100,9 @@ object JobManager {
         intervalInSeconds: Int,
         startFrom: Timestamp?,
         endAt: Timestamp?,
-        description: String?
+        description: String?,
+        configuredByName: String?,
+        configuredByEmail: String?
     ): Boolean {
         val jobName: String = metricInput.metricId // jobName = metricId (Therefore, for each metric, there is a job
         val triggerName: String =
@@ -107,9 +112,11 @@ object JobManager {
         jobDataMap["metricInput"] =
             objectMapper.writeValueAsString(metricInput) // gson.toJson(metricInput).toString() // Use Jackson
         jobDataMap["inputClass"] = metricInput::class.java.name
+        jobDataMap["configuredByName"] = configuredByName
+        jobDataMap["configuredByEmail"] = configuredByEmail
+        jobDataMap["repeatInterval"] = intervalInSeconds
         val jobKey = JobKey(jobName, SnorqlConstants.MONITORING_GROUP_NAME)
         val triggerKey = TriggerKey(triggerName, SnorqlConstants.MONITORING_GROUP_NAME)
-        startScheduler()
         return if (!scheduler.checkExists(jobKey)) {
             println("Job does not exist. Configuring a job with job key $jobKey")
             val job = JobBuilder.newJob(MonitoringJob<T, O, V>().javaClass)
@@ -167,7 +174,11 @@ object JobManager {
         }
     }
 
-    fun getAllMonitoringTriggers(group: String, metricId: String, databaseName: String): List<Map<String, Any?>> {
+    fun getAllMonitoringTriggers(
+        metricId: String,
+        databaseName: String
+    ): List<Map<String, Any?>> {
+        val group: String = SnorqlConstants.MONITORING_GROUP_NAME
         val allTriggerKeys =
             scheduler.getTriggerKeys(GroupMatcher.triggerGroupEquals(group)) // groupEquals(SnorqlConstants.MONITORING_GROUP_NAME))
         val triggersList = mutableListOf<Trigger>()
@@ -182,7 +193,10 @@ object JobManager {
                     "nextFireTime" to trigger.nextFireTime,
                     "endTime" to trigger.endTime,
                     "startTime" to trigger.startTime,
-                    "description" to trigger.description
+                    "description" to trigger.description,
+                    "repeatInterval" to trigger.jobDataMap["repeatInterval"],
+                    "configuredByName" to trigger.jobDataMap["configuredByName"],
+                    "configuredByEmail" to trigger.jobDataMap["configuredByEmail"]
                 )
                 val metricInputMap: Map<String, Any?> =
                     objectMapper.readValue(
@@ -202,22 +216,24 @@ object JobManager {
         return triggerDetailsList
     }
 
-//    fun removeAllTriggers() {
-//        getAllMonitoringTriggers().forEach {
-//            scheduler.unscheduleJob(it.key)
-//        }
-//    }
-
     fun removeEverything() {
         scheduler.clear()
     }
 
-    fun removeDataRecording(
+    fun deleteTrigger(
         triggerName: String
     ): Boolean {
         return try {
-            scheduler.unscheduleJob(TriggerKey(triggerName, SnorqlConstants.MONITORING_GROUP_NAME))
-            true
+            if (scheduler.checkExists(TriggerKey.triggerKey(triggerName))) {
+                println("Trigger exists: ")
+                scheduler.unscheduleJob(TriggerKey(triggerName, SnorqlConstants.MONITORING_GROUP_NAME))
+                true
+            } else {
+                throw TriggerNotFoundException("Trigger with name $triggerName not found")
+            }
+        } catch (e: TriggerNotFoundException) {
+            println("Trigger not found: $e")
+            false
         } catch (e: Exception) {
             println("Failed to stop data recording: $e")
             false

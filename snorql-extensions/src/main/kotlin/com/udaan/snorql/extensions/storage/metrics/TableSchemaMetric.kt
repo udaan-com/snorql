@@ -64,6 +64,7 @@ class TableSchemaMetric:
         responseMetadata["underlyingQueries"] = listOf(query)
         responseMetadata["referenceDocumentation"] = metricConfig.referenceDoc
         responseMetadata["description"] = metricConfig.description
+        responseMetadata["supportsHistorical"] = metricConfig.supportsHistorical
         return responseMetadata
     }
 
