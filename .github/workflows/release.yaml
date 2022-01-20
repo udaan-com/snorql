@@ -3,8 +3,8 @@ name: Release
 # Run workflow on commits to the `master` branch
 on:
   push:
-    branches:
-      - add-ci-cd
+    tags:
+      - '*'
 
 jobs:
   release:
