@@ -40,3 +40,10 @@ class SQLMonitoringConnectionException(message: String): Exception(message)
  * @param message Error message string
  */
 class SQLMonitoringException(message: String): Exception(message)
+
+/**
+ * Exception class when a trigger does not exist
+ *
+ * @param message Error message string
+ */
+class TriggerNotFoundException(message: String): Exception(message)

@@ -21,6 +21,8 @@ abstract class RecordingJobConfigOutline {
     abstract val startFrom: Timestamp
     abstract val endAt: Timestamp?
     abstract val description: String?
+    abstract val configuredByName: String?
+    abstract val configuredByEmail: String?
 }
 
 data class ActualMetricInput(

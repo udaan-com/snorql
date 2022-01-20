@@ -107,7 +107,7 @@ class JobManagerTests {
         val mockConnection: Connection = mock()
         SqlMetricManager.setConnection(mockConnection)
         jobManager.initializeJobScheduler(QuartzProperties.prop)
-        jobManager.getAllMonitoringTriggers(SnorqlConstants.MONITORING_GROUP_NAME, "performance_activeQueries","uddevsql/db-test")
+//        jobManager.getAllMonitoringTriggers(SnorqlConstants.MONITORING_GROUP_NAME, "performance_activeQueries","uddevsql/db-test")
     }
 
 
