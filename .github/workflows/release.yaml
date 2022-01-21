@@ -1,41 +1,36 @@
-name: Release
+name: Release version
 
-# Run workflow on commits to the `master` branch
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - add-ci-cd
 
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v2
-      - name: Set up Java for publishing to Maven Central Repository
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v2
+
+      - name: Build and Test
+        uses: qcastel/github-actions-maven-cmd@master
         with:
-          java-version: 1.8
-          server-id: ossrh
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
-          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE
-      - name: build artifact
-        run: mvn clean package
-      - name: Create release
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          artifacts: "${{ github.workspace }}/target/*.jar"
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish to the Maven Central Repository
-        run: |
-          mvn \
-            --no-transfer-progress \
-            --batch-mode \
-            deploy
+          maven-args: "clean install -Ddockerfile.skip -DdockerCompose.skip -Djib.skip"
+
+      - name: Release
+        uses: qcastel/github-actions-maven-release@master
         env:
-          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+          JAVA_HOME: /usr/lib/jvm/java-1.8-openjdk/
+        with:
+          access-token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+
+          git-release-bot-name: "releaseBot22"
+          git-release-bot-email: "release.with.bot@gmail.com"
+
+          maven-args: "-Dmaven.javadoc.skip=true -DskipTests -DskipITs -Dmaven.deploy.skip=true"
+
+          gpg-enabled: true
+          gpg-key-id: ${{ secrets.BOT_GPG_KEYID }}
+          gpg-key: ${{ secrets.BOT_GPG_KEY }}
+          gpg-passphrase: ${{ secrets.BOT_GPG_PASSPHRASE }}
