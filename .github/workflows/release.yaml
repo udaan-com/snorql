@@ -23,7 +23,7 @@ jobs:
         env:
           JAVA_HOME: /usr/lib/jvm/java-1.8-openjdk/
         with:
-          access-token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           git-release-bot-name: "releaseBot22"
           git-release-bot-email: "release.with.bot@gmail.com"
           maven-args: "-Dmaven.javadoc.skip=true -DskipTests -DskipITs -Dmaven.deploy.skip=true"
