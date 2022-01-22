@@ -23,9 +23,9 @@ jobs:
         env:
           JAVA_HOME: /usr/lib/jvm/java-1.8-openjdk/
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           git-release-bot-name: "releaseBot22"
           git-release-bot-email: "release.with.bot@gmail.com"
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           maven-args: "-Dmaven.javadoc.skip=true -DskipTests -DskipITs -Dmaven.deploy.skip=true"
           gpg-enabled: true
           gpg-key-id: ${{ secrets.GPG_KEY_ID }}
