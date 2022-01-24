@@ -31,5 +31,5 @@ jobs:
           gpg-key-id: ${{ secrets.GPG_KEY_ID }}
           gpg-key: ${{ secrets.GPG_KEY }}
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
-          release-branch-name: "add-ci-cd"
           maven-servers: ${{ secrets.MVN_REPO_SERVERS }}
+          release-branch-name: "add-ci-cd"
