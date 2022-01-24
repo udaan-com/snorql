@@ -111,9 +111,9 @@ class JobManagerTests {
     }
 
 
-//    @Test // Used to remove all the triggers
-//    fun removeEverything() {
-//        JobManager.initializeJobScheduler()
-//        JobManager.removeEverything()
-//    }
+    @Test // Used to remove all the triggers
+    fun removeEverything() {
+        JobManager.initializeJobScheduler(QuartzProperties.prop)
+        JobManager.removeEverything()
+    }
 }

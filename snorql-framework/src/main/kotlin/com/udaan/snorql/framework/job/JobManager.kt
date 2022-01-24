@@ -182,7 +182,7 @@ object JobManager {
         val allTriggerKeys =
             scheduler.getTriggerKeys(GroupMatcher.triggerGroupEquals(group)) // groupEquals(SnorqlConstants.MONITORING_GROUP_NAME))
         val triggersList = mutableListOf<Trigger>()
-        val triggerDetailsList: MutableList<Map<String, Any?>> = mutableListOf<Map<String, Any?>>()
+        var triggerDetailsList: MutableList<Map<String, Any?>> = mutableListOf<Map<String, Any?>>()
         allTriggerKeys.forEach { triggerKey ->
             run {
                 val trigger = scheduler.getTrigger(triggerKey)
@@ -207,9 +207,9 @@ object JobManager {
                 triggerDetailsList.add(triggerDetailsMap.toMap())
             }
         }
-        triggerDetailsList.filter { triggerDetail ->
+        triggerDetailsList = triggerDetailsList.filter { triggerDetail ->
             triggerDetail["metricId"] == metricId && triggerDetail["databaseName"] == databaseName
-        }
+        } as MutableList<Map<String, Any?>>
         triggerDetailsList.forEach {
             println("Element: $it")
         }
