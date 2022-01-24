@@ -37,10 +37,6 @@ class MonitoringJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommenda
             print("Quartz Job execution started!!")
             val runID: String = UUID.randomUUID().toString() // Generate a random monitoring run id
             val mergedDataMap = context.mergedJobDataMap
-//            println(" - Trigger Key: ${context.trigger.key}")
-//            val metricInput: T =
-//                objectMapper.readValue(mergedDataMap["metricInput"] as String)
-//            val metricInput: T = gson.fromJson(mergedDataMap["metricInput"] as String, MetricInput::class.java) as T
             val metricInput: T =
                 SnorqlConstants.objectMapper.readValue(mergedDataMap["metricInput"] as String,
                     Class.forName(mergedDataMap["inputClass"] as String)) as T

@@ -17,6 +17,7 @@ data class JobTriggerConfig(
 )
 
 abstract class RecordingJobConfigOutline {
+    abstract val databaseName: String
     abstract val watchIntervalInSeconds: Int
     abstract val startFrom: Timestamp
     abstract val endAt: Timestamp?
