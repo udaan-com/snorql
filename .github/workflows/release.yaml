@@ -27,9 +27,9 @@ jobs:
           git-release-bot-email: "release.with.bot@gmail.com"
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           maven-args: "-DskipTests -DskipITs -Ddockerfile.skip -DdockerCompose.skip -X"
+          release-branch-name: "add-ci-cd"
           gpg-enabled: true
           gpg-key-id: ${{ secrets.GPG_KEY_ID }}
           gpg-key: ${{ secrets.GPG_KEY }}
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
           maven-servers: ${{ secrets.MVN_REPO_SERVERS }}
-          release-branch-name: "add-ci-cd"
