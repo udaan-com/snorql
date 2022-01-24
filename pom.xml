@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.udaan.snorql</groupId>
     <artifactId>snorql</artifactId>
-    <version>0.4.4-SNAPSHOT</version>
+    <version>0.4.4</version>
     <packaging>pom</packaging>
 
     <name>snorql</name>
@@ -50,7 +50,7 @@
         <connection>scm:git:${project.scm.url}</connection>
         <developerConnection>scm:git:${project.scm.url}</developerConnection>
         <url>git@github.com:udaan-com/snorql.git</url>
-        <tag>HEAD</tag>
+        <tag>snorql-0.4.4</tag>
     </scm>
 
     <distributionManagement>
