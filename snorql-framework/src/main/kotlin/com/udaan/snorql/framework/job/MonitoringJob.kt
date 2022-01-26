@@ -57,7 +57,9 @@ class MonitoringJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommenda
             println("Following data was recorded: $dataRecorded")
             println("Quartz Job execution complete!!")
         } catch (e: Exception) {
-            println("There was an exception while recording data: $e")
+            println("Exception: $e")
+            println("There was an exception while recording data: ${e.stackTrace}")
+            e.printStackTrace()
         }
     }
 }

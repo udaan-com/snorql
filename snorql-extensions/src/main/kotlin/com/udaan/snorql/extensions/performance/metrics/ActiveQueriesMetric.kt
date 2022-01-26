@@ -62,6 +62,7 @@ class ActiveQueriesMetric :
         responseMetadata["referenceDocumentation"] = metricConfig.referenceDoc
         responseMetadata["description"] = metricConfig.description
         responseMetadata["supportsHistorical"] = metricConfig.supportsHistorical
+        responseMetadata["minimumRepeatInterval"] = metricConfig.persistDataOptions?.get("minimumRepeatInterval") ?: ""
 
         return responseMetadata
     }
