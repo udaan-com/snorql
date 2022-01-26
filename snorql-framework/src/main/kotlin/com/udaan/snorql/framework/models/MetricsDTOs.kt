@@ -49,6 +49,7 @@ abstract class MetricInput {
  */
 data class MetricConfig(val queries: Map<String, String>,
         val supportsHistorical: Boolean,
+        val persistDataOptions: Map<String, String>?,
         val supportsRealTime: Boolean,
         val isParameterized: Boolean,
         val referenceDoc: List<String>,
