@@ -24,7 +24,6 @@ jobs:
         uses: qcastel/github-actions-maven-release@master
         env:
           JAVA_HOME: /usr/lib/jvm/java-1.8-openjdk/
-          POM_VERSION: ${parsedVersion}
         with:
           git-release-bot-name: "releaseBot22"
           git-release-bot-email: "release.with.bot@gmail.com"
@@ -37,17 +36,17 @@ jobs:
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
           maven-servers: ${{ secrets.MVN_REPO_SERVERS }}
           version-patch: true
-      - name: Get envs
+      - name: Set Release version env variable
         run: |
-          echo ${{ env.JAVA_HOME }}
-          echo ${{ env.POM_VERSION }}
-#      - name: Create Github Release
-#        uses: ncipollo/release-action@v1
-#        env:
-#          RELEASE_VERSION: ${{ env.POM_VERSION }}
-#        with:
-#          allowUpdates: true
-#          artifacts: "${{ github.workspace }}/target/*.jar"
-#          token: ${{ secrets.GITHUB_TOKEN }}
-#          tag: "v$RELEASE_VERSION"
-#          bodyFile: "v${{ RELEASE_VERSION}}.md"
+          echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+      - name: Create Github Release
+        uses: ncipollo/release-action@v1
+        env:
+          RELEASE_VERSION: ${{ env.POM_VERSION }}
+        with:
+          allowUpdates: true
+          artifacts: "${{ github.workspace }}/target/*.jar"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: "v${{ env.RELEASE_VERSION }}"
+          bodyFile: "v${{ env.RELEASE_VERSION }}.md"
+          commit: add-ci-cd
