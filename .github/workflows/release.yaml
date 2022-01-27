@@ -39,8 +39,8 @@ jobs:
           version-patch: true
       - name: Get envs
         run: |
-          echo $POM_VERSION
-          echo ${{ POM_VERSION }}
+          echo ${{ env.JAVA_HOME }}
+          echo ${{ env.POM_VERSION }}
 #      - name: Create Github Release
 #        uses: ncipollo/release-action@v1
 #        env:
