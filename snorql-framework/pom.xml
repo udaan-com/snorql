@@ -129,7 +129,7 @@
                         <id>attach-javadocs</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>javadoc</goal>
+                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
