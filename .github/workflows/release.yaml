@@ -42,7 +42,7 @@ jobs:
       - name: Create Github Release
         uses: ncipollo/release-action@v1
         env:
-          RELEASE_VERSION: ${{ env.POM_VERSION }}
+          RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
         with:
           allowUpdates: true
           artifacts: "${{ github.workspace }}/target/*.jar"
