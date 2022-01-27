@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    if: "contains(github.event.head_commit.message, '[patch release]')"
+    if: "!contains(github.event.head_commit.message, '[patch release]')"
 
     steps:
       - uses: actions/checkout@v2
@@ -24,6 +24,7 @@ jobs:
         uses: qcastel/github-actions-maven-release@master
         env:
           JAVA_HOME: /usr/lib/jvm/java-1.8-openjdk/
+          POM_VERSION: ${parsedVersion}
         with:
           git-release-bot-name: "releaseBot22"
           git-release-bot-email: "release.with.bot@gmail.com"
@@ -36,18 +37,17 @@ jobs:
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
           maven-servers: ${{ secrets.MVN_REPO_SERVERS }}
           version-patch: true
-          id: version
-          run: echo ::set-output name=POM::${parsedVersion}
-      - name: Create Github Release
-        uses: ncipollo/release-action@v1
-        env:
-          RELEASE_VERSION: ${{ steps.version.outputs.POM }}
-        with:
-          allowUpdates: true
-          artifacts: "${{ github.workspace }}/target/*.jar"
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: "v$RELEASE_VERSION"
-          bodyFile: "v${{ steps.version.outputs.POM }}.md"
+      - name: Get envs
         run: |
           echo $RELEASE_VERSION
-          echo ${{ steps.vars.outputs.tag }}
+          echo ${{ RELEASE_VERSION}}
+#      - name: Create Github Release
+#        uses: ncipollo/release-action@v1
+#        env:
+#          RELEASE_VERSION: ${{ env.POM_VERSION }}
+#        with:
+#          allowUpdates: true
+#          artifacts: "${{ github.workspace }}/target/*.jar"
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          tag: "v$RELEASE_VERSION"
+#          bodyFile: "v${{ RELEASE_VERSION}}.md"
