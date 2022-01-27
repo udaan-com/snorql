@@ -19,7 +19,7 @@
 
 package com.udaan.snorql.framework.metric
 
-import com.udaan.snorql.framework.job.model.HistoricalDatabaseSchemaDTO
+import com.udaan.snorql.framework.models.HistoricalDatabaseSchemaDTO
 
 /**
  * Connection
