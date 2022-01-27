@@ -44,6 +44,12 @@
             <organization>Udaan</organization>
             <organizationUrl>https://www.udaan.com</organizationUrl>
         </developer>
+        <developer>
+            <name>Prakul Jain</name>
+            <email>prakul.jain@udaan.com</email>
+            <organization>Udaan</organization>
+            <organizationUrl>https://www.udaan.com</organizationUrl>
+        </developer>
     </developers>
 
     <scm>

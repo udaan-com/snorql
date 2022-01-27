@@ -21,13 +21,8 @@ package com.udaan.snorql.framework.job
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.udaan.snorql.framework.TriggerNotFoundException
-import com.udaan.snorql.framework.models.HistoricalDatabaseSchemaDTO
-import com.udaan.snorql.framework.models.RecordingJobConfigOutline
 import com.udaan.snorql.framework.metric.SqlMetricManager
-import com.udaan.snorql.framework.models.IMetricRecommendation
-import com.udaan.snorql.framework.models.IMetricResult
-import com.udaan.snorql.framework.models.MetricInput
-import com.udaan.snorql.framework.models.SnorqlConstants
+import com.udaan.snorql.framework.models.*
 import org.quartz.*
 import org.quartz.impl.StdSchedulerFactory
 import org.quartz.impl.matchers.GroupMatcher
@@ -64,8 +59,12 @@ object JobManager {
      */
     fun <T : MetricInput, O : IMetricResult, V : IMetricRecommendation> addJob(
         jobConfig: RecordingJobConfigOutline,
-        metricInput: T,
+        metricInput: T
     ): Boolean {
+        val metricConfig: MetricConfig = SqlMetricManager.configuration.get(metricId = metricInput.metricId)
+        if (!metricConfig.supportsHistorical) {
+            throw UnsupportedOperationException("Historical Data is not supported for metric: ${metricInput.metricId}")
+        }
         return try {
             val intervalInSeconds = jobConfig.watchIntervalInSeconds
             val startFrom = jobConfig.startFrom
