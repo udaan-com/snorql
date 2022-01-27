@@ -224,7 +224,7 @@ object JobManager {
         triggerName: String
     ): Boolean {
         return try {
-            if (scheduler.checkExists(TriggerKey.triggerKey(triggerName))) {
+            if (scheduler.checkExists(TriggerKey(triggerName, SnorqlConstants.MONITORING_GROUP_NAME))) {
                 println("Trigger exists: ")
                 scheduler.unscheduleJob(TriggerKey(triggerName, SnorqlConstants.MONITORING_GROUP_NAME))
                 true
