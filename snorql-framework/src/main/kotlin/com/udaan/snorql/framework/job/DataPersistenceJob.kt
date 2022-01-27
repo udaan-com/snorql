@@ -1,6 +1,6 @@
 package com.udaan.snorql.framework.job
 
-import com.udaan.snorql.framework.job.model.HistoricalDatabaseSchemaDTO
+import com.udaan.snorql.framework.models.HistoricalDatabaseSchemaDTO
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.IMetricResult
@@ -11,7 +11,7 @@ import org.quartz.JobExecutionContext
 import java.sql.Timestamp
 import java.util.*
 
-class MonitoringJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation> : Job {
+class DataPersistenceJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation> : Job {
 
     /**
      * (Deprecated) This function does the following:
@@ -48,7 +48,7 @@ class MonitoringJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommenda
                 timestamp = Timestamp(System.currentTimeMillis()),
                 metricId = metricInput.metricId,
                 databaseName = metricInput.databaseName,
-                source = SnorqlConstants.MONITORING_GROUP_NAME,
+                source = SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME,
                 metricInput = SnorqlConstants.objectMapper.writeValueAsString(metricInput), // metricInput,
                 metricOutput = SnorqlConstants.objectMapper.writeValueAsString(metricOutput) // metricOutput
             )

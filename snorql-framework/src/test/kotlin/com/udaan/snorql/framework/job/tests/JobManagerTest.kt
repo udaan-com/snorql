@@ -21,10 +21,9 @@ package com.udaan.snorql.framework.job.tests
 
 import com.nhaarman.mockitokotlin2.mock
 import com.udaan.snorql.framework.job.JobManager
-import com.udaan.snorql.framework.job.model.*
 import com.udaan.snorql.framework.metric.Connection
 import com.udaan.snorql.framework.metric.SqlMetricManager
-import com.udaan.snorql.framework.models.SnorqlConstants
+import com.udaan.snorql.framework.models.ActiveQueriesMetric
 import org.junit.Test
 import resources.QuartzProperties
 

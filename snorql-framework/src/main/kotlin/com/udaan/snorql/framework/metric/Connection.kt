@@ -19,7 +19,7 @@
 
 package com.udaan.snorql.framework.metric
 
-import com.udaan.snorql.framework.job.model.HistoricalDatabaseSchemaDTO
+import com.udaan.snorql.framework.models.HistoricalDatabaseSchemaDTO
 
 /**
  * Connection interface implemented by user to define methods required for snorql to interact with user's database

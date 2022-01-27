@@ -19,9 +19,8 @@
 
 package com.udaan.snorql.framework.metric
 
-import com.udaan.snorql.framework.job.model.HistoricalDatabaseSchemaDTO
+import com.udaan.snorql.framework.models.HistoricalDatabaseSchemaDTO
 import com.udaan.snorql.framework.models.SnorqlConstants
-import java.sql.Timestamp
 
 /**
  * Class to hold functions which interact with user defined query executor functions

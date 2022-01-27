@@ -12,7 +12,7 @@ object SnorqlConstants {
                 false).registerKotlinModule()
         }
 
-    const val MONITORING_GROUP_NAME = "monitoring"
+    const val DATA_PERSISTENCE_GROUP_NAME = "DATA_PERSISTENCE"
 
     const val HISTORICAL_DATA_BUCKET_ID = "sql_monitoring_historical_data"
     val historicalDataTableColumns =

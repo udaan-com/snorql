@@ -1,12 +1,6 @@
-package com.udaan.snorql.framework.job.model
+package com.udaan.snorql.framework.models
 
 import com.udaan.snorql.framework.metric.IMetric
-import com.udaan.snorql.framework.models.IMetricRecommendation
-import com.udaan.snorql.framework.models.IMetricResult
-import com.udaan.snorql.framework.models.MetricConfig
-import com.udaan.snorql.framework.models.MetricInput
-import com.udaan.snorql.framework.models.MetricOutput
-import com.udaan.snorql.framework.models.MetricPeriod
 import java.sql.Timestamp
 
 data class JobTriggerConfig(
@@ -65,8 +59,8 @@ data class ActualMetricOutput(val queryList: List<ActualQueryDTO>) : IMetricResu
 /**
  * Class which implements Active Queries Metric
  *
- * <p>The active queries metric fetches the active queries for the
- * specified database along with other metadata.</p>
+ * The active queries metric fetches the active queries for the
+ * specified database along with other metadata.
  *
  * @constructor Create Active queries metric
  */
