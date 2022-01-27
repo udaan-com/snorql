@@ -22,18 +22,16 @@ package com.udaan.snorql.framework.metric
 import com.udaan.snorql.framework.job.model.HistoricalDatabaseSchemaDTO
 
 /**
- * Connection
- *
- * @constructor Create empty Connection
+ * Connection interface implemented by user to define methods required for snorql to interact with user's database
  */
 interface Connection {
     /**
      * Run binds to <T> by executing a query using a databaseName instance
      *
-     * @param T
+     * @param T mapping model class
      * @param databaseName database name to create instance
      * @param query execute the query
-     * @param mapClass
+     * @param mapClass mapping class
      * @param params parameters for metric
      * @return
      */
@@ -44,11 +42,11 @@ interface Connection {
     ): List<T>
 
     /**
-     * Store data
+     * Store data into user's database
      *
-     * @param storageBucketId
-     * @param columns
-     * @param rows
+     * @param storageBucketId bucket id of historical data store
+     * @param columns list of column names
+     * @param rows list of rows of data to be stored
      */
     fun storeData(
         storageBucketId: String,

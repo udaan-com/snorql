@@ -1,0 +1,34 @@
+site_name: snorql
+
+# Meta tags (placed in header)
+site_description: snorql is a SQL monitoring tool
+site_author: udaan.com
+site_url: https://github.com/udaan-com/snorql
+
+# Repository (add link to repository on each page)
+repo_name: snorql
+repo_url: https://github.com/udaan-com/snorql
+
+# Material theme
+theme:
+  name: 'material'
+  favicon: favicon.svg
+  social:
+    - type: 'github'
+      link: 'https://github.com/udaan-com/snorql'
+
+nav:
+  - Home: index.md
+  - About the project: sections/about/ghp.md
+  - Usage:
+      - How to integrate snorql in your project: sections/integrate-snorql-to-project.md
+      - Enable snorql-extensions in your project: sections/enable-snorql-extensions/ghp.md
+      - Build your own custom metrics using snorql: sections/build-custom-metrics.md
+  - Kotlin Documentation: sections/kotlin-doc/ghp.md
+  - Roadmap: sections/roadmap.md
+  - License: sections/license-details.md
+  - Contact: sections/contacts.md
+  - Acknowledgments: sections/acknowledgements.md
+
+extra_css:
+  - colors.css
