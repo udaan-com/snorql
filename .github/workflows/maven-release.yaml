@@ -1,0 +1,38 @@
+name: Maven Release
+
+on:
+  push:
+    branches:
+      - add-ci-cd
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    if: "!contains(github.event.head_commit.message, '[patch release]')"
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build and Test
+        uses: qcastel/github-actions-maven-cmd@master
+        with:
+          maven-args: "clean install -Ddockerfile.skip -DdockerCompose.skip -Djib.skip"
+
+      - name: Release
+        uses: qcastel/github-actions-maven-release@master
+        env:
+          JAVA_HOME: /usr/lib/jvm/java-1.8-openjdk/
+        with:
+          git-release-bot-name: "releaseBot22"
+          git-release-bot-email: "release.with.bot@gmail.com"
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          maven-args: "-DskipTests -DskipITs -Ddockerfile.skip -DdockerCompose.skip"
+          release-branch-name: "add-ci-cd"
+          gpg-enabled: true
+          gpg-key-id: ${{ secrets.GPG_KEY_ID }}
+          gpg-key: ${{ secrets.GPG_KEY }}
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          maven-servers: ${{ secrets.MVN_REPO_SERVERS }}
+          version-patch: true
