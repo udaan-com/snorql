@@ -50,5 +50,5 @@ jobs:
           artifacts: "${{ github.workspace }}/target/*.jar"
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: "v${{ env.RELEASE_VERSION }}"
-          bodyFile: "v${{ env.RELEASE_VERSION }}.md"
+          bodyFile: "release-notes/v${{ env.RELEASE_VERSION }}.md"
           commit: add-ci-cd
