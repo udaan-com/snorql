@@ -22,12 +22,27 @@ package com.udaan.snorql.framework.job
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.udaan.snorql.framework.TriggerNotFoundException
 import com.udaan.snorql.framework.metric.SqlMetricManager
-import com.udaan.snorql.framework.models.*
-import org.quartz.*
+import com.udaan.snorql.framework.models.SnorqlConstants
+import com.udaan.snorql.framework.models.MetricInput
+import com.udaan.snorql.framework.models.IMetricResult
+import com.udaan.snorql.framework.models.IMetricRecommendation
+import com.udaan.snorql.framework.models.RecordingJobConfigOutline
+import com.udaan.snorql.framework.models.MetricConfig
+import com.udaan.snorql.framework.models.HistoricalDatabaseSchemaDTO
+import org.quartz.Scheduler
+import org.quartz.SimpleTrigger
+import org.quartz.TriggerBuilder
+import org.quartz.TriggerKey
+import org.quartz.JobBuilder
+import org.quartz.JobKey
+import org.quartz.Trigger
+import org.quartz.JobDetail
+import org.quartz.JobDataMap
+import org.quartz.SimpleScheduleBuilder
 import org.quartz.impl.StdSchedulerFactory
 import org.quartz.impl.matchers.GroupMatcher
 import java.sql.Timestamp
-import java.util.*
+import java.util.Properties
 
 object JobManager {
 
@@ -67,13 +82,19 @@ object JobManager {
         }
         return try {
             val intervalInSeconds = jobConfig.watchIntervalInSeconds
-            val startFrom = jobConfig.startFrom
             val endAt = jobConfig.endAt
             val description = jobConfig.description
             val configuredByName = jobConfig.configuredByName
             val configuredByEmail = jobConfig.configuredByEmail
             val configSuccess: Boolean =
-                configureJobAndTrigger<T, O, V>(metricInput, intervalInSeconds, startFrom, endAt, description, configuredByName, configuredByEmail)
+                configureJobAndTrigger<T, O, V>(
+                    metricInput,
+                    intervalInSeconds,
+                    endAt,
+                    description,
+                    configuredByName,
+                    configuredByEmail
+                )
             configSuccess
         } catch (e: Exception) {
             print("Unable to add data recording: $e")
@@ -97,7 +118,6 @@ object JobManager {
     private fun <T : MetricInput, O : IMetricResult, V : IMetricRecommendation> configureJobAndTrigger(
         metricInput: T,
         intervalInSeconds: Int,
-        startFrom: Timestamp?,
         endAt: Timestamp?,
         description: String?,
         configuredByName: String?,
