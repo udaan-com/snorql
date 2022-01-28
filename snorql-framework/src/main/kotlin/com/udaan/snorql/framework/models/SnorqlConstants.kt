@@ -8,8 +8,10 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 object SnorqlConstants {
     val objectMapper: ObjectMapper
         get() {
-            return jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-                false).registerKotlinModule()
+            return jacksonObjectMapper().configure(
+                DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+                false
+            ).registerKotlinModule()
         }
 
     const val DATA_PERSISTENCE_GROUP_NAME = "DATA_PERSISTENCE"

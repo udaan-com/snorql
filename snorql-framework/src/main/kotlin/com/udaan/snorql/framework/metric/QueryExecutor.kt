@@ -46,21 +46,16 @@ class QueryExecutor(val connection: Connection) {
     }
 
     /**
-     * Persist data to enable historical data in snorql
+     * Function used to read historical data stored.
+     * Calls `getHistoricalData` function defined by the user to fetch the data
+     * Note: [fetchHistoricalData] works on pagination
      *
-     * @param databaseName name of database to store data in
-     * @param tableName name of table to store data in
-     * @param columns columns to be written
-     * @param rows actual data rows to be written
+     * @param metricId read data belonging to a particular metricID
+     * @param databaseName read data belonging to a particular database
+     * @param pageNumber page number of filtered results (starts from 1)
+     * @param pageSize maximum number of records to be fetched
+     * @param params additional parameters passed to filter the data
      */
-    fun persistData(
-        storageBucketId: String,
-        columns: List<String>,
-        rows: List<List<Any>>
-    ) {
-        connection.storeData(storageBucketId, columns, rows)
-    }
-
     fun fetchHistoricalData(
         metricId: String,
         databaseName: String,
@@ -72,6 +67,13 @@ class QueryExecutor(val connection: Connection) {
         return connection.getHistoricalData(storageBucketId, metricId, databaseName, pageNumber, pageSize, params)
     }
 
+    /**
+     * Persist historical data to enable persistence in snorql
+     * This function calls the user defined `connection.storeData` function
+     *
+     * @param storageId Unique identifier of the storage bucket where historical data is stored
+     * @param historicalDataList Data to be stored as list of rows
+     */
     fun persistHistoricalData(
         storageId: String,
         historicalDataList: List<HistoricalDatabaseSchemaDTO>,
@@ -92,26 +94,6 @@ class QueryExecutor(val connection: Connection) {
             rows.add(row)
         }
         connection.storeData(storageId, columns, rows.toList())
-        println("Following data stored in historical database: $rows")
-    }
-
-    fun persistJobConfigData(metricId: String, databaseName: String, triggerName: String): Boolean {
-        println(
-            """Following data has been saved in the database: 
-            |1. Metric ID: $metricId 
-            |2. Database Name: $databaseName
-            |3. Trigger Key: $triggerName""".trimMargin()
-        )
-        return true
-    }
-
-    fun removeFromDatabase(metricId: String, databaseName: String, triggerName: String): Boolean {
-        println(
-            """Following data has been removed from the database: 
-            |1. Metric ID: $metricId 
-            |2. Database Name: $databaseName
-            |3. Trigger Key: $triggerName""".trimMargin()
-        )
-        return true
+//        println("Following data stored in historical database: $rows")
     }
 }

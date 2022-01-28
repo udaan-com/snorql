@@ -256,7 +256,7 @@ exceptions:
       - 'NullPointerException'
       - 'RuntimeException'
       - 'Throwable'
-    allowedExceptionNameRegex: '_|(ignore|expected).*'
+    allowedExceptionNameRegex: '_|(e).*'
   TooGenericExceptionThrown:
     active: true
     exceptionNames:
