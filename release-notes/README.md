@@ -14,7 +14,7 @@ Once you have decided on your version, follow the following steps to publish a r
 - Add a `<version-name>.md` file under `release-notes` directory. This will be used as the content for GitHub release.
   For ex: if your `pom.xml` looks like this: `<version>0.4.22-SNAPSHOT</version>`, your release file will should be named `v0.4.22.md`.<br><br>
 
-- Do an empty commit from `main` branch with either of the commit messages:
+- Do an empty commit from `main` branch with either of the commit messages(Make sure you have the permission):
 Considering current pom version to be `0.4.22-SNAPSHOT`,
     - `git commit --allow-empty -m "#release-with-patch"` would:
         - Publish a maven release with version `0.4.22`
