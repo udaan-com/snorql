@@ -1,16 +1,16 @@
-name: Release
+name: Release with major update for next
 
 on:
   push:
     branches:
-      - add-ci-cd
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    if: "contains(github.event.head_commit.message, '[patch-release]')"
+    if: "contains(github.event.head_commit.message, '#release-with-major')"
 
     steps:
       - uses: actions/checkout@v2
@@ -39,7 +39,7 @@ jobs:
           gpg-key: ${{ secrets.GPG_KEY }}
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
           maven-servers: ${{ secrets.MVN_REPO_SERVERS }}
-          version-patch: true
+          version-major: true
 
       - name: Create Github Release
         uses: ncipollo/release-action@v1
