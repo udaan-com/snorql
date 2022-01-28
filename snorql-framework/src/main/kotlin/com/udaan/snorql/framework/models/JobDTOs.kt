@@ -1,5 +1,7 @@
 package com.udaan.snorql.framework.models
 
+import org.quartz.JobDataMap
+import org.quartz.JobDetail
 import java.sql.Timestamp
 
 data class JobTriggerConfig(
@@ -17,6 +19,15 @@ abstract class RecordingJobConfigOutline {
     abstract val configuredByName: String?
     abstract val configuredByEmail: String?
 }
+
+data class TriggerBuildConfig(
+    val triggerName: String,
+    val description: String?,
+    val job: JobDetail?,
+    val jobDataMap: JobDataMap,
+    val intervalInSeconds: Int,
+    val endAt: Timestamp?
+)
 
 data class HistoricalDatabaseSchemaDTO(
     val runId: String,
