@@ -22,13 +22,7 @@ package com.udaan.snorql.framework.job
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.udaan.snorql.framework.TriggerNotFoundException
 import com.udaan.snorql.framework.metric.SqlMetricManager
-import com.udaan.snorql.framework.models.SnorqlConstants
-import com.udaan.snorql.framework.models.MetricInput
-import com.udaan.snorql.framework.models.IMetricResult
-import com.udaan.snorql.framework.models.IMetricRecommendation
-import com.udaan.snorql.framework.models.RecordingJobConfigOutline
-import com.udaan.snorql.framework.models.MetricConfig
-import com.udaan.snorql.framework.models.HistoricalDatabaseSchemaDTO
+import com.udaan.snorql.framework.models.*
 import org.quartz.Scheduler
 import org.quartz.SimpleTrigger
 import org.quartz.TriggerBuilder
@@ -129,7 +123,7 @@ object JobManager {
                 .plus(SnorqlConstants.objectMapper.writeValueAsString(metricInput).hashCode())
         val jobDataMap = JobDataMap()
         jobDataMap["metricInput"] =
-            objectMapper.writeValueAsString(metricInput) // gson.toJson(metricInput).toString() // Use Jackson
+            objectMapper.writeValueAsString(metricInput)
         jobDataMap["inputClass"] = metricInput::class.java.name
         jobDataMap["configuredByName"] = configuredByName
         jobDataMap["configuredByEmail"] = configuredByEmail
@@ -138,58 +132,63 @@ object JobManager {
         val triggerKey = TriggerKey(triggerName, SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME)
         return if (!scheduler.checkExists(jobKey)) {
             println("Job does not exist. Configuring a job with job key $jobKey")
+            val triggerConfig = TriggerBuildConfig(
+                triggerName = triggerName, description = description, job = null,
+                jobDataMap = jobDataMap, intervalInSeconds = intervalInSeconds, endAt = endAt
+            )
             val job = JobBuilder.newJob(DataPersistenceJob<T, O, V>().javaClass)
                 .withIdentity(jobName, SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME)
                 .storeDurably()
                 .build()
-            val trigger: SimpleTrigger =
-                TriggerBuilder.newTrigger()
-                    .withIdentity(triggerName, SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME)
-                    .withDescription(description)
-//                    .startAt(startFrom)
-                    .usingJobData(jobDataMap)
-                    .withSchedule(
-                        SimpleScheduleBuilder.simpleSchedule()
-                            .withIntervalInSeconds(intervalInSeconds)
-                            .repeatForever()
-                    )
-                    .endAt(endAt)
-                    .build()
+            val trigger: SimpleTrigger = buildTriggerObject(triggerConfig)
             triggerJob(job, trigger)
         } else {
             println("Job already exists with job key $jobKey")
             val job = scheduler.getJobDetail(jobKey)
+            val triggerConfig = TriggerBuildConfig(
+                triggerName = triggerName, description = description, job = job,
+                jobDataMap = jobDataMap, intervalInSeconds = intervalInSeconds, endAt = endAt
+            )
             if (!scheduler.checkExists(triggerKey)) {
-                val trigger: SimpleTrigger = TriggerBuilder.newTrigger()
-                    .withIdentity(triggerName, SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME)
-                    .withDescription(description)
-                    .forJob(job)
-//                    .startAt(startFrom)
-                    .usingJobData(jobDataMap)
-                    .withSchedule(
-                        SimpleScheduleBuilder.simpleSchedule()
-                            .withIntervalInSeconds(intervalInSeconds)
-                            .repeatForever()
-                    )
-                    .endAt(endAt)
-                    .build()
+                val trigger: SimpleTrigger = buildTriggerObject(triggerConfig)
                 triggerJob(job = null, trigger = trigger)
             } else {
-                val newTrigger: SimpleTrigger = TriggerBuilder.newTrigger()
-                    .withIdentity(triggerName, SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME)
-                    .withDescription(description)
-                    .forJob(job)
-//                        .startAt(startFrom)
-                    .usingJobData(jobDataMap)
-                    .withSchedule(
-                        SimpleScheduleBuilder.simpleSchedule()
-                            .withIntervalInSeconds(intervalInSeconds)
-                            .repeatForever()
-                    )
-                    .endAt(endAt)
-                    .build()
+                val newTrigger: SimpleTrigger = buildTriggerObject(triggerConfig)
                 replaceTrigger(triggerKey, newTrigger)
             }
+        }
+    }
+
+    private fun buildTriggerObject(triggerConfig: TriggerBuildConfig): SimpleTrigger {
+        return if (triggerConfig.job != null) {
+            val trigger: SimpleTrigger =
+                TriggerBuilder.newTrigger()
+                    .withIdentity(triggerConfig.triggerName, SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME)
+                    .withDescription(triggerConfig.description)
+                    .forJob(triggerConfig.job)
+                    .usingJobData(triggerConfig.jobDataMap)
+                    .withSchedule(
+                        SimpleScheduleBuilder.simpleSchedule()
+                            .withIntervalInSeconds(triggerConfig.intervalInSeconds)
+                            .repeatForever()
+                    )
+                    .endAt(triggerConfig.endAt)
+                    .build()
+            trigger
+        } else {
+            val trigger: SimpleTrigger =
+                TriggerBuilder.newTrigger()
+                    .withIdentity(triggerConfig.triggerName, SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME)
+                    .withDescription(triggerConfig.description)
+                    .usingJobData(triggerConfig.jobDataMap)
+                    .withSchedule(
+                        SimpleScheduleBuilder.simpleSchedule()
+                            .withIntervalInSeconds(triggerConfig.intervalInSeconds)
+                            .repeatForever()
+                    )
+                    .endAt(triggerConfig.endAt)
+                    .build()
+            trigger
         }
     }
 
