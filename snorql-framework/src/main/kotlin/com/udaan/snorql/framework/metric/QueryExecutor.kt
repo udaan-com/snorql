@@ -39,7 +39,8 @@ class QueryExecutor(val connection: Connection) {
      * @return list of rows wrapped in mapping model class [T]
      */
     inline fun <reified T> execute(
-        databaseName: String, query: String,
+        databaseName: String,
+        query: String,
         params: Map<String, *> = mapOf<String, Any>()
     ): List<T> {
         return connection.run(databaseName, query, T::class.java, params)
@@ -74,10 +75,7 @@ class QueryExecutor(val connection: Connection) {
      * @param storageId Unique identifier of the storage bucket where historical data is stored
      * @param historicalDataList Data to be stored as list of rows
      */
-    fun persistHistoricalData(
-        storageId: String,
-        historicalDataList: List<HistoricalDatabaseSchemaDTO>,
-    ) {
+    fun persistHistoricalData(storageId: String, historicalDataList: List<HistoricalDatabaseSchemaDTO>) {
         val columns = SnorqlConstants.historicalDataTableColumns
         val rows = mutableListOf<List<String>>()
         historicalDataList.forEach {

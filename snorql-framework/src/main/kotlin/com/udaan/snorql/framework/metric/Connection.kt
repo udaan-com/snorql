@@ -36,7 +36,8 @@ interface Connection {
      * @return
      */
     fun <T> run(
-        databaseName: String, query: String,
+        databaseName: String,
+        query: String,
         mapClass: Class<T>,
         params: Map<String, *> = emptyMap<String, String>()
     ): List<T>
@@ -48,11 +49,7 @@ interface Connection {
      * @param columns list of column names
      * @param rows list of rows of data to be stored
      */
-    fun storeData(
-        storageBucketId: String,
-        columns: List<String>,
-        rows: List<List<Any>>,
-    )
+    fun storeData(storageBucketId: String, columns: List<String>, rows: List<List<Any>>)
 
     /**
      * Get data saved by snorql
