@@ -13,7 +13,7 @@ import java.sql.Timestamp
 import java.util.UUID
 
 class DataPersistenceJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation> : Job {
-    val logger by logger()
+    val logger = SqlMetricManager.logger
 
     /**
      * Function executed when a data recording trigger is fired
@@ -25,8 +25,8 @@ class DataPersistenceJob<in T : MetricInput, O : IMetricResult, R : IMetricRecom
      */
     override fun execute(context: JobExecutionContext) {
         try {
-            print("Quartz Job execution started!!")
             val runID: String = UUID.randomUUID().toString()
+            logger.info("Data Persistence job execution started for runID: $runID")
             val mergedDataMap = context.mergedJobDataMap
             val metricInput: T =
                 SnorqlConstants.objectMapper.readValue(
@@ -47,13 +47,9 @@ class DataPersistenceJob<in T : MetricInput, O : IMetricResult, R : IMetricRecom
             )
             val storageId = SnorqlConstants.HISTORICAL_DATA_BUCKET_ID
             SqlMetricManager.queryExecutor.persistHistoricalData(storageId, listOf(dataRecorded))
-//            println("Following data was recorded: $dataRecorded")
-//            println("Quartz Job execution complete!!")
+            logger.info("Data persisted for runID: $runID")
         } catch (e: Exception) {
             logger.error("[DataPersistenceJob] $e", e.stackTraceToString())
-//            println("Exception: $e")
-//            println("There was an exception while recording data: ${e.stackTrace}")
-//            e.printStackTrace()
         }
     }
 }
