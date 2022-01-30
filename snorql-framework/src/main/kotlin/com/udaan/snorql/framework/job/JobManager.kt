@@ -23,7 +23,14 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.udaan.snorql.framework.TriggerNotFoundException
 import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.metric.logger
-import com.udaan.snorql.framework.models.*
+import com.udaan.snorql.framework.models.IMetricRecommendation
+import com.udaan.snorql.framework.models.IMetricResult
+import com.udaan.snorql.framework.models.RecordingJobConfigOutline
+import com.udaan.snorql.framework.models.SnorqlConstants
+import com.udaan.snorql.framework.models.MetricInput
+import com.udaan.snorql.framework.models.MetricConfig
+import com.udaan.snorql.framework.models.HistoricalDatabaseSchemaDTO
+import com.udaan.snorql.framework.models.TriggerBuildConfig
 import org.quartz.Scheduler
 import org.quartz.SimpleTrigger
 import org.quartz.TriggerBuilder
@@ -212,7 +219,6 @@ object JobManager {
             trigger
         }
     }
-
 
     /**
      * Fetches triggers added to the scheduler based on metric id and database name
