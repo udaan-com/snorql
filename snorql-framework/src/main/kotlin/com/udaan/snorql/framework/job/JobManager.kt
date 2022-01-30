@@ -22,6 +22,7 @@ package com.udaan.snorql.framework.job
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.udaan.snorql.framework.TriggerNotFoundException
 import com.udaan.snorql.framework.metric.SqlMetricManager
+import com.udaan.snorql.framework.metric.logger
 import com.udaan.snorql.framework.models.*
 import org.quartz.Scheduler
 import org.quartz.SimpleTrigger
@@ -43,6 +44,13 @@ object JobManager {
     private var schedulerFactory: StdSchedulerFactory = StdSchedulerFactory()
     private var scheduler: Scheduler = schedulerFactory.scheduler
 
+    /**
+     * Function to initialize Quartz Job Scheduler
+     *
+     * To be called by the user to initialize Job Scheduling in snorql
+     *
+     * @param quartzProperties Quartz properties as required by the user. Also defines the Quartz Job Store
+     */
     fun initializeJobScheduler(quartzProperties: Properties?) {
         schedulerFactory = if (quartzProperties != null) StdSchedulerFactory(quartzProperties)
         else StdSchedulerFactory()
@@ -52,6 +60,11 @@ object JobManager {
 
     private val objectMapper: ObjectMapper = SnorqlConstants.objectMapper
 
+    val logger = SqlMetricManager.logger
+
+    /**
+     * Function to start a job scheduler
+     */
     private fun startScheduler() {
         try {
             scheduler.start()
@@ -91,7 +104,10 @@ object JobManager {
                 )
             configSuccess
         } catch (e: Exception) {
-            print("Unable to add data recording: $e")
+            logger.error(
+                "[addJob] Unable to add job and trigger for ${metricInput.metricId}: ${metricInput.databaseName}",
+                e.stackTrace
+            )
             false
         }
     }
@@ -131,7 +147,7 @@ object JobManager {
         val jobKey = JobKey(jobName, SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME)
         val triggerKey = TriggerKey(triggerName, SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME)
         return if (!scheduler.checkExists(jobKey)) {
-            println("Job does not exist. Configuring a job with job key $jobKey")
+            logger.info("[configureJobAndTrigger] Configuring a job with job key $jobKey")
             val triggerConfig = TriggerBuildConfig(
                 triggerName = triggerName, description = description, job = null,
                 jobDataMap = jobDataMap, intervalInSeconds = intervalInSeconds, endAt = endAt
@@ -143,7 +159,6 @@ object JobManager {
             val trigger: SimpleTrigger = buildTriggerObject(triggerConfig)
             triggerJob(job, trigger)
         } else {
-            println("Job already exists with job key $jobKey")
             val job = scheduler.getJobDetail(jobKey)
             val triggerConfig = TriggerBuildConfig(
                 triggerName = triggerName, description = description, job = job,
@@ -159,6 +174,12 @@ object JobManager {
         }
     }
 
+    /**
+     * Function used to build a trigger object
+     * Builds different objects based on job provided or not.
+     *
+     * @param triggerConfig Configuration of trigger
+     */
     private fun buildTriggerObject(triggerConfig: TriggerBuildConfig): SimpleTrigger {
         return if (triggerConfig.job != null) {
             val trigger: SimpleTrigger =
@@ -192,13 +213,20 @@ object JobManager {
         }
     }
 
+
+    /**
+     * Fetches triggers added to the scheduler based on metric id and database name
+     *
+     * @param metricId metric id to fetch triggers for required metric
+     * @param databaseName name of database to fetch triggers for required database
+     */
     fun getAllMonitoringTriggers(
         metricId: String,
         databaseName: String
     ): List<Map<String, Any?>> {
         val group: String = SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME
         val allTriggerKeys =
-            scheduler.getTriggerKeys(GroupMatcher.triggerGroupEquals(group)) // groupEquals(SnorqlConstants.MONITORING_GROUP_NAME))
+            scheduler.getTriggerKeys(GroupMatcher.triggerGroupEquals(group))
         val triggersList = mutableListOf<Trigger>()
         var triggerDetailsList: MutableList<Map<String, Any?>> = mutableListOf<Map<String, Any?>>()
         allTriggerKeys.forEach { triggerKey ->
@@ -228,46 +256,62 @@ object JobManager {
         triggerDetailsList = triggerDetailsList.filter { triggerDetail ->
             triggerDetail["metricId"] == metricId && triggerDetail["databaseName"] == databaseName
         } as MutableList<Map<String, Any?>>
-        triggerDetailsList.forEach {
-            println("Element: $it")
-        }
         return triggerDetailsList
     }
 
+    /**
+     * DANGER! To be used to reset Quartz scheduler.
+     */
     fun removeEverything() {
         scheduler.clear()
     }
 
+    /**
+     * Function responsible to delete an existing trigger in quartz scheduler
+     * @param triggerName name of the trigger to be deleted
+     */
     fun deleteTrigger(
         triggerName: String
     ): Boolean {
         return try {
             if (scheduler.checkExists(TriggerKey(triggerName, SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME))) {
-                println("Trigger exists: ")
                 scheduler.unscheduleJob(TriggerKey(triggerName, SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME))
                 true
             } else {
-                throw TriggerNotFoundException("Trigger with name $triggerName not found")
+                throw TriggerNotFoundException("[deleteTrigger] Trigger with name $triggerName not found")
             }
         } catch (e: TriggerNotFoundException) {
-            println("Trigger not found: $e")
+            logger.info("[deleteTrigger] Trigger not found: $e")
             false
         } catch (e: Exception) {
-            println("Failed to stop data recording: $e")
+            logger.info("[deleteTrigger] Failed to stop data recording: $e")
             false
         }
     }
 
+    /**
+     * Function responsible to reschedule a job (Primararily replace/update an existing trigger)
+     *
+     * @param triggerKey trigger key of existing trigger
+     * @param newTrigger updated trigger object
+     */
     private fun replaceTrigger(triggerKey: TriggerKey, newTrigger: SimpleTrigger): Boolean {
         return try {
             scheduler.rescheduleJob(triggerKey, newTrigger)
+            logger.info("[replaceTrigger] Trigger updated with TriggerKey: ${newTrigger.key}")
             true
         } catch (e: Exception) {
-            print("Trigger replacement failed due to $e")
+            logger.error("[replaceTrigger] Trigger replacement failed due to $e", e.stackTrace)
             false
         }
     }
 
+    /**
+     * Adds a job and trigger to the scheduler
+     *
+     * @param job (Optional) Details of the job to be added
+     * @param trigger Trigger object to be added
+     */
     private fun triggerJob(
         job: JobDetail?,
         trigger: SimpleTrigger
@@ -275,9 +319,10 @@ object JobManager {
         return try {
             if (job == null) scheduler.scheduleJob(trigger)
             else scheduler.scheduleJob(job, trigger)
+            logger.info("[triggerJob] Trigger added with TriggerKey: ${trigger.key}")
             true
         } catch (e: Exception) {
-            print("Job Scheduling failed due to $e")
+            logger.error("[triggerJob] Job Scheduling failed due to $e", e.stackTrace)
             false
         }
     }
