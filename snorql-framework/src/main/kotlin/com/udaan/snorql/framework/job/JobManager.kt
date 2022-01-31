@@ -62,7 +62,11 @@ object JobManager {
         schedulerFactory = if (quartzProperties != null) StdSchedulerFactory(quartzProperties)
         else StdSchedulerFactory()
         scheduler = schedulerFactory.scheduler
-        startScheduler()
+        try {
+            scheduler.start()
+        } catch (e: Exception) {
+            logger.error("Unable to start quartz scheduler: $e", e.stackTrace)
+        }
     }
 
     private val objectMapper: ObjectMapper = SnorqlConstants.objectMapper
@@ -73,11 +77,7 @@ object JobManager {
      * Function to start a job scheduler
      */
     private fun startScheduler() {
-        try {
-            scheduler.start()
-        } catch (e: Exception) {
-            print("Scheduler start failed due to $e")
-        }
+
     }
 
     /**
@@ -100,15 +100,7 @@ object JobManager {
             val description = jobConfig.description
             val configuredByName = jobConfig.configuredByName
             val configuredByEmail = jobConfig.configuredByEmail
-            val configSuccess: Boolean =
-                configureJobAndTrigger<T, O, V>(
-                    metricInput,
-                    intervalInSeconds,
-                    endAt,
-                    description,
-                    configuredByName,
-                    configuredByEmail
-                )
+            val configSuccess: Boolean = configureJobAndTrigger<T, O, V>(jobConfig, metricInput)
             configSuccess
         } catch (e: Exception) {
             logger.error(
@@ -133,12 +125,8 @@ object JobManager {
     }
 
     private fun <T : MetricInput, O : IMetricResult, V : IMetricRecommendation> configureJobAndTrigger(
-        metricInput: T,
-        intervalInSeconds: Int,
-        endAt: Timestamp?,
-        description: String?,
-        configuredByName: String?,
-        configuredByEmail: String?
+        jobConfig: RecordingJobConfigOutline,
+        metricInput: T
     ): Boolean {
         val jobName: String = metricInput.metricId // jobName = metricId (Therefore, for each metric, there is a job
         val triggerName: String =
@@ -148,16 +136,16 @@ object JobManager {
         jobDataMap["metricInput"] =
             objectMapper.writeValueAsString(metricInput)
         jobDataMap["inputClass"] = metricInput::class.java.name
-        jobDataMap["configuredByName"] = configuredByName
-        jobDataMap["configuredByEmail"] = configuredByEmail
-        jobDataMap["repeatInterval"] = intervalInSeconds
+        jobDataMap["configuredByName"] = jobConfig.configuredByName
+        jobDataMap["configuredByEmail"] = jobConfig.configuredByEmail
+        jobDataMap["repeatInterval"] = jobConfig.watchIntervalInSeconds
         val jobKey = JobKey(jobName, SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME)
         val triggerKey = TriggerKey(triggerName, SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME)
         return if (!scheduler.checkExists(jobKey)) {
             logger.info("[configureJobAndTrigger] Configuring a job with job key $jobKey")
             val triggerConfig = TriggerBuildConfig(
-                triggerName = triggerName, description = description, job = null,
-                jobDataMap = jobDataMap, intervalInSeconds = intervalInSeconds, endAt = endAt
+                triggerName = triggerName, description = jobConfig.description, job = null,
+                jobDataMap = jobDataMap, intervalInSeconds = jobConfig.watchIntervalInSeconds, endAt = jobConfig.endAt
             )
             val job = JobBuilder.newJob(DataPersistenceJob<T, O, V>().javaClass)
                 .withIdentity(jobName, SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME)
@@ -168,8 +156,8 @@ object JobManager {
         } else {
             val job = scheduler.getJobDetail(jobKey)
             val triggerConfig = TriggerBuildConfig(
-                triggerName = triggerName, description = description, job = job,
-                jobDataMap = jobDataMap, intervalInSeconds = intervalInSeconds, endAt = endAt
+                triggerName = triggerName, description = jobConfig.description, job = job,
+                jobDataMap = jobDataMap, intervalInSeconds = jobConfig.watchIntervalInSeconds, endAt = jobConfig.endAt
             )
             if (!scheduler.checkExists(triggerKey)) {
                 val trigger: SimpleTrigger = buildTriggerObject(triggerConfig)
@@ -286,9 +274,6 @@ object JobManager {
             } else {
                 throw TriggerNotFoundException("[deleteTrigger] Trigger with name $triggerName not found")
             }
-        } catch (e: TriggerNotFoundException) {
-            logger.info("[deleteTrigger] Trigger not found: $e")
-            false
         } catch (e: Exception) {
             logger.info("[deleteTrigger] Failed to stop data recording: $e")
             false
