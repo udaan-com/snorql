@@ -22,7 +22,6 @@ package com.udaan.snorql.framework.job
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.udaan.snorql.framework.TriggerNotFoundException
 import com.udaan.snorql.framework.metric.SqlMetricManager
-import com.udaan.snorql.framework.metric.logger
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.RecordingJobConfigOutline
@@ -43,7 +42,6 @@ import org.quartz.JobDataMap
 import org.quartz.SimpleScheduleBuilder
 import org.quartz.impl.StdSchedulerFactory
 import org.quartz.impl.matchers.GroupMatcher
-import java.sql.Timestamp
 import java.util.Properties
 
 object JobManager {
@@ -72,13 +70,6 @@ object JobManager {
     private val objectMapper: ObjectMapper = SnorqlConstants.objectMapper
 
     val logger = SqlMetricManager.logger
-
-    /**
-     * Function to start a job scheduler
-     */
-    private fun startScheduler() {
-
-    }
 
     /**
      * [addJob] does the following:
