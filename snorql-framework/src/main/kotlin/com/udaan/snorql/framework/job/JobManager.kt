@@ -49,17 +49,23 @@ object JobManager {
     private var schedulerFactory: StdSchedulerFactory = StdSchedulerFactory()
     private var scheduler: Scheduler = schedulerFactory.scheduler
 
+    private var HISTORICAL_DATA_BUCKET_ID = SnorqlConstants.HISTORICAL_DATA_BUCKET_ID
+
     /**
      * Function to initialize Quartz Job Scheduler
      *
      * To be called by the user to initialize Job Scheduling in snorql
      *
-     * @param quartzProperties Quartz properties as required by the user. Also defines the Quartz Job Store
+     * @param snorqlProperties Quartz properties as required by the user. Also defines the Quartz Job Store
      */
-    fun initializeJobScheduler(quartzProperties: Properties?) {
-        schedulerFactory = if (quartzProperties != null) StdSchedulerFactory(quartzProperties)
+    fun initializeJobScheduler(snorqlProperties: Properties?) {
+        schedulerFactory = if (snorqlProperties != null) StdSchedulerFactory(snorqlProperties)
         else StdSchedulerFactory()
         scheduler = schedulerFactory.scheduler
+
+        if ((snorqlProperties != null) && snorqlProperties.containsKey("HISTORICAL_DATA_BUCKET_ID")) {
+            HISTORICAL_DATA_BUCKET_ID = snorqlProperties["HISTORICAL_DATA_BUCKET_ID"] as String
+        }
         try {
             scheduler.start()
         } catch (e: Exception) {
@@ -86,11 +92,6 @@ object JobManager {
             throw UnsupportedOperationException("Historical Data is not supported for metric: ${metricInput.metricId}")
         }
         return try {
-            val intervalInSeconds = jobConfig.watchIntervalInSeconds
-            val endAt = jobConfig.endAt
-            val description = jobConfig.description
-            val configuredByName = jobConfig.configuredByName
-            val configuredByEmail = jobConfig.configuredByEmail
             val configSuccess: Boolean = configureJobAndTrigger<T, O, V>(jobConfig, metricInput)
             configSuccess
         } catch (e: Exception) {
