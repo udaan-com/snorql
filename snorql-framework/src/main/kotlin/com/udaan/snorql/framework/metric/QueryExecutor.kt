@@ -19,6 +19,9 @@
 
 package com.udaan.snorql.framework.metric
 
+import com.udaan.snorql.framework.job.model.HistoricalDatabaseSchemaDTO
+import com.udaan.snorql.framework.models.SnorqlConstants
+
 /**
  * Class to hold functions which interact with user defined query executor functions
  *
@@ -48,10 +51,45 @@ class QueryExecutor(val connection: Connection) {
      * @param columns columns to be written
      * @param rows actual data rows to be written
      */
-    fun persistData(databaseName:String, tableName: String,
+    fun persistData(storageBucketId: String,
                     columns: List<String>,
                     rows: List<List<Any>>) {
-        connection.storeData(databaseName,tableName, columns, rows)
+        connection.storeData(storageBucketId, columns, rows)
     }
 
+    fun persistHistoricalData(
+        storageId: String,
+        historicalDataList: List<HistoricalDatabaseSchemaDTO>,
+    ) {
+        val columns = SnorqlConstants.historicalDataTableColumns
+        val rows = mutableListOf<List<String>>()
+        historicalDataList.forEach {
+            val row = mutableListOf<String>()
+            row.add(it.runId)
+            row.add(it.timestamp.toString())
+            row.add(it.metricId)
+            row.add(it.databaseName)
+            row.add(SnorqlConstants.objectMapper.writeValueAsString(it.metricInput))
+            row.add(SnorqlConstants.objectMapper.writeValueAsString(it.metricOutput))
+            rows.add(row)
+        }
+        connection.storeData(storageId, columns, rows.toList())
+        println("Following data stored in historical database: $rows")
+    }
+
+    fun persistJobConfigData(metricId: String, databaseName: String, triggerName: String): Boolean {
+        println("""Following data has been saved in the database: 
+            |1. Metric ID: $metricId 
+            |2. Database Name: $databaseName
+            |3. Trigger Key: $triggerName""".trimMargin())
+        return true
+    }
+
+    fun removeFromDatabase(metricId: String, databaseName: String, triggerName: String): Boolean {
+        println("""Following data has been removed from the database: 
+            |1. Metric ID: $metricId 
+            |2. Database Name: $databaseName
+            |3. Trigger Key: $triggerName""".trimMargin())
+        return true
+    }
 }

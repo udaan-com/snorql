@@ -40,12 +40,13 @@ interface Connection {
     /**
      * Store data into user's database
      *
-     * @param databaseName name of database to store data in
-     * @param tableName name of table to store data in
+     * @param storageBucketId bucket id of data store
      * @param columns list of column names
      * @param rows list of rows of data to be stored
      */
-    fun storeData(databaseName:String, tableName: String,
-                  columns: List<String>,
-                  rows: List<List<Any>>)
+    fun storeData(
+        storageBucketId: String,
+        columns: List<String>,
+        rows: List<List<Any>>,
+    )
 }
