@@ -5,7 +5,7 @@
     },
     "supportsHistorical": true,
     "persistDataOptions": {
-      "minimumRepeatInterval": 2
+      "minimumRepeatInterval": 10
     },
     "supportsRealTime": true,
     "isParameterized": false,
@@ -44,7 +44,7 @@
     },
     "supportsHistorical": true,
     "persistDataOptions": {
-      "minimumRepeatInterval": 7200
+      "minimumRepeatInterval": 3600
     },
     "supportsRealTime": true,
     "isParameterized": true,
