@@ -91,6 +91,12 @@ object JobManager {
         if (!metricConfig.supportsHistorical) {
             throw UnsupportedOperationException("Historical Data is not supported for metric: ${metricInput.metricId}")
         }
+        val metricMinimumRepeatInterval: Int? =
+            metricConfig.persistDataOptions?.get("minimumRepeatInterval")?.toIntOrNull()
+        if ((metricMinimumRepeatInterval != null) && (metricMinimumRepeatInterval > jobConfig.watchIntervalInSeconds)) {
+            throw UnsupportedOperationException("Repeat interval is set to ${jobConfig.watchIntervalInSeconds}. " +
+                    "Minimum possible value is $metricMinimumRepeatInterval")
+        }
         return try {
             val configSuccess: Boolean = configureJobAndTrigger<T, O, V>(jobConfig, metricInput)
             configSuccess
