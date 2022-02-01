@@ -114,6 +114,7 @@
                 </executions>
             </plugin>
 
+            <!-- Sources plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -128,37 +129,23 @@
                 </executions>
             </plugin>
 
+            <!-- Javadoc plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.3.1</version>
                 <executions>
                     <execution>
-                        <id>empty-javadoc-jar</id>
+                        <id>attach-javadocs</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>javadoc</classifier>
-                            <classesDirectory>${basedir}/javadoc</classesDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.jetbrains.dokka</groupId>
-                <artifactId>dokka-maven-plugin</artifactId>
-                <version>1.4.20</version>
-                <executions>
-                    <execution>
-                        <phase>pre-site</phase>
-                        <goals>
-                            <goal>javadocJar</goal>
+                            <goal>javadoc</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- KDoc with Dokka plugin -->
             <plugin>
                 <groupId>org.jetbrains.dokka</groupId>
                 <artifactId>dokka-maven-plugin</artifactId>
@@ -174,6 +161,21 @@
                 <configuration>
                     <outputDir>${project.parent.basedir}/doc/docs/snorql-extensions</outputDir>
                 </configuration>
+            </plugin>
+
+            <!-- Generates Javadoc -->
+            <plugin>
+                <groupId>org.jetbrains.dokka</groupId>
+                <artifactId>dokka-maven-plugin</artifactId>
+                <version>1.4.20</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>javadocJar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
