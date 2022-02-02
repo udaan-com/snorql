@@ -66,11 +66,8 @@ object JobManager {
         if ((snorqlProperties != null) && snorqlProperties.containsKey("HISTORICAL_DATA_BUCKET_ID")) {
             HISTORICAL_DATA_BUCKET_ID = snorqlProperties["HISTORICAL_DATA_BUCKET_ID"] as String
         }
-        try {
-            scheduler.start()
-        } catch (e: Exception) {
-            logger.error("Unable to start quartz scheduler: $e", e.stackTrace)
-        }
+        scheduler.start()
+        logger.info("[JobManager] Quartz scheduler started")
     }
 
     private val objectMapper: ObjectMapper = SnorqlConstants.objectMapper
@@ -94,19 +91,12 @@ object JobManager {
         val metricMinimumRepeatInterval: Int? =
             metricConfig.persistDataOptions?.get("minimumRepeatInterval")?.toIntOrNull()
         if ((metricMinimumRepeatInterval != null) && (metricMinimumRepeatInterval > jobConfig.watchIntervalInSeconds)) {
-            throw UnsupportedOperationException("Repeat interval is set to ${jobConfig.watchIntervalInSeconds}. " +
-                    "Minimum possible value is $metricMinimumRepeatInterval")
-        }
-        return try {
-            val configSuccess: Boolean = configureJobAndTrigger<T, O, V>(jobConfig, metricInput)
-            configSuccess
-        } catch (e: Exception) {
-            logger.error(
-                "[addJob] Unable to add job and trigger for ${metricInput.metricId}: ${metricInput.databaseName}",
-                e.stackTrace
+            throw UnsupportedOperationException(
+                "Repeat interval is set to ${jobConfig.watchIntervalInSeconds}. " +
+                        "Minimum possible value is $metricMinimumRepeatInterval"
             )
-            false
         }
+        return configureJobAndTrigger<T, O, V>(jobConfig, metricInput)
     }
 
     /**
@@ -265,16 +255,11 @@ object JobManager {
     fun deleteTrigger(
         triggerName: String
     ): Boolean {
-        return try {
-            if (scheduler.checkExists(TriggerKey(triggerName, SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME))) {
-                scheduler.unscheduleJob(TriggerKey(triggerName, SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME))
-                true
-            } else {
-                throw TriggerNotFoundException("[deleteTrigger] Trigger with name $triggerName not found")
-            }
-        } catch (e: Exception) {
-            logger.info("[deleteTrigger] Failed to stop data recording: $e")
-            false
+        return if (scheduler.checkExists(TriggerKey(triggerName, SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME))) {
+            scheduler.unscheduleJob(TriggerKey(triggerName, SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME))
+            true
+        } else {
+            throw TriggerNotFoundException("[deleteTrigger] Trigger with name $triggerName not found")
         }
     }
 

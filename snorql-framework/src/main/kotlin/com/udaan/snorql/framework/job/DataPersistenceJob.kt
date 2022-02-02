@@ -24,10 +24,10 @@ class DataPersistenceJob<in T : MetricInput, O : IMetricResult, R : IMetricRecom
      * 4. Calls the function to store data in historical data store
      */
     override fun execute(context: JobExecutionContext) {
+        val runID: String = UUID.randomUUID().toString()
+        logger.info("Data Persistence job execution started for runID: $runID")
+        val mergedDataMap = context.mergedJobDataMap
         try {
-            val runID: String = UUID.randomUUID().toString()
-            logger.info("Data Persistence job execution started for runID: $runID")
-            val mergedDataMap = context.mergedJobDataMap
             val metricInput: T =
                 SnorqlConstants.objectMapper.readValue(
                     mergedDataMap["metricInput"] as String,
@@ -49,7 +49,10 @@ class DataPersistenceJob<in T : MetricInput, O : IMetricResult, R : IMetricRecom
             SqlMetricManager.queryExecutor.persistHistoricalData(storageId, listOf(dataRecorded))
             logger.info("Data persisted for runID: $runID")
         } catch (e: Exception) {
-            logger.error("[DataPersistenceJob] $e", e.stackTraceToString())
+            logger.error(
+                "[DataPersistenceJob] Error while persisting metric data: ${e.message}\n" +
+                        "Metric Input: ${mergedDataMap["metricInput"]}", e
+            )
         }
     }
 }
