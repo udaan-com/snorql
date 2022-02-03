@@ -19,7 +19,7 @@
 
 package com.udaan.snorql.framework.metric
 
-import com.udaan.snorql.framework.models.HistoricalDatabaseSchemaDTO
+import com.udaan.snorql.framework.models.HistoricalDatabaseResult
 
 /**
  * Connection interface implemented by user to define methods required for snorql to interact with user's database
@@ -60,8 +60,7 @@ interface Connection {
         storageBucketId: String,
         metricId: String,
         databaseName: String,
-        pageNumber: Int,
-        pageSize: Int,
+        paginationParams: Map<String, *> = emptyMap<String, String>(),
         params: Map<String, *> = emptyMap<String, String>()
-    ): List<HistoricalDatabaseSchemaDTO>
+    ): HistoricalDatabaseResult
 }

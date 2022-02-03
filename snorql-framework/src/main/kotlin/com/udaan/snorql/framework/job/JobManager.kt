@@ -28,7 +28,7 @@ import com.udaan.snorql.framework.models.RecordingJobConfigOutline
 import com.udaan.snorql.framework.models.SnorqlConstants
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricConfig
-import com.udaan.snorql.framework.models.HistoricalDatabaseSchemaDTO
+import com.udaan.snorql.framework.models.HistoricalDatabaseResult
 import com.udaan.snorql.framework.models.TriggerBuildConfig
 import org.quartz.Scheduler
 import org.quartz.SimpleTrigger
@@ -105,11 +105,10 @@ object JobManager {
     fun getHistoricalData(
         metricId: String,
         databaseName: String,
-        pageNumber: Int,
-        pageSize: Int,
+        paginationParams: Map<String, *> = emptyMap<String, String>(),
         params: Map<String, *> = mapOf<String, String>()
-    ): List<HistoricalDatabaseSchemaDTO> {
-        return SqlMetricManager.queryExecutor.fetchHistoricalData(metricId, databaseName, pageNumber, pageSize, params)
+    ): HistoricalDatabaseResult {
+        return SqlMetricManager.queryExecutor.fetchHistoricalData(metricId, databaseName, paginationParams, params)
     }
 
     private fun <T : MetricInput, O : IMetricResult, V : IMetricRecommendation> configureJobAndTrigger(

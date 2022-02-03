@@ -1,16 +1,19 @@
 package com.udaan.snorql.framework.job
 
-import com.udaan.snorql.framework.models.HistoricalDatabaseSchemaDTO
 import com.udaan.snorql.framework.metric.SqlMetricManager
-import com.udaan.snorql.framework.metric.logger
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.SnorqlConstants
+import com.udaan.snorql.framework.models.HistoricalDatabaseSchemaDTO
 import org.quartz.Job
 import org.quartz.JobExecutionContext
-import java.sql.Timestamp
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.UUID
+import java.util.TimeZone
+import java.util.Date
+
 
 class DataPersistenceJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation> : Job {
     val logger = SqlMetricManager.logger
@@ -36,9 +39,11 @@ class DataPersistenceJob<in T : MetricInput, O : IMetricResult, R : IMetricRecom
             val metricResponse = SqlMetricManager.getMetric<T, O, R>(metricInput.metricId, metricInput)
             val metricOutput = metricResponse.metricOutput
 
+
+            val timestamp = currentTimestampInISOString()
             val dataRecorded = HistoricalDatabaseSchemaDTO(
-                runId = runID,
-                timestamp = Timestamp(System.currentTimeMillis()),
+                runId = "${timestamp}_$runID",
+                timestamp = timestamp,
                 metricId = metricInput.metricId,
                 databaseName = metricInput.databaseName,
                 source = SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME,
@@ -47,12 +52,20 @@ class DataPersistenceJob<in T : MetricInput, O : IMetricResult, R : IMetricRecom
             )
             val storageId = SnorqlConstants.HISTORICAL_DATA_BUCKET_ID
             SqlMetricManager.queryExecutor.persistHistoricalData(storageId, listOf(dataRecorded))
-            logger.info("Data persisted for runID: $runID")
+            logger.info("Data persisted for runID: ${dataRecorded.runId}")
         } catch (e: Exception) {
             logger.error(
                 "[DataPersistenceJob] Error while persisting metric data: ${e.message}\n" +
                         "Metric Input: ${mergedDataMap["metricInput"]}", e
             )
         }
+    }
+
+    private fun currentTimestampInISOString(): String {
+        val tz = TimeZone.getTimeZone("UTC")
+        val df: DateFormat =
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") // Quoted "Z" to indicate UTC, no timezone offset
+        df.timeZone = tz
+        return df.format(Date())
     }
 }

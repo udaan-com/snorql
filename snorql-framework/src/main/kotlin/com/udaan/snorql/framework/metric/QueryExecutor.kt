@@ -19,6 +19,7 @@
 
 package com.udaan.snorql.framework.metric
 
+import com.udaan.snorql.framework.models.HistoricalDatabaseResult
 import com.udaan.snorql.framework.models.HistoricalDatabaseSchemaDTO
 import com.udaan.snorql.framework.models.SnorqlConstants
 
@@ -49,23 +50,20 @@ class QueryExecutor(val connection: Connection) {
     /**
      * Function used to read historical data stored.
      * Calls `getHistoricalData` function defined by the user to fetch the data
-     * Note: [fetchHistoricalData] works on pagination
+     * Note: [fetchHistoricalData] can work on pagination using [paginationParams]
      *
      * @param metricId read data belonging to a particular metricID
      * @param databaseName read data belonging to a particular database
-     * @param pageNumber page number of filtered results (starts from 1)
-     * @param pageSize maximum number of records to be fetched
      * @param params additional parameters passed to filter the data
      */
     fun fetchHistoricalData(
         metricId: String,
         databaseName: String,
-        pageNumber: Int,
-        pageSize: Int,
+        paginationParams: Map<String, *> = emptyMap<String, String>(),
         params: Map<String, *> = emptyMap<String, String>()
-    ): List<HistoricalDatabaseSchemaDTO> {
+    ): HistoricalDatabaseResult {
         val storageBucketId: String = SnorqlConstants.HISTORICAL_DATA_BUCKET_ID
-        return connection.getHistoricalData(storageBucketId, metricId, databaseName, pageNumber, pageSize, params)
+        return connection.getHistoricalData(storageBucketId, metricId, databaseName, paginationParams, params)
     }
 
     /**

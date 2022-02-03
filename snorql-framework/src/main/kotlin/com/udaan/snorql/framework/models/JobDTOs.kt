@@ -29,12 +29,17 @@ data class TriggerBuildConfig(
     val endAt: Timestamp?
 )
 
+data class HistoricalDatabaseResult(
+    val result: List<HistoricalDatabaseSchemaDTO>,
+    val metadata: Map<String, Any>?
+)
+
 data class HistoricalDatabaseSchemaDTO(
     val runId: String,
-    val timestamp: Timestamp,
+    val timestamp: String,
     val metricId: String,
     val databaseName: String,
     val source: String,
     val metricInput: String,
-    val metricOutput: String
+    val metricOutput: String,
 )
