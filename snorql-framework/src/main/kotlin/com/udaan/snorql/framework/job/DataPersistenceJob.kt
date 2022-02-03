@@ -38,8 +38,6 @@ class DataPersistenceJob<in T : MetricInput, O : IMetricResult, R : IMetricRecom
                 ) as T
             val metricResponse = SqlMetricManager.getMetric<T, O, R>(metricInput.metricId, metricInput)
             val metricOutput = metricResponse.metricOutput
-
-
             val timestamp = currentTimestampInISOString()
             val dataRecorded = HistoricalDatabaseSchemaDTO(
                 runId = "${timestamp}_$runID",
