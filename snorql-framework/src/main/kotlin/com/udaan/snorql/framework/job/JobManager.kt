@@ -49,8 +49,6 @@ object JobManager {
     private var schedulerFactory: StdSchedulerFactory = StdSchedulerFactory()
     private var scheduler: Scheduler = schedulerFactory.scheduler
 
-    private var HISTORICAL_DATA_BUCKET_ID = SnorqlConstants.HISTORICAL_DATA_BUCKET_ID
-
     /**
      * Function to initialize Quartz Job Scheduler
      *
@@ -64,7 +62,8 @@ object JobManager {
         scheduler = schedulerFactory.scheduler
 
         if ((snorqlProperties != null) && snorqlProperties.containsKey("HISTORICAL_DATA_BUCKET_ID")) {
-            HISTORICAL_DATA_BUCKET_ID = snorqlProperties["HISTORICAL_DATA_BUCKET_ID"] as String
+            logger.info("Setting Historical Bucket ID to: ${snorqlProperties["HISTORICAL_DATA_BUCKET_ID"]}")
+            SnorqlConstants.HISTORICAL_DATA_BUCKET_ID = snorqlProperties["HISTORICAL_DATA_BUCKET_ID"] as String
         }
         scheduler.start()
         logger.info("[JobManager] Quartz scheduler started")
