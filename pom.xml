@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.udaan.snorql</groupId>
     <artifactId>snorql</artifactId>
-    <version>0.4.22-SNAPSHOT</version>
+    <version>0.4.23-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>snorql</name>
@@ -41,6 +41,12 @@
         <developer>
             <name>Lokesh Devnani</name>
             <email>lokesh.devnani@udaan.com</email>
+            <organization>Udaan</organization>
+            <organizationUrl>https://www.udaan.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Prakul Jain</name>
+            <email>prakul.jain@udaan.com</email>
             <organization>Udaan</organization>
             <organizationUrl>https://www.udaan.com</organizationUrl>
         </developer>

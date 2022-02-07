@@ -19,6 +19,8 @@
 
 package com.udaan.snorql.framework.metric
 
+import com.udaan.snorql.framework.models.HistoricalDatabaseResult
+
 /**
  * Connection interface implemented by user to define methods required for snorql to interact with user's database
  */
@@ -33,19 +35,32 @@ interface Connection {
      * @param params parameters for metric
      * @return
      */
-    fun <T> run(databaseName:String, query: String,
-                mapClass: Class<T>,
-                params: Map<String, *> = emptyMap<String, String>()): List<T>
+    fun <T> run(
+        databaseName: String,
+        query: String,
+        mapClass: Class<T>,
+        params: Map<String, *> = emptyMap<String, String>()
+    ): List<T>
 
     /**
      * Store data into user's database
      *
-     * @param databaseName name of database to store data in
-     * @param tableName name of table to store data in
+     * @param storageBucketId bucket id of historical data store
      * @param columns list of column names
      * @param rows list of rows of data to be stored
      */
-    fun storeData(databaseName:String, tableName: String,
-                  columns: List<String>,
-                  rows: List<List<Any>>)
+    fun storeData(storageBucketId: String, columns: List<String>, rows: List<List<Any>>)
+
+    /**
+     * Get data saved by snorql
+     *
+     * @param storageBucketId
+     */
+    fun getHistoricalData(
+        storageBucketId: String,
+        metricId: String,
+        databaseName: String,
+        paginationParams: Map<String, *> = emptyMap<String, String>(),
+        params: Map<String, *> = emptyMap<String, String>()
+    ): HistoricalDatabaseResult
 }

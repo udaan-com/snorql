@@ -26,7 +26,7 @@ import kotlin.reflect.full.companionObject
 /**
  * Return logger for Java class, if companion object fix the name
  */
-private fun <T: Any> logger(forClass: Class<T>): Logger {
+private fun <T : Any> logger(forClass: Class<T>): Logger {
 
     fun Logger.debug(s: () -> String) {
         if (isDebugEnabled) debug(s())
@@ -38,7 +38,7 @@ private fun <T: Any> logger(forClass: Class<T>): Logger {
 /**
  * unwrap companion class to enclosing class given a Java Class
  */
-private fun <T: Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
+private fun <T : Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
     return if (ofClass.enclosingClass != null && ofClass.enclosingClass.kotlin.companionObject?.java == ofClass) {
         ofClass.enclosingClass
     } else {

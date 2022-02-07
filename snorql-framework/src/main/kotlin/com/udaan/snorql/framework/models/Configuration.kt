@@ -37,6 +37,6 @@ class Configuration(private val configMap: Map<String, MetricConfig>) {
      * @throws SQLMonitoringConfigException when configuration is not present against [metricId]
      */
     fun get(metricId: String): MetricConfig = configMap[metricId]
-            ?: throw SQLMonitoringConfigException("Config against metric id $metricId not found")
+        ?: throw SQLMonitoringConfigException("Config against metric id $metricId not found")
 
 }

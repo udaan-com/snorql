@@ -3,13 +3,13 @@
     <parent>
         <artifactId>snorql</artifactId>
         <groupId>com.udaan.snorql</groupId>
-        <version>0.4.22-SNAPSHOT</version>
+        <version>0.4.23-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
     <artifactId>snorql-framework</artifactId>
-    <version>0.4.22-SNAPSHOT</version>
+    <version>0.4.23-SNAPSHOT</version>
     <name>snorql-framework</name>
 
     <dependencies>
@@ -61,6 +61,34 @@
             <groupId>org.jdbi</groupId>
             <artifactId>jdbi3-core</artifactId>
             <version>3.6.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz-jobs</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.10.19</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.nhaarman.mockitokotlin2</groupId>
+            <artifactId>mockito-kotlin</artifactId>
+            <version>2.2.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>RELEASE</version>
             <scope>compile</scope>
         </dependency>
 

@@ -113,6 +113,7 @@ complexity:
     ignoreAnnotated: []
   LongParameterList:
     active: true
+    excludes: ['**/Connection.kt']
     functionThreshold: 6
     constructorThreshold: 7
     ignoreDefaultParameters: false
@@ -256,7 +257,7 @@ exceptions:
       - 'NullPointerException'
       - 'RuntimeException'
       - 'Throwable'
-    allowedExceptionNameRegex: '_|(ignore|expected).*'
+    allowedExceptionNameRegex: '_|(e).*'
   TooGenericExceptionThrown:
     active: true
     exceptionNames:

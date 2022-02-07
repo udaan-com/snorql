@@ -47,12 +47,15 @@ abstract class MetricInput {
  * @property description metric description
  * @constructor Create Metric configuration object
  */
-data class MetricConfig(val queries: Map<String, String>,
-        val supportsHistorical: Boolean,
-        val supportsRealTime: Boolean,
-        val isParameterized: Boolean,
-        val referenceDoc: List<String>,
-        val description: String)
+data class MetricConfig(
+    val queries: Map<String, String>,
+    val supportsHistorical: Boolean,
+    val persistDataOptions: Map<String, String>?,
+    val supportsRealTime: Boolean,
+    val isParameterized: Boolean,
+    val referenceDoc: List<String>,
+    val description: String
+)
 
 /**
  * Metric output model class
@@ -63,8 +66,7 @@ data class MetricConfig(val queries: Map<String, String>,
  * @property recommendation metric recommendation
  * @constructor Create Metric output object
  */
-data class MetricOutput<T : IMetricResult, V : IMetricRecommendation>(val result: T,
-                                                                      val recommendation: V?)
+data class MetricOutput<T : IMetricResult, V : IMetricRecommendation>(val result: T, val recommendation: V?)
 
 /**
  * Data class to hold the metric response
