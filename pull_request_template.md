@@ -1,15 +1,11 @@
 <!--- Provide a general summary of your changes in the Title above -->
 
-## Description
-<!--- Describe your changes in detail -->
-
 ## Motivation and Context
 <!--- Why is this change required? What problem does it solve? Link to PRD, TRD?-->
 <!--- If it fixes an open issue, please link to the issue here. Add the Linear issue number. -->
 
 ## Description
 <!--- Describe your changes in detail -->
-
 
 ## Types of changes
 <!--- What types of changes does your code introduce? Put an `x` in all the boxes that apply: -->
