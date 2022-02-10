@@ -20,6 +20,7 @@
 package com.udaan.snorql.framework.metric
 
 import com.udaan.snorql.framework.models.HistoricalDatabaseResult
+import com.udaan.snorql.framework.models.SnorqlConstants
 
 /**
  * Connection interface implemented by user to define methods required for snorql to interact with user's database
@@ -60,6 +61,7 @@ interface Connection {
         storageBucketId: String,
         metricId: String,
         databaseName: String,
+        columns: List<String> = SnorqlConstants.historicalDataTableColumns,
         paginationParams: Map<String, *> = emptyMap<String, String>(),
         params: Map<String, *> = emptyMap<String, String>()
     ): HistoricalDatabaseResult
