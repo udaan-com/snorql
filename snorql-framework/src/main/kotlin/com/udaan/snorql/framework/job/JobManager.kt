@@ -108,7 +108,13 @@ object JobManager {
         paginationParams: Map<String, *> = emptyMap<String, String>(),
         params: Map<String, *> = mapOf<String, String>()
     ): HistoricalDatabaseResult {
-        return SqlMetricManager.queryExecutor.fetchHistoricalData(metricId, databaseName, columns, paginationParams, params)
+        return SqlMetricManager.queryExecutor.fetchHistoricalData(
+            metricId,
+            databaseName,
+            columns,
+            paginationParams,
+            params
+        )
     }
 
     private fun <T : MetricInput, O : IMetricResult, V : IMetricRecommendation> configureJobAndTrigger(
