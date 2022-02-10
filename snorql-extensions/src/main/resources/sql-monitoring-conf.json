@@ -81,6 +81,9 @@
       "dbSize": "SELECT CONVERT(double precision,DATABASEPROPERTYEX( :databaseName, 'MaxSizeInBytes'))/(1024*1024*1024) AS DatabaseDataMaxSizeInBytes"
     },
     "supportsHistorical": true,
+    "persistDataOptions": {
+      "minimumRepeatInterval": 3600
+    },
     "supportsRealTime": true,
     "isParameterized": false,
     "referenceDoc": ["https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-spaceused-transact-sql?view=sql-server-ver15#examples"],
