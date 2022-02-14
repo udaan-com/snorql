@@ -167,5 +167,15 @@
     "isParameterized": false,
     "referenceDoc": [],
     "description": ""
+  },
+  "session_sessionLocks": {
+    "queries": {
+      "main": "SELECT dm_tran_locks.request_session_id,\n       dm_tran_locks.resource_database_id,\n       dm_tran_locks.request_lifetime,\n       DB_NAME(dm_tran_locks.resource_database_id) AS dbname,\n       CASE\n           WHEN resource_type = 'OBJECT'\n               THEN OBJECT_NAME(dm_tran_locks.resource_associated_entity_id)\n           ELSE OBJECT_NAME(partitions.OBJECT_ID)\n           END AS ObjectName,\n       partitions.index_id,\n       indexes.name AS index_name,\n       dm_tran_locks.resource_type,\n       dm_tran_locks.resource_description,\n       dm_tran_locks.resource_associated_entity_id,\n       dm_tran_locks.request_mode,\n       dm_tran_locks.request_status\nFROM sys.dm_tran_locks\n         LEFT JOIN sys.partitions ON partitions.hobt_id = dm_tran_locks.resource_associated_entity_id\n         LEFT JOIN sys.indexes ON indexes.OBJECT_ID = partitions.OBJECT_ID AND indexes.index_id = partitions.index_id\nWHERE resource_associated_entity_id > 0\n  AND resource_database_id = DB_ID() AND request_session_id = :sessionId\nORDER BY request_session_id, resource_associated_entity_id;"
+    },
+    "supportsHistorical": false,
+    "supportsRealTime": true,
+    "isParameterized": false,
+    "referenceDoc": ["https://docs.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-tran-locks-transact-sql?view=sql-server-ver15"],
+    "description": ""
   }
 }
