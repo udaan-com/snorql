@@ -59,11 +59,12 @@ class QueryExecutor(val connection: Connection) {
     fun fetchHistoricalData(
         metricId: String,
         databaseName: String,
+        columns: List<String> = SnorqlConstants.historicalDataTableColumns,
         paginationParams: Map<String, *> = emptyMap<String, String>(),
         params: Map<String, *> = emptyMap<String, String>()
     ): HistoricalDatabaseResult {
         val storageBucketId: String = SnorqlConstants.HISTORICAL_DATA_BUCKET_ID
-        return connection.getHistoricalData(storageBucketId, metricId, databaseName, paginationParams, params)
+        return connection.getHistoricalData(storageBucketId, metricId, databaseName, columns, paginationParams, params)
     }
 
     /**
