@@ -1,12 +1,13 @@
 package com.udaan.snorql.extensions.session.models
 
+import com.udaan.snorql.extensions.session.SessionEnums
 import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 import org.jdbi.v3.core.mapper.reflect.ColumnName
 
 data class SessionLocksInput(
-    override val metricId: String,
+    override val metricId: String = SessionEnums.SESSION_LOCKS.getId(),
     override val metricPeriod: MetricPeriod,
     override val databaseName: String,
     val sessionId: Int
