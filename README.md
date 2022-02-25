@@ -354,10 +354,10 @@ Please find the detailed KDoc for snorql-extensions [here](https://udaan-com.git
 <!-- ROADMAP -->
 ## Roadmap
 
-- [] Feature 1
-- [] Feature 2
-- [] Feature 3
-    - [] Nested Feature
+- [] Snorql Persistence
+  - [x] Storage/Querying of historical metrics
+  - [] Auto purge older metrics
+- [] Snorql Alerting
 
 See the [open issues](https://github.com/udaan-com/snorql/issues) for a full list of proposed features (and known issues).
 
@@ -389,20 +389,26 @@ Distributed under the Apache License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-udaan.com - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+udaan.com - [@udaandotcom](https://twitter.com/udaandotcom)
 
 Project Link: [https://github.com/udaan-com/snorql](https://github.com/udaan-com/snorql)
+
+<a href="https://github.com/udaan-com/snorql/issues">Report Bug</a>
+·
+<a href="https://github.com/udaan-com/snorql/issues">Request Feature</a>
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- ACKNOWLEDGMENTS -->
-<!--
 ## Acknowledgments
 
-* []()
-* []()
-* []()
--->
+* [Lakshmi Ramakrishnan](https://github.com/lakshmi-udaan)
+* [Anish Tiwari](https://github.com/AnishTiwari)
+* [Prakul Jain](https://github.com/prajain12)
+* [Prince Bansal](https://github.com/princebansal)
+* [Lokesh Devnani](https://github.com/lokeshdevnani)
+* [Kaushik Mukherjee](https://www.linkedin.com/in/kaushikm21/)
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
