@@ -149,7 +149,7 @@
             <plugin>
                 <groupId>org.jetbrains.dokka</groupId>
                 <artifactId>dokka-maven-plugin</artifactId>
-                <version>1.5.0</version>
+                <version>1.4.20</version>
                 <executions>
                     <execution>
                         <phase>pre-site</phase>
@@ -170,7 +170,7 @@
                 <version>1.5.0</version>
                 <executions>
                     <execution>
-                        <phase>package</phase>
+                        <phase>pre-site</phase>
                         <goals>
                             <goal>javadocJar</goal>
                         </goals>
