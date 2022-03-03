@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build and Test
-        uses: qcastel/github-actions-maven-cmd@master
+        uses: qcastel/github-actions-maven-cmd@1.0.1
         with:
           maven-args: "clean install -Ddockerfile.skip -DdockerCompose.skip -Djib.skip"
 
