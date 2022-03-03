@@ -15,10 +15,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build and Test
-        uses: qcastel/github-actions-maven-cmd@master
-        with:
-          maven-args: "clean install -Ddockerfile.skip -DdockerCompose.skip -Djib.skip"
+#      - name: Build and Test
+#        uses: qcastel/github-actions-maven-cmd@master
+#        with:
+#          maven-args: "clean install -Ddockerfile.skip -DdockerCompose.skip -Djib.skip"
 
       - name: Set Release version env variable
         run: |
