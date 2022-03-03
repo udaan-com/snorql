@@ -16,15 +16,15 @@ Once you have decided on your version, follow the following steps to publish a r
 
 - Do an empty commit from `main` branch with either of the commit messages(Make sure you have the permission):
 Considering current pom version to be `0.4.22-SNAPSHOT`,
-    - `git commit --allow-empty -m "#release-with-patch"` would:
+    - `git commit --allow-empty -m "##release-with-patch-for-next"` would:
         - Publish a maven release with version `0.4.22`
         - Publish a GitHub Release with version `v0.4.22`
         - Increment pom to `0.4.23-SNAPSHOT` to set up for next version<br><br>
-    - `git commit --allow-empty -m "#release-with-minor"` would:
+    - `git commit --allow-empty -m "#release-with-minor-for-next"` would:
         - Publish a maven release with version `0.4.22`
         - Publish a GitHub Release with version `v0.4.22`
         - Increment pom to `0.5.0-SNAPSHOT` to set up for next version<br><br>
-    - `git commit --allow-empty -m "#release-with-major"` would:
+    - `git commit --allow-empty -m "#release-with-major-for-next"` would:
         - Publish a maven release with version `0.4.22`
         - Publish a GitHub Release with version `v0.4.22`
         - Increment pom to `1.0.0-SNAPSHOT` to set up for next version
