@@ -188,7 +188,7 @@
                 <version>1.4.20</version>
                 <executions>
                     <execution>
-                        <phase>package</phase>
+                        <phase>pre-site</phase>
                         <goals>
                             <goal>javadocJar</goal>
                         </goals>
