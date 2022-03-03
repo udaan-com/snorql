@@ -32,7 +32,7 @@ jobs:
           git-release-bot-name: "releaseBot22"
           git-release-bot-email: "release.with.bot@gmail.com"
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          maven-args: "-DskipTests -DskipITs -Ddockerfile.skip -DdockerCompose.skip"
+          maven-args: "clean install -DskipTests -DskipITs -Ddockerfile.skip -DdockerCompose.skip"
           release-branch-name: "releasing-to-nexus"
           gpg-enabled: true
           gpg-key-id: ${{ secrets.GPG_KEY_ID }}
