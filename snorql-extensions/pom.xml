@@ -137,7 +137,7 @@
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
-                        <phase>package</phase>
+                        <phase>pre-site</phase>
                         <goals>
                             <goal>javadoc</goal>
                         </goals>
