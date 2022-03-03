@@ -1,5 +1,5 @@
 <!-- PROJECT SHIELDS -->
-<!--
+<!-- 
 *** I'm using markdown "reference style" links for readability.
 *** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
