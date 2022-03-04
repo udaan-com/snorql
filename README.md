@@ -1,5 +1,10 @@
 <!-- PROJECT SHIELDS -->
-<!-- 
+<!--
+*** This is automatically generated README.md. Please do update here directly.
+*** To make any changes to README.md or docs published in github pages, refer to /doc/docs directory.
+*** This project uses mkdocs to publish docs to github pages. To learn more about it refer to https://www.mkdocs.org/getting-started/
+-->
+<!--
 *** I'm using markdown "reference style" links for readability.
 *** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
