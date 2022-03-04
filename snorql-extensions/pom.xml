@@ -146,22 +146,22 @@
             </plugin>
 
             <!-- KDoc with Dokka plugin -->
-<!--            <plugin>-->
-<!--                <groupId>org.jetbrains.dokka</groupId>-->
-<!--                <artifactId>dokka-maven-plugin</artifactId>-->
-<!--                <version>1.4.20</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <phase>pre-site</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>dokka</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--                <configuration>-->
-<!--                    <outputDir>${project.parent.basedir}/doc/docs/snorql-extensions</outputDir>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
+            <plugin>
+                <groupId>org.jetbrains.dokka</groupId>
+                <artifactId>dokka-maven-plugin</artifactId>
+                <version>1.4.20</version>
+                <executions>
+                    <execution>
+                        <phase>pre-site</phase>
+                        <goals>
+                            <goal>dokka</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <outputDir>${project.parent.basedir}/doc/docs/snorql-extensions</outputDir>
+                </configuration>
+            </plugin>
 
             <!-- Generates Javadoc -->
             <plugin>
