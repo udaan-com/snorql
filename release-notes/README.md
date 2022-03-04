@@ -11,9 +11,13 @@
 
 ### How to publish a release:
 Once you have decided on your version, follow the following steps to publish a release:
+- Create a new branch
+- Update `snorql/pom.xml`, `snorql/snorql-framework/pom.xml` & `snorql/snorql-extensions/pom.xml` with the desired version.
 - Add a `<version-name>.md` file under `release-notes` directory. This will be used as the content for GitHub release.
-  For ex: if your `pom.xml` looks like this: `<version>0.4.22-SNAPSHOT</version>`, your release file will should be named `v0.4.22.md`.<br><br>
-
+  For ex: if your `pom.xml` looks like this: `<version>0.4.22-SNAPSHOT</version>`, your release file will should be named `v0.4.22.md`.
+- Raise a PR & merge to main
+- Request the admins to release the version<br><br>
+For admins only:
 - Do an empty commit from `main` branch with the commit message `git commit --allow-empty -m "#release"`
   <i>(Make sure you have the permission)</i><br>
     Considering current pom version to be `0.4.22-SNAPSHOT`,
