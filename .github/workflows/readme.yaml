@@ -9,8 +9,7 @@ jobs:
   generate-readme:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout master
-        uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Set up JDK 1.8
         uses: actions/setup-java@v1
@@ -25,14 +24,11 @@ jobs:
           chmod +x ./scripts/populate-readme.sh
           ./scripts/populate-readme.sh
         shell: bash
-
       - name: Get the current branch name
         shell: bash
         run: echo "::set-output name=branch::${GITHUB_REF#refs/heads/}"
         id: currentref
-
-      - name: Push to master
-        uses: mikeal/publish-to-github-action@master
+      - uses: mikeal/publish-to-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH_NAME: ${{ steps.currentref.outputs.branch }}
