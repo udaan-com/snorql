@@ -10,10 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Build
-        uses: qcastel/github-actions-maven/actions/maven@master
-        with:
-          maven-args: "clean install"
       - name: Run script file
         run: |
           chmod +x ./scripts/populate-readme.sh
