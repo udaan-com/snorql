@@ -14,6 +14,11 @@ jobs:
       - name: Checkout master
         uses: actions/checkout@v1
 
+      - name: Build
+        uses: qcastel/github-actions-maven/actions/maven@master
+        with:
+          maven-args: "clean install"
+
       - name: Deploy docs
         uses: mhausenblas/mkdocs-deploy-gh-pages@master
         env:
