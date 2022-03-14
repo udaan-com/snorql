@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - releasing-to-nexus
-#    paths:
-#      - 'doc/**'
+    paths:
+      - 'doc/**'
 
 jobs:
   build:
