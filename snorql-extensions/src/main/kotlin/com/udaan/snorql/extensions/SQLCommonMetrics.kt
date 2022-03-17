@@ -23,6 +23,10 @@ import com.udaan.snorql.extensions.accesscontrol.AccessControlEnums
 import com.udaan.snorql.extensions.accesscontrol.metrics.UserRoleMetric
 import com.udaan.snorql.extensions.performance.PerformanceEnums
 import com.udaan.snorql.extensions.performance.metrics.*
+import com.udaan.snorql.extensions.session.SessionEnums
+import com.udaan.snorql.extensions.session.metrics.LatestExecutedQuery
+import com.udaan.snorql.extensions.session.metrics.SessionActiveQueryMetric
+import com.udaan.snorql.extensions.session.metrics.SessionLocksMetric
 import com.udaan.snorql.extensions.storage.StorageEnums
 import com.udaan.snorql.extensions.storage.metrics.*
 import com.udaan.snorql.framework.metric.SqlMetricManager
@@ -49,5 +53,10 @@ object SQLCommonMetrics {
         SqlMetricManager.addMetric(StorageEnums.TABLE_UNUSED_INDEX.getId(), TableUnusedIndexMetric())
         SqlMetricManager.addMetric(StorageEnums.PVS.getId(), PVSMetric())
         SqlMetricManager.addMetric(StorageEnums.TABLE_SCHEMA.getId(), TableSchemaMetric())
+
+        // register session related metrics here
+        SqlMetricManager.addMetric(SessionEnums.SESSION_LOCKS.getId(), SessionLocksMetric())
+        SqlMetricManager.addMetric(SessionEnums.SESSION_ACTIVE_QUERY.getId(), SessionActiveQueryMetric())
+        SqlMetricManager.addMetric(SessionEnums.LATEST_EXECUTED_QUERY.getId(), LatestExecutedQuery())
     }
 }
