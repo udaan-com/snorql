@@ -6,7 +6,11 @@ import com.udaan.snorql.extensions.session.models.SessionActiveQueryResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
-import com.udaan.snorql.framework.models.*
+import com.udaan.snorql.framework.models.IMetricRecommendation
+import com.udaan.snorql.framework.models.MetricConfig
+import com.udaan.snorql.framework.models.MetricOutput
+import com.udaan.snorql.framework.models.IMetricResult
+import com.udaan.snorql.framework.models.MetricInput
 
 class SessionActiveQueryMetric : IMetric<SessionActiveQueryInput, SessionActiveQueryResult, IMetricRecommendation> {
 

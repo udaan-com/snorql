@@ -19,6 +19,6 @@ data class LatestExecutedQueryInput(
     override val metricPeriod: MetricPeriod,
     override val databaseName: String,
     val sessionId: Int
-): MetricInput()
+) : MetricInput()
 
-data class LatestExecutedQueryResult(val queryList: List<LatestExecutedQueryDTO>): IMetricResult()
+data class LatestExecutedQueryResult(val queryList: List<LatestExecutedQueryDTO>) : IMetricResult()

@@ -11,7 +11,7 @@ data class SessionLocksInput(
     override val metricPeriod: MetricPeriod,
     override val databaseName: String,
     val sessionId: Int
-): MetricInput()
+) : MetricInput()
 
 data class SessionLocksDTO(
     @ColumnName("request_session_id")
@@ -40,4 +40,4 @@ data class SessionLocksDTO(
     val requestStatus: String
 )
 
-data class SessionLocksResult(val queryList: List<SessionLocksDTO>): IMetricResult()
+data class SessionLocksResult(val queryList: List<SessionLocksDTO>) : IMetricResult()
