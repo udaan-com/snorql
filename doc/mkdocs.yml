@@ -8,6 +8,7 @@ site_url: https://github.com/udaan-com/snorql
 # Repository (add link to repository on each page)
 repo_name: snorql
 repo_url: https://github.com/udaan-com/snorql
+edit_uri: edit/main/doc/docs/
 
 # Material theme
 theme:

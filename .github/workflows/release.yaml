@@ -1,0 +1,49 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    if: "contains(github.event.head_commit.message, '#release')"
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set Release version env variable
+        run: |
+          echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | rev | cut -c10- | rev)" >> $GITHUB_ENV
+
+      - name: Release
+        uses: qcastel/github-actions-maven-release@master
+        env:
+          JAVA_HOME: /usr/lib/jvm/java-1.8-openjdk/
+        with:
+          git-release-bot-name: "releaseBot22"
+          git-release-bot-email: "release.with.bot@gmail.com"
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          maven-args: "clean install -DskipTests -DskipITs -Ddockerfile.skip -DdockerCompose.skip"
+          release-branch-name: "main"
+          gpg-enabled: true
+          gpg-key-id: ${{ secrets.GPG_KEY_ID }}
+          gpg-key: ${{ secrets.GPG_KEY }}
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          maven-servers: ${{ secrets.MVN_REPO_SERVERS }}
+          version-patch: true
+
+      - name: Create Github Release
+        uses: ncipollo/release-action@v1
+        env:
+          RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
+        with:
+          allowUpdates: true
+          artifacts: "${{ github.workspace }}/target/*.jar"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: "v${{ env.RELEASE_VERSION }}"
+          bodyFile: "release-notes/v${{ env.RELEASE_VERSION }}.md"
+          commit: main

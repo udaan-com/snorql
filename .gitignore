@@ -4,3 +4,5 @@ target/
 *.tmp
 
 reports/
+/doc/docs/snorql-extensions/
+/doc/docs/snorql-framework/

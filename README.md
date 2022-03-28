@@ -1,5 +1,10 @@
 <!-- PROJECT SHIELDS -->
 <!--
+*** This is automatically generated README.md. Please do update here directly.
+*** To make any changes to README.md or docs published in github pages, refer to /doc/docs directory.
+*** This project uses mkdocs to publish docs to github pages. To learn more about it refer to https://www.mkdocs.org/getting-started/
+-->
+<!--
 *** I'm using markdown "reference style" links for readability.
 *** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
@@ -39,7 +44,7 @@
   </h3>
 
   <p align="center">
-    snorql a.k.a. SQL-Monitoring is an open-source, free-to-use project developed at udaan aimed at diagnosing & resolving common database-related problems using SQL metrics.
+    snorql a.k.a. SQL-Monitoring is an open-source, free-to-use project developed at udaan aimed at diagnosing and resolving common database-related problems using SQL metrics.
     <br />
     <a href="https://udaan-com.github.io/snorql/sections/about/ghp/"><strong>Explore the docs »</strong></a>
     <br />
