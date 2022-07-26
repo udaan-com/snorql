@@ -47,3 +47,10 @@ class SQLMonitoringException(message: String) : Exception(message)
  * @param message Error message string
  */
 class TriggerNotFoundException(message: String) : Exception(message)
+
+/**
+ * Exception class when a job does not exist
+ *
+ * @param message Error message string
+ */
+class JobNotFoundException(message: String) : Exception(message)
