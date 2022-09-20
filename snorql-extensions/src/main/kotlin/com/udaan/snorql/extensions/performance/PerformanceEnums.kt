@@ -45,9 +45,44 @@ enum class PerformanceEnums(private val metricId:String):IMtericId {
     BLOCKED_QUERIES("blockedQueries"),
 
     /**
+     * Index Fragmentation Metric ID mapping
+     */
+    INDEX_FRAGMENTATION("indexFragmentation"),
+
+    /**
      * Index Stats Metric ID mapping
      */
     INDEX_STATS("indexStats"),
+
+    /**
+     * Compute Utilization Metric ID mapping
+     */
+    COMPUTE_UTILIZATION("computeUtilization"),
+
+    /**
+     * Query Plan Stats Metric ID mapping
+     */
+    QUERY_PLAN_STATS("queryPlanStats"),
+
+    /**
+     * Query Plan XML Metric ID mapping
+     */
+    QUERY_PLAN_XML("queryPlanXML"),
+
+    /**
+     * Query Store Metric ID mapping
+     */
+    QUERY_STORE("queryStore"),
+
+    /**
+     * Read Replication Lag Metric ID mapping
+     */
+    READ_REPLICATION_LAG("readReplicationLag"),
+
+    /**
+     * Geo Replica Lag Metric ID mapping
+     */
+    GEO_REPLICA_LAG("geoReplicaLag"),
 
     /**
      * Active DDL Queries Metric ID mapping

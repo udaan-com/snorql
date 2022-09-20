@@ -26,6 +26,7 @@ import com.udaan.snorql.framework.models.HistoricalDataPurgeConfig
 import com.udaan.snorql.framework.models.HistoricalDatabaseResult
 import com.udaan.snorql.framework.models.HistoricalDatabaseSchemaDTO
 import com.udaan.snorql.framework.models.SnorqlConstants
+import java.sql.Statement
 
 /**
  * Class to hold functions which interact with user defined query executor functions
@@ -49,6 +50,26 @@ class QueryExecutor(val connection: Connection) {
         params: Map<String, *> = mapOf<String, Any>()
     ): List<T> {
         return connection.run(databaseName, query, T::class.java, params)
+    }
+
+    /**
+     * Execute the query using the connection instance as [Statement]
+     *
+     * @param T
+     * @param databaseName
+     * @param query (raw query, should not be parameterised)
+     * @param preHooks hooks to run with statement before running the query
+     * @param postHooks hooks to run with statement after running the query
+     * @return
+     */
+    fun <T> execute(
+        databaseName: String,
+        query: String,
+        mapClass: Class<T>,
+        preHooks: (Statement.() -> Unit)? = null,
+        postHooks: (Statement.() -> Unit)? = null
+    ): List<T> {
+        return connection.run(databaseName, query, mapClass, preHooks, postHooks)
     }
 
     /**
