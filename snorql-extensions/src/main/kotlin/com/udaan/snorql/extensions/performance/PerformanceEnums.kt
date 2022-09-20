@@ -50,9 +50,54 @@ enum class PerformanceEnums(private val metricId:String):IMtericId {
     INDEX_STATS("indexStats"),
 
     /**
+     * Index Fragmentation Metric ID mapping
+     */
+    INDEX_FRAGMENTATION("indexFragmentation"),
+
+    /**
      * Active DDL Queries Metric ID mapping
      */
-    ACTIVE_DDL("activeDDL");
+    ACTIVE_DDL("activeDDL"),
+
+    /**
+     * Query Plan Stats Metric ID mapping
+     */
+    QUERY_PLAN_STATS("queryPlanStats"),
+
+    /**
+     * Query Plan XML Metric ID mapping
+     */
+    QUERY_PLAN_XML("queryPlanXML"),
+
+    /**
+     * Compute Utilization Metric ID mapping
+     */
+    COMPUTE_UTILIZATION("computeUtilization"),
+
+    /**
+     * Query Store Metric ID mapping
+     */
+    QUERY_STORE("queryStore"),
+
+    /**
+     * Analyze Query Plan Metric ID mapping
+     */
+    ANALYZE_QUERY_STORE("analyzeQueryPlan"),
+
+    /**
+     * Log Space Usage Metric ID mapping
+     */
+    LOG_SPACE_USAGE("logSpaceUsage"),
+
+    /**
+     * Read Replication Lag Metric ID mapping
+     */
+    READ_REPLICATION_LAG("readReplicationLag"),
+
+    /**
+     * Geo Replica Lag Metric ID mapping
+     */
+    GEO_REPLICA_LAG("geoReplicaLag");
 
     override fun getId(): String {
         return "performance_" + this.metricId

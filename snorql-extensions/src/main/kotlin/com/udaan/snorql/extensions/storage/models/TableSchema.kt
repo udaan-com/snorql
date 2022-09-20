@@ -42,11 +42,11 @@ import com.udaan.snorql.framework.models.MetricPeriod
 data class TableSchemaDTO (
     val columnName:String,
     val createdDate:String,
-    val isRowGuid:String,
-    val isIdentity:String,
+    val isRowGuid:Boolean,
+    val isIdentity:Boolean,
     val ordinalPosition:Int,
     val columnDefault:String?,
-    val isNullable:String,
+    val isNullable:Boolean,
     val dataType:String,
     val characterMaximumLength:Int?,
     val collationName:String?
@@ -64,7 +64,7 @@ data class TableSchemaDTO (
 data class TableSchemaInput(
     override val metricId: String = StorageEnums.TABLE_SCHEMA.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String,
-    val tableName: String,
+    val tableName: String
 ) : MetricInput()
 
 /**

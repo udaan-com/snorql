@@ -19,9 +19,8 @@
 
 package com.udaan.snorql.framework.metric
 
-import com.udaan.snorql.framework.models.HistoricalDatabaseResult
-import com.udaan.snorql.framework.models.HistoricalDatabaseSchemaDTO
-import com.udaan.snorql.framework.models.SnorqlConstants
+import com.udaan.snorql.framework.models.*
+import java.sql.Statement
 
 /**
  * Class to hold functions which interact with user defined query executor functions
@@ -48,6 +47,26 @@ class QueryExecutor(val connection: Connection) {
     }
 
     /**
+     * Execute the query using the connection instance as [Statement]
+     *
+     * @param T
+     * @param databaseName
+     * @param query (raw query, should not be parameterised)
+     * @param preHooks hooks to run with statement before running the query
+     * @param postHooks hooks to run with statement after running the query
+     * @return
+     */
+    fun <T> execute(
+        databaseName: String,
+        query: String,
+        mapClass: Class<T>,
+        preHooks: (Statement.() -> Unit)? = null,
+        postHooks: (Statement.() -> Unit)? = null
+    ): List<T> {
+        return connection.run(databaseName, query, mapClass, preHooks, postHooks)
+    }
+
+    /**
      * Function used to read historical data stored.
      * Calls `getHistoricalData` function defined by the user to fetch the data
      * Note: [fetchHistoricalData] can work on pagination using [paginationParams]
@@ -59,12 +78,11 @@ class QueryExecutor(val connection: Connection) {
     fun fetchHistoricalData(
         metricId: String,
         databaseName: String,
-        columns: List<String> = SnorqlConstants.historicalDataTableColumns,
         paginationParams: Map<String, *> = emptyMap<String, String>(),
         params: Map<String, *> = emptyMap<String, String>()
     ): HistoricalDatabaseResult {
         val storageBucketId: String = SnorqlConstants.HISTORICAL_DATA_BUCKET_ID
-        return connection.getHistoricalData(storageBucketId, metricId, databaseName, columns, paginationParams, params)
+        return connection.getHistoricalData(storageBucketId, metricId, databaseName, paginationParams, params)
     }
 
     /**
@@ -92,5 +110,23 @@ class QueryExecutor(val connection: Connection) {
         }
         connection.storeData(storageId, columns, rows.toList())
 //        println("Following data stored in historical database: $rows")
+    }
+
+    /**
+     * Handle an alert
+     */
+    fun handleAlert(alertConfig: AlertConfigOutline, alertInput: AlertInput, alertOutput: AlertOutput<*, *>) {
+        connection.handleAlert(alertConfig, alertInput, alertOutput)
+    }
+
+    /**
+     * Purge historical data from user's database
+     * Wrapper for [Connection.purgePersistedData] function
+     *
+     * @param storageId Unique identifier of the storage bucket where historical data is stored
+     * @param purgingInfo List of data filters for purging the data
+     */
+    fun purgeHistoricalData(storageId: String, purgingInfo: List<HistoricalDataPurgeConfig>) {
+        return connection.purgePersistedData(storageId, purgingInfo)
     }
 }

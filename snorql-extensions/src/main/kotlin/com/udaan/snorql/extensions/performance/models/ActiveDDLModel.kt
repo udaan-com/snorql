@@ -61,7 +61,7 @@ data class ActiveDDLDTO(
  */
 data class ActiveDDLInput(
     override val metricId: String = PerformanceEnums.ACTIVE_DDL.getId(),
-    override val metricPeriod: MetricPeriod, override val databaseName: String,
+    override val metricPeriod: MetricPeriod, override val databaseName: String
 ) : MetricInput()
 
 /**

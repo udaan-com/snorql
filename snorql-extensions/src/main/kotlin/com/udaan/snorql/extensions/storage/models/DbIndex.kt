@@ -36,12 +36,12 @@ import com.udaan.snorql.framework.models.MetricPeriod
  * @constructor Create Database Index Metric model
  */
 data class DbIndexDTO(
-    val rows: String,
+    val rows: Long,
     val indexName: String?,
     val tableName: String,
-    val totalSpaceMB: String,
-    val usedSpaceMB: String,
-    val unusedSpaceMB: String
+    val totalSpaceMB: Float,
+    val usedSpaceMB: Float,
+    val unusedSpaceMB: Float
 )
 
 /**
@@ -54,7 +54,7 @@ data class DbIndexDTO(
  */
 data class DbIndexInput(
     override val metricId: String = StorageEnums.DB_INDEX.getId(),
-    override val metricPeriod: MetricPeriod, override val databaseName: String,
+    override val metricPeriod: MetricPeriod, override val databaseName: String
 ) : MetricInput()
 
 /**

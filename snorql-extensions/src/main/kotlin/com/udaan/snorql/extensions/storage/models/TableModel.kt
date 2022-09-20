@@ -38,7 +38,7 @@ import org.jdbi.v3.core.mapper.reflect.ColumnName
  */
 data class TableDTO(
     val name: String,
-    val rows: String,
+    val rows: Int,
     val reserved: String,
     val data: String,
     @ColumnName("index_size")
@@ -58,7 +58,7 @@ data class TableDTO(
 data class TableInput(
     override val metricId: String = StorageEnums.TABLE.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String,
-    val tableName: String,
+    val tableName: String
 ) : MetricInput()
 
 /**

@@ -23,6 +23,10 @@ import com.udaan.snorql.extensions.accesscontrol.AccessControlEnums
 import com.udaan.snorql.extensions.accesscontrol.metrics.UserRoleMetric
 import com.udaan.snorql.extensions.performance.PerformanceEnums
 import com.udaan.snorql.extensions.performance.metrics.*
+import com.udaan.snorql.extensions.session.SessionEnums
+import com.udaan.snorql.extensions.session.metrics.LatestExecutedQuery
+import com.udaan.snorql.extensions.session.metrics.SessionActiveQueryMetric
+import com.udaan.snorql.extensions.session.metrics.SessionLocksMetric
 import com.udaan.snorql.extensions.storage.StorageEnums
 import com.udaan.snorql.extensions.storage.metrics.*
 import com.udaan.snorql.framework.metric.SqlMetricManager
@@ -36,6 +40,15 @@ object SQLCommonMetrics {
         SqlMetricManager.addMetric(PerformanceEnums.LONG_RUNNING_QUERIES.getId(), LongRunningQueriesMetric())
         SqlMetricManager.addMetric(PerformanceEnums.INDEX_STATS.getId(), IndexStatsMetric())
         SqlMetricManager.addMetric(PerformanceEnums.ACTIVE_DDL.getId(), ActiveDDLMetric())
+        SqlMetricManager.addMetric(PerformanceEnums.QUERY_PLAN_STATS.getId(), QueryPlanStatsMetric())
+        SqlMetricManager.addMetric(PerformanceEnums.QUERY_PLAN_XML.getId(), QueryPlanXMLMetric())
+        SqlMetricManager.addMetric(PerformanceEnums.COMPUTE_UTILIZATION.getId(), ComputeUtilizationMetric())
+        SqlMetricManager.addMetric(PerformanceEnums.INDEX_FRAGMENTATION.getId(), IndexFragmentationMetric())
+        SqlMetricManager.addMetric(PerformanceEnums.QUERY_STORE.getId(), QueryStoreMetric())
+        SqlMetricManager.addMetric(PerformanceEnums.ANALYZE_QUERY_STORE.getId(), AnalyzeQueryPlanMetric())
+        SqlMetricManager.addMetric(PerformanceEnums.READ_REPLICATION_LAG.getId(), ReadReplicationLagMetric())
+        SqlMetricManager.addMetric(PerformanceEnums.LOG_SPACE_USAGE.getId(), LogSpaceUsageMetric())
+        SqlMetricManager.addMetric(PerformanceEnums.GEO_REPLICA_LAG.getId(), GeoReplicaLagMetric())
 
         // register access-control related metric here
         SqlMetricManager.addMetric(AccessControlEnums.USER_ROLE.getId(), UserRoleMetric())
@@ -49,5 +62,11 @@ object SQLCommonMetrics {
         SqlMetricManager.addMetric(StorageEnums.TABLE_UNUSED_INDEX.getId(), TableUnusedIndexMetric())
         SqlMetricManager.addMetric(StorageEnums.PVS.getId(), PVSMetric())
         SqlMetricManager.addMetric(StorageEnums.TABLE_SCHEMA.getId(), TableSchemaMetric())
+        SqlMetricManager.addMetric(StorageEnums.DB_INDEX_REDUNDANCY.getId(), DbIndexRedundancyMetric())
+
+        // register session related metrics here
+        SqlMetricManager.addMetric(SessionEnums.SESSION_LOCKS.getId(), SessionLocksMetric())
+        SqlMetricManager.addMetric(SessionEnums.SESSION_ACTIVE_QUERY.getId(), SessionActiveQueryMetric())
+        SqlMetricManager.addMetric(SessionEnums.LATEST_EXECUTED_QUERY.getId(), LatestExecutedQuery())
     }
 }

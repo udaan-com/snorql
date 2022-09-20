@@ -46,25 +46,25 @@ data class DbTableDTO(
     @ColumnName("SchemaName")
     val schemaName: String,
 
-    val rows: String,
+    val rows: Int,
 
     @ColumnName("TotalSpaceKB")
-    val totalSpaceKB: String,
+    val totalSpaceKB: Float,
 
     @ColumnName("TotalSpaceMB")
-    val totalSpaceMB: String,
+    val totalSpaceMB: Float,
 
     @ColumnName("UsedSpaceKB")
-    val usedSpaceKB: String,
+    val usedSpaceKB: Float,
 
     @ColumnName("UsedSpaceMB")
-    val usedSpaceMB: String,
+    val usedSpaceMB: Float,
 
     @ColumnName("UnusedSpaceKB")
-    val unusedSpaceKB: String,
+    val unusedSpaceKB: Float,
 
     @ColumnName("UnusedSpaceMB")
-    val unusedSpaceMB: String
+    val unusedSpaceMB: Float
 )
 
 /**
@@ -77,7 +77,7 @@ data class DbTableDTO(
  */
 data class DbTableInput(
     override val metricId: String = StorageEnums.DB_TABLES.getId(),
-    override val metricPeriod: MetricPeriod, override val databaseName: String,
+    override val metricPeriod: MetricPeriod, override val databaseName: String
 ) : MetricInput()
 
 /**

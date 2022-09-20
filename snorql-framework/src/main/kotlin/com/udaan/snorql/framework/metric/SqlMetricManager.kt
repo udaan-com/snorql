@@ -43,6 +43,7 @@ object SqlMetricManager {
             return jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
                     false).registerKotlinModule()
         }
+
     val configuration: Configuration by lazy {
         val file = SqlMetricManager::class.java.getResource(CONFIG_FILE_LOCATION).readText()
         if (file.isNotEmpty()) {

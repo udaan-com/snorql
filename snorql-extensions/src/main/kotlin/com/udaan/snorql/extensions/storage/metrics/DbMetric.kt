@@ -75,6 +75,8 @@ class DbMetric :
         responseMetadata["referenceDocumentation"] = metricConfig.referenceDoc
         responseMetadata["description"] = metricConfig.description
         responseMetadata["supportsHistorical"] = metricConfig.supportsHistorical
+        responseMetadata["supportsAlert"] = metricConfig.supportsAlert
+        responseMetadata["supportedAlerts"] = metricConfig.alertingOptions?.get("supportedAlerts") ?: listOf<String>()
         responseMetadata["minimumRepeatInterval"] = metricConfig.persistDataOptions?.get("minimumRepeatInterval") ?: ""
         return responseMetadata
     }

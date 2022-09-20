@@ -33,7 +33,7 @@ abstract class MetricInput {
     abstract val databaseName: String
     val from: Timestamp? = null
     val to: Timestamp? = null
-    val recommendationRequired: Boolean = false
+    open val recommendationRequired: Boolean = false
 }
 
 /**
@@ -52,6 +52,8 @@ data class MetricConfig(
     val supportsHistorical: Boolean,
     val persistDataOptions: Map<String, String>?,
     val supportsRealTime: Boolean,
+    val supportsAlert: Boolean = false,
+    val alertingOptions: Map<String, *>?,
     val isParameterized: Boolean,
     val referenceDoc: List<String>,
     val description: String
@@ -93,9 +95,7 @@ data class MetricOutput<T : IMetricResult, V : IMetricRecommendation>(val result
  *                          metadata
  */
 data class MetricResponse<T : IMetricResult, V : IMetricRecommendation>(
-    val metricInput: MetricInput,
-    val metricOutput: MetricOutput<T, V>,
-    val metadata: Map<String, Any>? = null
+    val metricInput: MetricInput, val metricOutput: MetricOutput<T, V>, val metadata: Map<String, Any>? = null
 )
 
 /**
