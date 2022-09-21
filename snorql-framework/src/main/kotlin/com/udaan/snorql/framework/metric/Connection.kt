@@ -19,6 +19,10 @@
 
 package com.udaan.snorql.framework.metric
 
+import com.udaan.snorql.framework.models.AlertConfigOutline
+import com.udaan.snorql.framework.models.AlertInput
+import com.udaan.snorql.framework.models.AlertOutput
+import com.udaan.snorql.framework.models.HistoricalDataPurgeConfig
 import com.udaan.snorql.framework.models.HistoricalDatabaseResult
 import com.udaan.snorql.framework.models.SnorqlConstants
 
@@ -65,4 +69,22 @@ interface Connection {
         paginationParams: Map<String, *> = emptyMap<String, String>(),
         params: Map<String, *> = emptyMap<String, String>()
     ): HistoricalDatabaseResult
+
+    /**
+     * Handle an alert from snorql
+     */
+    // Take parameter from user
+    fun handleAlert(
+        alertConfig: AlertConfigOutline,
+        alertInput: AlertInput,
+        alertOutput: AlertOutput<*, *>
+    )
+
+    /**
+     * Purge persisted data
+     *
+     * @param storageBucketId bucket id of historical data store
+     * @param purgingInfo List of data that is to be purged
+     */
+    fun purgePersistedData(storageBucketId: String, purgingInfo: List<HistoricalDataPurgeConfig>)
 }

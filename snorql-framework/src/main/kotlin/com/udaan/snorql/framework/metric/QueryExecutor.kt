@@ -19,6 +19,10 @@
 
 package com.udaan.snorql.framework.metric
 
+import com.udaan.snorql.framework.models.AlertConfigOutline
+import com.udaan.snorql.framework.models.AlertInput
+import com.udaan.snorql.framework.models.AlertOutput
+import com.udaan.snorql.framework.models.HistoricalDataPurgeConfig
 import com.udaan.snorql.framework.models.HistoricalDatabaseResult
 import com.udaan.snorql.framework.models.HistoricalDatabaseSchemaDTO
 import com.udaan.snorql.framework.models.SnorqlConstants
@@ -92,5 +96,23 @@ class QueryExecutor(val connection: Connection) {
         }
         connection.storeData(storageId, columns, rows.toList())
 //        println("Following data stored in historical database: $rows")
+    }
+
+    /**
+     * Handle an alert
+     */
+    fun handleAlert(alertConfig: AlertConfigOutline, alertInput: AlertInput, alertOutput: AlertOutput<*, *>) {
+        connection.handleAlert(alertConfig, alertInput, alertOutput)
+    }
+
+    /**
+     * Purge historical data from user's database
+     * Wrapper for [Connection.purgePersistedData] function
+     *
+     * @param storageId Unique identifier of the storage bucket where historical data is stored
+     * @param purgingInfo List of data filters for purging the data
+     */
+    fun purgeHistoricalData(storageId: String, purgingInfo: List<HistoricalDataPurgeConfig>) {
+        return connection.purgePersistedData(storageId, purgingInfo)
     }
 }
