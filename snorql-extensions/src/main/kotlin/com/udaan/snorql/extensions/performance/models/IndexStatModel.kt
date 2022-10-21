@@ -85,7 +85,8 @@ data class IndexStatInput(
     override val metricId: String = PerformanceEnums.INDEX_STATS.getId(),
     override val metricPeriod: MetricPeriod,
     override val databaseName: String,
-    val tableName: String, val indexName: String
+    val tableName: String,
+    val indexName: String
 ) : MetricInput()
 
 /**
