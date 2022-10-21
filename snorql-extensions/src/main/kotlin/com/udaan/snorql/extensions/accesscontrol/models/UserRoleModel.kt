@@ -32,12 +32,11 @@ import com.udaan.snorql.framework.models.MetricPeriod
  * @property type tpe of role (SQL User/External Group/External User/etc)
  * @constructor Create user role wrapper for each user role
  */
-data class UserRoleDTO (
-        val name: String,
-        val role: String,
-        val type: String
+data class UserRoleDTO(
+    val name: String,
+    val role: String,
+    val type: String
 )
-
 
 /**
  * Wrapper class to hold input for UserRoleMetric
@@ -48,8 +47,8 @@ data class UserRoleDTO (
  * @constructor Create User role input
  */
 data class UserRoleInput(
-        override val metricId: String = AccessControlEnums.USER_ROLE.getId(),
-        override val metricPeriod: MetricPeriod, override val databaseName: String
+    override val metricId: String = AccessControlEnums.USER_ROLE.getId(),
+    override val metricPeriod: MetricPeriod, override val databaseName: String
 ) : MetricInput()
 
 /**

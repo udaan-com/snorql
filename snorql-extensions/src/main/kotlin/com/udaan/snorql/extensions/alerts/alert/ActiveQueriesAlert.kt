@@ -57,7 +57,7 @@ class ActiveQueriesAlert :
         }
         if (alertInput.cpuTimeThreshold != null) {
             filteredQueryList = filteredQueryList.filter {
-               it.cpuTime != null && it.cpuTime >= alertInput.cpuTimeThreshold
+                it.cpuTime != null && it.cpuTime >= alertInput.cpuTimeThreshold
             }
         }
         if (alertInput.logicalReadsThreshold != null) {

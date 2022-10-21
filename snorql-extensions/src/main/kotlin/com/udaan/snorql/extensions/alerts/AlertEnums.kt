@@ -28,6 +28,4 @@ enum class AlertEnums(private val alertId: String) : IAlertId {
     override fun getId(): String {
         return "alert_" + this.alertId
     }
-
-
 }

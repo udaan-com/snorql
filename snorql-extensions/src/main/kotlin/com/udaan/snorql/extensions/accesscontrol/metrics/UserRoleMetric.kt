@@ -20,17 +20,23 @@
 package com.udaan.snorql.extensions.accesscontrol.metrics
 
 
+import com.udaan.snorql.extensions.accesscontrol.models.UserRoleDTO
+import com.udaan.snorql.extensions.accesscontrol.models.UserRoleInput
+import com.udaan.snorql.extensions.accesscontrol.models.UserRoleResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
-import com.udaan.snorql.framework.models.*
-import com.udaan.snorql.extensions.accesscontrol.models.*
+import com.udaan.snorql.framework.models.IMetricRecommendation
+import com.udaan.snorql.framework.models.IMetricResult
+import com.udaan.snorql.framework.models.MetricConfig
+import com.udaan.snorql.framework.models.MetricInput
+import com.udaan.snorql.framework.models.MetricOutput
 
 /**
  * User role metric class is the implementation of user role metric
  *
- * <p>The user role metric can be used to get the user roles defined for the database.
- * User role metric returns the name, privileges and type of user role.</p>
+ * The user role metric can be used to get the user roles defined for the database.
+ * User role metric returns the name, privileges and type of user role.
  *
  * @constructor Create user role metric
  */
@@ -41,7 +47,6 @@ class UserRoleMetric :
         metricInput: UserRoleInput,
         metricConfig: MetricConfig
     ): UserRoleResult {
-        // check the metricConfig.supportedHistory before getting the query
         val query =
             metricConfig.queries["main"]
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
