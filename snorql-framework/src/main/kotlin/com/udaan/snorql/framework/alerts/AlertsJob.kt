@@ -42,11 +42,8 @@ class AlertsJob<in T : AlertInput, O : IAlertResult, V : IAlertRecommendation> :
             val alertType = mergedDataMap["alertType"] as String
             logger.info("[AlertsJob] Alert Input: {}", alertInput)
             val alertConfig = getAlertConfigOutline(context)
-            val alertClass = mergedDataMap["alertClass"]
-            logger.info("[AlertsJob] Alert Class is: $alertClass")
 
             val alertResponse = AlertsManager.getAlertResponse<T, O, V>(alertType, alertInput, alertConfig)
-
             logger.info("[AlertsJob] Alert Response: {}", alertResponse)
 
             if (alertResponse.alertOutput.isAlert) {
@@ -59,7 +56,7 @@ class AlertsJob<in T : AlertInput, O : IAlertResult, V : IAlertRecommendation> :
                 logger.info("[AlertsJob] Not an alert \n{} \n{}", alertInput, alertResponse)
             }
         } catch (e: Exception) {
-            logger.error("[AlertsJob] There has been an error", e)
+            logger.error("[AlertsJob] There has been an error ${e.message}", e)
         }
     }
 
