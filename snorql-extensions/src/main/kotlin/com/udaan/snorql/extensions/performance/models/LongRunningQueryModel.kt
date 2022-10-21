@@ -93,7 +93,7 @@ data class LongRunningInput(
 /**
  * Wrapper class for Long running queries metric result
  *
- * Result of long running queries metric is a list of Long Running Queries with metadata
+ * Result of long-running queries metric is a list of Long Running Queries with metadata
  * which are wrapped using [LongRunningQueryDTO]
  *
  * @property queryList list of long running queries wrapped in [LongRunningQueryDTO]

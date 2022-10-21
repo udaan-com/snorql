@@ -38,7 +38,7 @@ import com.udaan.snorql.framework.models.MetricOutput
  *
  * @constructor Create Table schema metric
  */
-class TableSchemaMetric:
+class TableSchemaMetric :
     IMetric<TableSchemaInput, TableSchemaResult, IMetricRecommendation> {
 
     override fun getMetricResult(

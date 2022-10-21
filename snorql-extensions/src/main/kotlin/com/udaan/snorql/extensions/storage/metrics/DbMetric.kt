@@ -59,7 +59,18 @@ class DbMetric :
         val paramMap = mapOf("databaseName" to metricInput.dbName)
         val dbSizeResult = SqlMetricManager.queryExecutor.execute<Int>(metricInput.databaseName, dbSizeQuery, paramMap)
 
-        val dbResultList :List<DbStorageSize> = result.mapIndexed { index, it ->  DbStorageSize(databaseName = it.databaseName,databaseSize = it.databaseSize, unallocatedSpace = it.unallocatedSpace,reserved = it.reserved, data = it.data, indexSize = it.indexSize, unused = it.unused, dbTotalSize = dbSizeResult[index] ) }
+        val dbResultList: List<DbStorageSize> = result.mapIndexed { index, it ->
+            DbStorageSize(
+                databaseName = it.databaseName,
+                databaseSize = it.databaseSize,
+                unallocatedSpace = it.unallocatedSpace,
+                reserved = it.reserved,
+                data = it.data,
+                indexSize = it.indexSize,
+                unused = it.unused,
+                dbTotalSize = dbSizeResult[index]
+            )
+        }
         return DbResult(dbResultList)
     }
 

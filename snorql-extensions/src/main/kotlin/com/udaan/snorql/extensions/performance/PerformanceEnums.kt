@@ -27,7 +27,7 @@ import com.udaan.snorql.framework.IMtericId
  * @property metricId id of performance metric in context
  * @constructor Create Performance enums
  */
-enum class PerformanceEnums(private val metricId:String):IMtericId {
+enum class PerformanceEnums(private val metricId: String) : IMtericId {
 
     /**
      * Active Queries Metric ID mapping

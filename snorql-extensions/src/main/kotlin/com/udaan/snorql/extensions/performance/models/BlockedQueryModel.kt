@@ -60,8 +60,8 @@ data class BlockedQueriesDTO(
     val sessionId: Int,
     val blockedBy: Int?,
     val blockingThese: String?,
-    val batchText:String?,
-    val inputBuffer:String?,
+    val batchText: String?,
+    val inputBuffer: String?,
     val loginName: String?,
     val status: String,
     val waitType: String?,
@@ -101,8 +101,8 @@ data class BlockedQueriesInput(
 /**
  * Wrapper class for Blocked queries metric result
  *
- * <p>Result of blocked queries metric is a list of Blocked Queries with metadata
- * which are wrapped using [BlockedQueriesDTO]</p>
+ * Result of blocked queries metric is a list of Blocked Queries with metadata
+ * which are wrapped using [BlockedQueriesDTO]
  *
  * @property queryList list of bloacked queries wrapped in [BlockedQueriesDTO]
  * @constructor Create Blocked queries metric result

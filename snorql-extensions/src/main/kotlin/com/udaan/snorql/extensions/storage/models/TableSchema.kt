@@ -39,17 +39,17 @@ import com.udaan.snorql.framework.models.MetricPeriod
  * @property collationName name of collation
  * @constructor Create column schema model
  */
-data class TableSchemaDTO (
-    val columnName:String,
-    val createdDate:String,
-    val isRowGuid:String,
-    val isIdentity:String,
-    val ordinalPosition:Int,
-    val columnDefault:String?,
-    val isNullable:String,
-    val dataType:String,
-    val characterMaximumLength:Int?,
-    val collationName:String?
+data class TableSchemaDTO(
+    val columnName: String,
+    val createdDate: String,
+    val isRowGuid: String,
+    val isIdentity: String,
+    val ordinalPosition: Int,
+    val columnDefault: String?,
+    val isNullable: String,
+    val dataType: String,
+    val characterMaximumLength: Int?,
+    val collationName: String?
 )
 
 /**

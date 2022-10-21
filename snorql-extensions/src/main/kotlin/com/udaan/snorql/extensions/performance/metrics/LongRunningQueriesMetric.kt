@@ -19,18 +19,24 @@
 
 package com.udaan.snorql.extensions.performance.metrics
 
-import com.udaan.snorql.extensions.performance.models.*
+import com.udaan.snorql.extensions.performance.models.LongRunningInput
+import com.udaan.snorql.extensions.performance.models.LongRunningQueryDTO
+import com.udaan.snorql.extensions.performance.models.LongRunningResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
-import com.udaan.snorql.framework.models.*
+import com.udaan.snorql.framework.models.IMetricRecommendation
+import com.udaan.snorql.framework.models.IMetricResult
+import com.udaan.snorql.framework.models.MetricConfig
+import com.udaan.snorql.framework.models.MetricInput
+import com.udaan.snorql.framework.models.MetricOutput
 
 /**
  * Class which implements the Long Running Queries metric
  *
- * <p>The long running queries metric is used to list the queries
+ * The long-running queries metric is used to list the queries
  * with useful metadata which have been running for more than a
- * specified time (seconds).</p>
+ * specified time (seconds).
  *
  * @constructor Create Long running queries metric
  */
@@ -41,12 +47,12 @@ class LongRunningQueriesMetric :
         metricInput: LongRunningInput,
         metricConfig: MetricConfig
     ): LongRunningResult {
-        // check the metricConfig.supportedHistory before getting the query
         val query =
             metricConfig.queries["main"]
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
         val paramMap = mapOf("elapsedTimeParam" to metricInput.elapsedTime)
-        val result = SqlMetricManager.queryExecutor.execute<LongRunningQueryDTO>(metricInput.databaseName, query,paramMap)
+        val result =
+            SqlMetricManager.queryExecutor.execute<LongRunningQueryDTO>(metricInput.databaseName, query, paramMap)
         return LongRunningResult(result)
     }
 

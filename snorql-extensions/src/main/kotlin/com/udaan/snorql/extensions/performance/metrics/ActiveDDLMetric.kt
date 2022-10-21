@@ -19,11 +19,17 @@
 
 package com.udaan.snorql.extensions.performance.metrics
 
-import com.udaan.snorql.extensions.performance.models.*
+import com.udaan.snorql.extensions.performance.models.ActiveDDLDTO
+import com.udaan.snorql.extensions.performance.models.ActiveDDLInput
+import com.udaan.snorql.extensions.performance.models.ActiveDDLResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
-import com.udaan.snorql.framework.models.*
+import com.udaan.snorql.framework.models.IMetricRecommendation
+import com.udaan.snorql.framework.models.IMetricResult
+import com.udaan.snorql.framework.models.MetricConfig
+import com.udaan.snorql.framework.models.MetricInput
+import com.udaan.snorql.framework.models.MetricOutput
 
 /**
  * ActiveDDLMetric class is an implementation of Active DDL Queries Metric
@@ -40,7 +46,6 @@ class ActiveDDLMetric :
         metricInput: ActiveDDLInput,
         metricConfig: MetricConfig
     ): ActiveDDLResult {
-        // check the metricConfig.supportedHistory before getting the query
         val query =
             metricConfig.queries["main"]
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")

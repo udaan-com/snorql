@@ -102,7 +102,7 @@ data class DbStorageSize(
 data class DbInput(
     override val metricId: String = StorageEnums.DB.getId(),
     override val metricPeriod: MetricPeriod, override val databaseName: String,
-    val dbName:String
+    val dbName: String
 ) : MetricInput()
 
 /**
