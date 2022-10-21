@@ -51,7 +51,8 @@ object AlertsManager {
     }
 
     fun <T : AlertInput, O : IAlertResult, V : IAlertRecommendation> addAlert(
-        alertConfig: AlertConfigOutline, alertInput: T
+        alertConfig: AlertConfigOutline,
+        alertInput: T
     ): Boolean {
         val jobName = alertConfig.alertType
         val triggerName = "${alertInput.databaseName}-${alertConfig.alertType}".plus("-").plus(
@@ -120,7 +121,9 @@ object AlertsManager {
     }
 
     fun <T : AlertInput, O : IAlertResult, V : IAlertRecommendation> getAlertResponse(
-        alertId: String, alertInput: T, alertConfig: AlertConfigOutline
+        alertId: String,
+        alertInput: T,
+        alertConfig: AlertConfigOutline
     ): AlertResponse<*, *> {
         val instance = alertIdToAlertMap[alertId]?.let { it as IAlert<T, O, V> }
             ?: throw SQLMonitoringException("IMetric impl instance not found for metric id [$alertId]")
@@ -137,7 +140,9 @@ object AlertsManager {
      * @param databaseName name of database to fetch triggers for required database
      */
     private fun getAllAlerts(
-        databaseName: String, alertId: String? = null, triggerGroup: String = SnorqlConstants.ALERT_GROUP_NAME
+        databaseName: String,
+        alertId: String? = null,
+        triggerGroup: String = SnorqlConstants.ALERT_GROUP_NAME
     ): List<Map<String, Any?>> {
         logger.info("[AlertsManager][getAllAlerts] Group is $triggerGroup")
         val allTriggerKeys = QuartzUtils.scheduler.getTriggerKeys(GroupMatcher.triggerGroupEquals(triggerGroup))

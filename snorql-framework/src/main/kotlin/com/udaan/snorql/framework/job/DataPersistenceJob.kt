@@ -29,7 +29,9 @@ import org.quartz.Job
 import org.quartz.JobExecutionContext
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.UUID
+import java.util.TimeZone
+import java.util.Date
 
 class DataPersistenceJob<in T : MetricInput, O : IMetricResult, R : IMetricRecommendation> : Job {
     val logger = SqlMetricManager.logger

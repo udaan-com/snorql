@@ -20,26 +20,21 @@
 package com.udaan.snorql.framework.job
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.udaan.snorql.framework.TriggerNotFoundException
 import com.udaan.snorql.framework.metric.SqlMetricManager
+import com.udaan.snorql.framework.models.HistoricalDatabaseResult
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.IMetricResult
+import com.udaan.snorql.framework.models.MetricConfig
+import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.RecordingJobConfigOutline
 import com.udaan.snorql.framework.models.SnorqlConstants
-import com.udaan.snorql.framework.models.MetricInput
-import com.udaan.snorql.framework.models.MetricConfig
-import com.udaan.snorql.framework.models.HistoricalDatabaseResult
 import com.udaan.snorql.framework.models.TriggerBuildConfig
-import com.udaan.snorql.framework.models.CronTriggerBuildConfig
-import org.quartz.Scheduler
-import org.quartz.SimpleTrigger
-import org.quartz.TriggerKey
 import org.quartz.JobBuilder
-import org.quartz.JobKey
-import org.quartz.Trigger
 import org.quartz.JobDataMap
-import org.quartz.CronExpression
-import org.quartz.impl.StdSchedulerFactory
+import org.quartz.JobKey
+import org.quartz.SimpleTrigger
+import org.quartz.Trigger
+import org.quartz.TriggerKey
 import org.quartz.impl.matchers.GroupMatcher
 import java.util.Properties
 
@@ -204,7 +199,8 @@ object JobManager {
     /**
      * Function responsible to delete an existing trigger in quartz scheduler
      * @param triggerName name of the trigger to be deleted
-     * @param triggerGroup Group which the trigger belongs to. Default set to [SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME]
+     * @param triggerGroup Group which the trigger belongs to.
+     * Default set to [SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME]
      */
     fun deleteTrigger(
         triggerName: String,

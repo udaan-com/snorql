@@ -6,9 +6,21 @@ import com.udaan.snorql.framework.metric.SqlMetricManager
 import com.udaan.snorql.framework.models.CronTriggerBuildConfig
 import com.udaan.snorql.framework.models.SnorqlConstants
 import com.udaan.snorql.framework.models.TriggerBuildConfig
-import org.quartz.*
+import org.quartz.CronExpression
+import org.quartz.CronScheduleBuilder
+import org.quartz.CronTrigger
+import org.quartz.JobBuilder
+import org.quartz.JobDataMap
+import org.quartz.JobDetail
+import org.quartz.JobKey
+import org.quartz.Scheduler
+import org.quartz.SimpleScheduleBuilder
+import org.quartz.SimpleTrigger
+import org.quartz.Trigger
+import org.quartz.TriggerBuilder
+import org.quartz.TriggerKey
 import org.quartz.impl.StdSchedulerFactory
-import java.util.*
+import java.util.Properties
 
 object QuartzUtils {
 
@@ -200,7 +212,8 @@ object QuartzUtils {
             scheduler.unscheduleJob(TriggerKey(triggerName, triggerGroup))
             true
         } else {
-            throw TriggerNotFoundException("[deleteTrigger] Trigger with name $triggerName in group $triggerGroup not found")
+            throw TriggerNotFoundException("[deleteTrigger] Trigger with name $triggerName in group " +
+                    "$triggerGroup not found")
         }
     }
 

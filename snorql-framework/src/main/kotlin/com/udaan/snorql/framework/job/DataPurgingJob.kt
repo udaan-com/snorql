@@ -26,7 +26,7 @@ import org.quartz.Job
 import org.quartz.JobExecutionContext
 import java.sql.Timestamp
 import java.time.LocalDateTime
-import java.util.*
+import java.util.Calendar
 
 class DataPurgingJob : Job {
     private val logger = SqlMetricManager.logger
@@ -35,7 +35,7 @@ class DataPurgingJob : Job {
      * This function will be executed by Data Purge Cron Trigger
      */
     override fun execute(context: JobExecutionContext) {
-        logger.info("Starting data purge job at ${Calendar.getInstance().time}")
+        logger.info("[DataPurgingJob] Starting data purge job at ${Calendar.getInstance().time}")
         val mergedDataMap = context.mergedJobDataMap
         val metricsToPurge: MutableList<HistoricalDataPurgeConfig> = mutableListOf()
         for ((key, value) in mergedDataMap.entries) {

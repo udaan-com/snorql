@@ -48,7 +48,10 @@ class BlockedQueriesMetric :
     ): BlockedQueriesResult {
         val query =
             metricConfig.queries["main"]
-                ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
+                ?: throw SQLMonitoringConfigException(
+                    "SQL config query [main] not found under config " +
+                            "[${metricInput.metricId}]"
+                )
         val results = SqlMetricManager.queryExecutor.execute<BlockedQueriesDTO>(metricInput.databaseName, query)
 
         for (result in results) {
@@ -78,7 +81,10 @@ class BlockedQueriesMetric :
 
     private fun generateBlockingTree(result: BlockedQueriesDTO, results: List<BlockedQueriesDTO>): BlockedQueriesDTO? {
         if (result.blockedBy != 0) {
-            if (!results.single { it.sessionId == result.blockedBy }.blockingTree.any { it?.sessionId == result.sessionId }) {
+            if (!results.single { it.sessionId == result.blockedBy }.blockingTree.any {
+                    it?.sessionId == result.sessionId
+                }
+            ) {
                 results.single { it.sessionId == result.blockedBy }.blockingTree.add(result)
             }
             generateBlockingTree(results.single { it.sessionId == result.blockedBy }, results)
