@@ -19,7 +19,11 @@
 
 package com.udaan.snorql.framework.metric
 
-import com.udaan.snorql.framework.models.*
+import com.udaan.snorql.framework.models.AlertConfigOutline
+import com.udaan.snorql.framework.models.AlertInput
+import com.udaan.snorql.framework.models.AlertOutput
+import com.udaan.snorql.framework.models.HistoricalDataPurgeConfig
+import com.udaan.snorql.framework.models.HistoricalDatabaseResult
 import java.sql.Statement
 
 /**
@@ -55,11 +59,12 @@ interface Connection {
      * @param postHooks hooks to run with statement after running the query
      * @return
      */
-    fun <T> run(databaseName: String,
-                query: String,
-                mapClass: Class<T>,
-                preHooks: ((statement: Statement) -> Unit)? = null,
-                postHooks: ((statement: Statement) -> Unit)? = null
+    fun <T> run(
+        databaseName: String,
+        query: String,
+        mapClass: Class<T>,
+        preHooks: ((statement: Statement) -> Unit)? = null,
+        postHooks: ((statement: Statement) -> Unit)? = null
     ): List<T>
 
     /**

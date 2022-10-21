@@ -19,7 +19,12 @@
 
 package com.udaan.snorql.framework.metric
 
-import com.udaan.snorql.framework.models.*
+import com.udaan.snorql.framework.models.IMetricRecommendation
+import com.udaan.snorql.framework.models.IMetricResult
+import com.udaan.snorql.framework.models.MetricConfig
+import com.udaan.snorql.framework.models.MetricInput
+import com.udaan.snorql.framework.models.MetricOutput
+import com.udaan.snorql.framework.models.MetricResponse
 
 /**
  * [IMetric] The interface to be implemented by Metric Class which represents a 'metric'
