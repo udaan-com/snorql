@@ -61,8 +61,8 @@ class DataPersistenceJob<in T : MetricInput, O : IMetricResult, R : IMetricRecom
                 metricId = metricInput.metricId,
                 databaseName = metricInput.databaseName,
                 source = SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME,
-                metricInput = SnorqlConstants.objectMapper.writeValueAsString(metricInput), // metricInput,
-                metricOutput = SnorqlConstants.objectMapper.writeValueAsString(metricOutput) // metricOutput
+                metricInput = SnorqlConstants.objectMapper.writeValueAsString(metricInput),
+                metricOutput = SnorqlConstants.objectMapper.writeValueAsString(metricOutput)
             )
             val storageId = SnorqlConstants.HISTORICAL_DATA_BUCKET_ID
             SqlMetricManager.queryExecutor.persistHistoricalData(storageId, listOf(dataRecorded))

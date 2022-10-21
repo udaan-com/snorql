@@ -47,7 +47,6 @@ interface Connection {
         params: Map<String, *> = emptyMap<String, String>()
     ): List<T>
 
-
     /**
      * Run binds to <T> by executing a query as a [Statement] using a databaseName instance
      *

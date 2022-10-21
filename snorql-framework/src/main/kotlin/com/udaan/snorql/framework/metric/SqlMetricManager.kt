@@ -118,5 +118,4 @@ object SqlMetricManager {
                 ?: throw SQLMonitoringException("IMetric impl instance not found for metric id [$metricId]")
         return instance.getMetricResponse(metricInput)
     }
-
 }

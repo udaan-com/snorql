@@ -17,7 +17,6 @@
  * under the License.
  */
 
-
 package com.udaan.snorql.framework
 
 /**
