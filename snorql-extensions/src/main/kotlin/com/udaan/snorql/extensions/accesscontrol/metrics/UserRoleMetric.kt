@@ -46,8 +46,6 @@ class UserRoleMetric :
             metricConfig.queries["main"]
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
         val result = SqlMetricManager.queryExecutor.execute<UserRoleDTO>(metricInput.databaseName, query)
-
-
         return UserRoleResult(result)
     }
 

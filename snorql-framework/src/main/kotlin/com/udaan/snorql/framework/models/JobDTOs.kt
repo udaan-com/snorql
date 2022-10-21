@@ -14,11 +14,12 @@ data class JobTriggerConfig(
 interface RecordingJobConfigOutline {
     val databaseName: String
     val watchIntervalInSeconds: Int
-    val startFrom: Timestamp
     val endAt: Timestamp?
+    val startFrom: Timestamp?
     val description: String?
     val configuredByName: String?
     val configuredByEmail: String?
+    val dataRetentionPeriodInDays: Int
 }
 
 data class TriggerBuildConfig(

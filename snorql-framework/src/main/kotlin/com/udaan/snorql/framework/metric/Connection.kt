@@ -19,12 +19,8 @@
 
 package com.udaan.snorql.framework.metric
 
-import com.udaan.snorql.framework.models.AlertConfigOutline
-import com.udaan.snorql.framework.models.AlertInput
-import com.udaan.snorql.framework.models.AlertOutput
-import com.udaan.snorql.framework.models.HistoricalDataPurgeConfig
-import com.udaan.snorql.framework.models.HistoricalDatabaseResult
-import com.udaan.snorql.framework.models.SnorqlConstants
+import com.udaan.snorql.framework.models.*
+import java.sql.Statement
 
 /**
  * Connection interface implemented by user to define methods required for snorql to interact with user's database
@@ -47,6 +43,25 @@ interface Connection {
         params: Map<String, *> = emptyMap<String, String>()
     ): List<T>
 
+
+    /**
+     * Run binds to <T> by executing a query as a [Statement] using a databaseName instance
+     *
+     * @param T
+     * @param databaseName database name to create instance
+     * @param query execute the raw query (not parameterised)
+     * @param mapClass
+     * @param preHooks hooks to run with statement before running the query
+     * @param postHooks hooks to run with statement after running the query
+     * @return
+     */
+    fun <T> run(databaseName: String,
+                query: String,
+                mapClass: Class<T>,
+                preHooks: ((statement: Statement) -> Unit)? = null,
+                postHooks: ((statement: Statement) -> Unit)? = null
+    ): List<T>
+
     /**
      * Store data into user's database
      *
@@ -65,7 +80,6 @@ interface Connection {
         storageBucketId: String,
         metricId: String,
         databaseName: String,
-        columns: List<String> = SnorqlConstants.historicalDataTableColumns,
         paginationParams: Map<String, *> = emptyMap<String, String>(),
         params: Map<String, *> = emptyMap<String, String>()
     ): HistoricalDatabaseResult
@@ -73,7 +87,6 @@ interface Connection {
     /**
      * Handle an alert from snorql
      */
-    // Take parameter from user
     fun handleAlert(
         alertConfig: AlertConfigOutline,
         alertInput: AlertInput,
