@@ -25,6 +25,7 @@ import java.sql.ResultSet
 /**
  * Extension Utility to Map [ResultSet] to [T] mapClass provided by the client
  */
+@Suppress("SpreadOperator")
 fun <T> ResultSet.rowMapper(mapClass: Class<T>): List<T> {
     val outputList = mutableListOf<T>()
     val columns = getAllColsInOrder(mapClass)

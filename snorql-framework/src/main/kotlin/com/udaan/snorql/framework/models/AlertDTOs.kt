@@ -38,6 +38,7 @@ data class AlertConfigOutline(
 /**
  * Abstract alert input class
  */
+@Suppress("UnnecessaryAbstractClass")
 abstract class AlertInput {
     abstract val databaseName: String
 }
