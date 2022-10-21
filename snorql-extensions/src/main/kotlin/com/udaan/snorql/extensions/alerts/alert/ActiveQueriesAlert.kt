@@ -37,7 +37,8 @@ class ActiveQueriesAlert :
     IAlert<ActiveQueriesFilterAlertInput, ActiveQueriesFilterAlertResult, IAlertRecommendation> {
 
     override fun getAlertOutput(
-        alertInput: ActiveQueriesFilterAlertInput, alertConfig: AlertConfigOutline
+        alertInput: ActiveQueriesFilterAlertInput,
+        alertConfig: AlertConfigOutline
     ): AlertOutput<ActiveQueriesFilterAlertResult, IAlertRecommendation> {
         val metricResponse = SqlMetricManager.getMetric<ActiveQueryInput, ActiveQueryResult, IMetricRecommendation>(
             metricId = PerformanceEnums.ACTIVE_QUERIES.getId(),

@@ -47,7 +47,6 @@ class SQLMonitoringException(message: String) : Exception(message)
  */
 class TriggerNotFoundException(message: String) : Exception(message)
 
-
 /**
  * Exception class for unsupported alert input
  *

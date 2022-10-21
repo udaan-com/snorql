@@ -59,7 +59,8 @@ enum class AlertSeverity {
  * Response of an alert
  */
 data class AlertResponse<T : IAlertResult, V : IAlertRecommendation>(
-    val alertInput: AlertInput, val alertOutput: AlertOutput<*, *>
+    val alertInput: AlertInput,
+    val alertOutput: AlertOutput<*, *>
 )
 
 /**

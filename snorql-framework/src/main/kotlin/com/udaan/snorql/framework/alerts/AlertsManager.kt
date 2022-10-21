@@ -44,9 +44,7 @@ object AlertsManager {
     private val logger = SqlMetricManager.logger
     private val alertIdToAlertMap: MutableMap<String, Any> = mutableMapOf()
 
-    fun addAlertToMap(
-        alertId: String, instance: IAlert<*, *, *>
-    ) {
+    fun addAlertToMap(alertId: String, instance: IAlert<*, *, *>) {
         alertIdToAlertMap[alertId] = instance
     }
 
