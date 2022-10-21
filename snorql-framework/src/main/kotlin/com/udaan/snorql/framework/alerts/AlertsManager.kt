@@ -27,8 +27,6 @@ object AlertsManager {
         val triggerName = "${alertInput.databaseName}-${alertConfig.alertType}".plus("-").plus(
             objectMapper.writeValueAsString(alertInput).hashCode()
         )
-        // Change alertID to AlertName
-        // databaseName-alertType-alertInputHashcode
         val jobDataMap = JobDataMap()
         jobDataMap["alertInput"] = objectMapper.writeValueAsString(alertInput)
         jobDataMap["alertClass"] = alertIdToAlertMap[alertConfig.alertType]!!::class.java.name
