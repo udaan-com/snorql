@@ -19,11 +19,17 @@
 
 package com.udaan.snorql.extensions.performance.metrics
 
-import com.udaan.snorql.extensions.performance.models.*
+import com.udaan.snorql.extensions.performance.models.IndexStatDTO
+import com.udaan.snorql.extensions.performance.models.IndexStatInput
+import com.udaan.snorql.extensions.performance.models.IndexStatResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
-import com.udaan.snorql.framework.models.*
+import com.udaan.snorql.framework.models.IMetricRecommendation
+import com.udaan.snorql.framework.models.IMetricResult
+import com.udaan.snorql.framework.models.MetricConfig
+import com.udaan.snorql.framework.models.MetricInput
+import com.udaan.snorql.framework.models.MetricOutput
 
 /**
  * Class which implements the Database Index Statistics metric
@@ -40,7 +46,6 @@ class IndexStatsMetric :
         metricInput: IndexStatInput,
         metricConfig: MetricConfig
     ): IndexStatResult {
-        // check the metricConfig.supportedHistory before getting the query
         val query =
             metricConfig.queries["main"]
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
@@ -49,7 +54,7 @@ class IndexStatsMetric :
         val paramMap = mapOf("tableName" to metricInput.tableName, "indexName" to metricInput.indexName)
 
         val result = SqlMetricManager.queryExecutor.execute<IndexStatDTO>(metricInput.databaseName, query, paramMap)
-            return IndexStatResult(result)
+        return IndexStatResult(result)
     }
 
     override fun getMetricResponseMetadata(

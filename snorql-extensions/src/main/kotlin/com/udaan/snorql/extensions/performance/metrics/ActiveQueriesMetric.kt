@@ -25,13 +25,17 @@ import com.udaan.snorql.extensions.performance.models.ActiveQueryResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
-import com.udaan.snorql.framework.models.*
+import com.udaan.snorql.framework.models.IMetricRecommendation
+import com.udaan.snorql.framework.models.IMetricResult
+import com.udaan.snorql.framework.models.MetricConfig
+import com.udaan.snorql.framework.models.MetricInput
+import com.udaan.snorql.framework.models.MetricOutput
 
 /**
  * Class which implements Active Queries Metric
  *
- * <p>The active queries metric fetches the active queries for the
- * specified database along with other metadata.</p>
+ * The active queries metric fetches the active queries for the
+ * specified database along with other metadata.
  *
  * @constructor Create Active queries metric
  */
@@ -42,13 +46,12 @@ class ActiveQueriesMetric :
         metricInput: ActiveQueryInput,
         metricConfig: MetricConfig
     ): ActiveQueryResult {
-        // check the metricConfig.supportedHistory before getting the query
         val query =
             metricConfig.queries["main"]
                 ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
 
-            val result = SqlMetricManager.queryExecutor.execute<ActiveQueryDTO>(metricInput.databaseName, query)
-            return ActiveQueryResult(result)
+        val result = SqlMetricManager.queryExecutor.execute<ActiveQueryDTO>(metricInput.databaseName, query)
+        return ActiveQueryResult(result)
     }
 
     override fun getMetricResponseMetadata(

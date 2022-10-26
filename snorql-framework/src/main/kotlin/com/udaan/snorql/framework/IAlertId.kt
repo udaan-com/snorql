@@ -20,15 +20,10 @@
 package com.udaan.snorql.framework
 
 /**
- * Interface responsible for getting Metric IDs
+ * Interface responsible for getting Alert IDs
  *
- * @constructor Create empty IMetric id
+ * @constructor Create empty IAlertID
  */
-interface IMtericId {
-    /**
-     * Get metric id
-     *
-     * @return metric id
-     */
+interface IAlertId {
     fun getId(): String
 }

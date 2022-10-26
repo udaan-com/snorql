@@ -17,18 +17,23 @@
  * under the License.
  */
 
-package com.udaan.snorql.framework
+package com.udaan.snorql.extensions.alerts.model
 
-/**
- * Interface responsible for getting Metric IDs
- *
- * @constructor Create empty IMetric id
- */
-interface IMtericId {
-    /**
-     * Get metric id
-     *
-     * @return metric id
-     */
-    fun getId(): String
-}
+import com.udaan.snorql.extensions.performance.models.ActiveQueryResult
+import com.udaan.snorql.framework.models.AlertInput
+import com.udaan.snorql.framework.models.IAlertResult
+
+data class ActiveQueriesFilterAlertInput(
+    override val databaseName: String,
+    val queriesCountThreshold: Int?,
+    val elapsedTimeThreshold: Int?,
+    val cpuTimeThreshold: Int?,
+    val logicalReadsThreshold: Int?,
+    val readsThreshold: Int?,
+    val writesThreshold: Int?,
+    val openTransactionCountThreshold: Int?
+) : AlertInput()
+
+data class ActiveQueriesFilterAlertResult(
+    val filteredMetricResult: ActiveQueryResult
+) : IAlertResult()

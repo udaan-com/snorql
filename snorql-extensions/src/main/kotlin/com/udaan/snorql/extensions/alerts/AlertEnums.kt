@@ -17,18 +17,15 @@
  * under the License.
  */
 
-package com.udaan.snorql.framework
+package com.udaan.snorql.extensions.alerts
 
-/**
- * Interface responsible for getting Metric IDs
- *
- * @constructor Create empty IMetric id
- */
-interface IMtericId {
-    /**
-     * Get metric id
-     *
-     * @return metric id
-     */
-    fun getId(): String
+import com.udaan.snorql.framework.IAlertId
+
+enum class AlertEnums(private val alertId: String) : IAlertId {
+
+    ACTIVE_QUERIES_FILTER("activeQueriesFilter");
+
+    override fun getId(): String {
+        return "alert_" + this.alertId
+    }
 }

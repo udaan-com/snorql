@@ -26,7 +26,12 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.udaan.snorql.framework.SQLMonitoringConnectionException
 import com.udaan.snorql.framework.SQLMonitoringException
-import com.udaan.snorql.framework.models.*
+import com.udaan.snorql.framework.models.Configuration
+import com.udaan.snorql.framework.models.IMetricRecommendation
+import com.udaan.snorql.framework.models.IMetricResult
+import com.udaan.snorql.framework.models.MetricConfig
+import com.udaan.snorql.framework.models.MetricInput
+import com.udaan.snorql.framework.models.MetricResponse
 
 object SqlMetricManager {
 
@@ -40,8 +45,10 @@ object SqlMetricManager {
 
     private val objectMapper: ObjectMapper
         get() {
-            return jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-                    false).registerKotlinModule()
+            return jacksonObjectMapper().configure(
+                DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+                false
+            ).registerKotlinModule()
         }
     val configuration: Configuration by lazy {
         val file = SqlMetricManager::class.java.getResource(CONFIG_FILE_LOCATION).readText()
@@ -70,7 +77,7 @@ object SqlMetricManager {
     val queryExecutor: QueryExecutor
         get() {
             return connection?.let { QueryExecutor(it) }
-                    ?: throw SQLMonitoringConnectionException("Connection is null. Cannot get QueryExecutor instance.")
+                ?: throw SQLMonitoringConnectionException("Connection is null. Cannot get QueryExecutor instance.")
         }
 
     /**
@@ -81,8 +88,9 @@ object SqlMetricManager {
      * @param metricId id of the metric
      * @param instance instance of the metric
      */
-    fun addMetric(metricId: String,
-                  instance: IMetric<*, *, *>
+    fun addMetric(
+        metricId: String,
+        instance: IMetric<*, *, *>
     ) {
         metricIdToMetricMap[metricId] = instance
     }
@@ -101,12 +109,13 @@ object SqlMetricManager {
      * @param metricInput input for the metric triggered
      * @return metric response wrapped in MetricResponse
      */
-    fun <T : MetricInput, O : IMetricResult, V : IMetricRecommendation> getMetric(metricId: String,
-                                                                                  metricInput: T): MetricResponse<*, *> {
+    fun <T : MetricInput, O : IMetricResult, V : IMetricRecommendation> getMetric(
+        metricId: String,
+        metricInput: T
+    ): MetricResponse<*, *> {
         val instance =
             metricIdToMetricMap[metricId]?.let { it as IMetric<T, O, V> }
-                    ?: throw SQLMonitoringException("IMetric impl instance not found for metric id [$metricId]")
+                ?: throw SQLMonitoringException("IMetric impl instance not found for metric id [$metricId]")
         return instance.getMetricResponse(metricInput)
     }
-
 }

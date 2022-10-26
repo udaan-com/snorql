@@ -67,8 +67,8 @@ data class ActiveDDLInput(
 /**
  * Wrapper class to hold the result of ActiveDDLMetric
  *
- * <p>Result of active DDL queries metric is a list of Active DDL Queries with metadata
- * which is wrapped using [ActiveDDLResult]</p>
+ * Result of active DDL queries metric is a list of Active DDL Queries with metadata
+ * which is wrapped using [ActiveDDLResult]
  *
  * @property queryList List of active DDL queries wrapped in [ActiveDDLDTO]
  * @constructor Create ActiveDDLMetric Result

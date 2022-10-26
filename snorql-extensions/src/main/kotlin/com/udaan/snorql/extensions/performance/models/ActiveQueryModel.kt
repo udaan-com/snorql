@@ -93,8 +93,8 @@ data class ActiveQueryInput(
 /**
  * Wrapper class for Active query metric result
  *
- * <p>Result of active queries metric is a list of Active Queries with metadata
- * which are wrapped using [ActiveQueryDTO]</p>
+ * Result of active queries metric is a list of Active Queries with metadata
+ * which are wrapped using [ActiveQueryDTO]
  *
  * @property queryList list of active queries wrapped in [ActiveQueryDTO]
  * @constructor Create Active query result

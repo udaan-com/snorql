@@ -17,18 +17,11 @@
  * under the License.
  */
 
-package com.udaan.snorql.framework
+package com.udaan.snorql.framework.annotations
 
 /**
- * Interface responsible for getting Metric IDs
- *
- * @constructor Create empty IMetric id
+ * Annotation to explicitly provide mapping name for sql columns returned the db
  */
-interface IMtericId {
-    /**
-     * Get metric id
-     *
-     * @return metric id
-     */
-    fun getId(): String
-}
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.FIELD)
+annotation class SnorqlColumnName(val colName: String)

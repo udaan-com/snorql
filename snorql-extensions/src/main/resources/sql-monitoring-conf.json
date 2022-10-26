@@ -64,7 +64,6 @@
     "referenceDoc": [],
     "description": ""
   },
-
   "accessControl_userRole": {
     "queries": {
       "main": "select dp1.name, string_agg(dp2.name,', ') as role, dp1.type as type from sys.database_role_members drm\njoin sys.database_principals dp1 on dp1.principal_id=drm.member_principal_id\njoin sys.database_principals dp2 on dp2.principal_id=drm.role_principal_id\ngroup by dp1.name, dp1.type"
@@ -86,7 +85,9 @@
     },
     "supportsRealTime": true,
     "isParameterized": false,
-    "referenceDoc": ["https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-spaceused-transact-sql?view=sql-server-ver15#examples"],
+    "referenceDoc": [
+      "https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-spaceused-transact-sql?view=sql-server-ver15#examples"
+    ],
     "description": "Displaying updated space information about a database"
   },
   "storage_dbTables": {
@@ -125,7 +126,9 @@
     },
     "supportsRealTime": true,
     "isParameterized": true,
-    "referenceDoc": ["https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-spaceused-transact-sql?view=sql-server-ver15#examples"],
+    "referenceDoc": [
+      "https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-spaceused-transact-sql?view=sql-server-ver15#examples"
+    ],
     "description": "Displaying disk space information about a table"
   },
   "storage_dbGrowth": {

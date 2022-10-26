@@ -83,15 +83,17 @@ data class IndexStatDTO(
  */
 data class IndexStatInput(
     override val metricId: String = PerformanceEnums.INDEX_STATS.getId(),
-    override val metricPeriod: MetricPeriod, override val databaseName: String,
-    val tableName:String, val indexName:String
+    override val metricPeriod: MetricPeriod,
+    override val databaseName: String,
+    val tableName: String,
+    val indexName: String
 ) : MetricInput()
 
 /**
  * Wrapper class to hold Index stat metric result
  *
- * <p>Result of index stats metric is a list of Index Statistics
- * which are wrapped using [IndexStatDTO]</p>
+ * Result of index stats metric is a list of Index Statistics
+ * which are wrapped using [IndexStatDTO]
  *
  * @property queryList list of index statistics wrapped in [IndexStatDTO]
  * @constructor Create empty Index stat result

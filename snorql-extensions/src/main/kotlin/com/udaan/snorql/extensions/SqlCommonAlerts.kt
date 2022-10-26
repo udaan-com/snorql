@@ -17,18 +17,14 @@
  * under the License.
  */
 
-package com.udaan.snorql.framework
+package com.udaan.snorql.extensions
 
-/**
- * Interface responsible for getting Metric IDs
- *
- * @constructor Create empty IMetric id
- */
-interface IMtericId {
-    /**
-     * Get metric id
-     *
-     * @return metric id
-     */
-    fun getId(): String
+import com.udaan.snorql.extensions.alerts.AlertEnums
+import com.udaan.snorql.extensions.alerts.alert.ActiveQueriesAlert
+import com.udaan.snorql.framework.alerts.AlertsManager
+
+object SqlCommonAlerts {
+    fun initialize() {
+        AlertsManager.addAlertToMap(AlertEnums.ACTIVE_QUERIES_FILTER.getId(), ActiveQueriesAlert())
+    }
 }

@@ -1,11 +1,30 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package com.udaan.snorql.framework.job
 
 import com.udaan.snorql.framework.metric.SqlMetricManager
+import com.udaan.snorql.framework.models.HistoricalDatabaseSchemaDTO
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.SnorqlConstants
-import com.udaan.snorql.framework.models.HistoricalDatabaseSchemaDTO
 import org.quartz.Job
 import org.quartz.JobExecutionContext
 import java.text.DateFormat
@@ -44,8 +63,8 @@ class DataPersistenceJob<in T : MetricInput, O : IMetricResult, R : IMetricRecom
                 metricId = metricInput.metricId,
                 databaseName = metricInput.databaseName,
                 source = SnorqlConstants.DATA_PERSISTENCE_GROUP_NAME,
-                metricInput = SnorqlConstants.objectMapper.writeValueAsString(metricInput), // metricInput,
-                metricOutput = SnorqlConstants.objectMapper.writeValueAsString(metricOutput) // metricOutput
+                metricInput = SnorqlConstants.objectMapper.writeValueAsString(metricInput),
+                metricOutput = SnorqlConstants.objectMapper.writeValueAsString(metricOutput)
             )
             val storageId = SnorqlConstants.HISTORICAL_DATA_BUCKET_ID
             SqlMetricManager.queryExecutor.persistHistoricalData(storageId, listOf(dataRecorded))

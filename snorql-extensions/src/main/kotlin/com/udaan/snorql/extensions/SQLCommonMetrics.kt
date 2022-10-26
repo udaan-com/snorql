@@ -22,9 +22,20 @@ package com.udaan.snorql.extensions
 import com.udaan.snorql.extensions.accesscontrol.AccessControlEnums
 import com.udaan.snorql.extensions.accesscontrol.metrics.UserRoleMetric
 import com.udaan.snorql.extensions.performance.PerformanceEnums
-import com.udaan.snorql.extensions.performance.metrics.*
+import com.udaan.snorql.extensions.performance.metrics.ActiveDDLMetric
+import com.udaan.snorql.extensions.performance.metrics.ActiveQueriesMetric
+import com.udaan.snorql.extensions.performance.metrics.BlockedQueriesMetric
+import com.udaan.snorql.extensions.performance.metrics.IndexStatsMetric
+import com.udaan.snorql.extensions.performance.metrics.LongRunningQueriesMetric
 import com.udaan.snorql.extensions.storage.StorageEnums
-import com.udaan.snorql.extensions.storage.metrics.*
+import com.udaan.snorql.extensions.storage.metrics.DbGrowthMetric
+import com.udaan.snorql.extensions.storage.metrics.DbIndexMetric
+import com.udaan.snorql.extensions.storage.metrics.DbMetric
+import com.udaan.snorql.extensions.storage.metrics.DbTableMetric
+import com.udaan.snorql.extensions.storage.metrics.PVSMetric
+import com.udaan.snorql.extensions.storage.metrics.TableMetric
+import com.udaan.snorql.extensions.storage.metrics.TableSchemaMetric
+import com.udaan.snorql.extensions.storage.metrics.TableUnusedIndexMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
 
 object SQLCommonMetrics {

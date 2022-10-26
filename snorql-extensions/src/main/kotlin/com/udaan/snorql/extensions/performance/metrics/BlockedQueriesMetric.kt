@@ -19,17 +19,23 @@
 
 package com.udaan.snorql.extensions.performance.metrics
 
-import com.udaan.snorql.extensions.performance.models.*
+import com.udaan.snorql.extensions.performance.models.BlockedQueriesDTO
+import com.udaan.snorql.extensions.performance.models.BlockedQueriesInput
+import com.udaan.snorql.extensions.performance.models.BlockedQueriesResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
-import com.udaan.snorql.framework.models.*
+import com.udaan.snorql.framework.models.IMetricRecommendation
+import com.udaan.snorql.framework.models.IMetricResult
+import com.udaan.snorql.framework.models.MetricConfig
+import com.udaan.snorql.framework.models.MetricInput
+import com.udaan.snorql.framework.models.MetricOutput
 
 /**
  * Class which implements Blocked Queries Metric
  *
- * <p>Blocked queries metric can be used to fetch the queries which are in the
- * blocked state.</p>
+ * Blocked queries metric can be used to fetch the queries which are in the
+ * blocked state.
  *
  * @constructor Create Blocked queries metric
  */
@@ -42,11 +48,14 @@ class BlockedQueriesMetric :
     ): BlockedQueriesResult {
         val query =
             metricConfig.queries["main"]
-                ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
+                ?: throw SQLMonitoringConfigException(
+                    "SQL config query [main] not found under config " +
+                            "[${metricInput.metricId}]"
+                )
         val results = SqlMetricManager.queryExecutor.execute<BlockedQueriesDTO>(metricInput.databaseName, query)
 
-        for(result in results) {
-            if(result.blockedBy != 0){
+        for (result in results) {
+            if (result.blockedBy != 0) {
                 generateBlockingTree(result, results)
             }
         }
@@ -70,10 +79,12 @@ class BlockedQueriesMetric :
         return responseMetadata
     }
 
-    private fun generateBlockingTree(result:BlockedQueriesDTO, results:List<BlockedQueriesDTO>): BlockedQueriesDTO?{
-        if (result.blockedBy != 0){
-            if (!results.single { it.sessionId == result.blockedBy }.blockingTree.any{ it?.sessionId == result.sessionId})
-            {
+    private fun generateBlockingTree(result: BlockedQueriesDTO, results: List<BlockedQueriesDTO>): BlockedQueriesDTO? {
+        if (result.blockedBy != 0) {
+            if (!results.single { it.sessionId == result.blockedBy }.blockingTree.any {
+                    it?.sessionId == result.sessionId
+                }
+            ) {
                 results.single { it.sessionId == result.blockedBy }.blockingTree.add(result)
             }
             generateBlockingTree(results.single { it.sessionId == result.blockedBy }, results)
