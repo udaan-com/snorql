@@ -1,10 +1,16 @@
 package com.udaan.snorql.extensions.session.metrics
 
-import com.udaan.snorql.extensions.session.models.*
+import com.udaan.snorql.extensions.session.models.LatestExecutedQueryDTO
+import com.udaan.snorql.extensions.session.models.LatestExecutedQueryInput
+import com.udaan.snorql.extensions.session.models.LatestExecutedQueryResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
-import com.udaan.snorql.framework.models.*
+import com.udaan.snorql.framework.models.IMetricRecommendation
+import com.udaan.snorql.framework.models.IMetricResult
+import com.udaan.snorql.framework.models.MetricConfig
+import com.udaan.snorql.framework.models.MetricInput
+import com.udaan.snorql.framework.models.MetricOutput
 
 class LatestExecutedQuery : IMetric<LatestExecutedQueryInput, LatestExecutedQueryResult, IMetricRecommendation> {
 
