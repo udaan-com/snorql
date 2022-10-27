@@ -33,7 +33,8 @@ data class SessionActiveQueryDTO(
 
 data class SessionActiveQueryInput(
     override val metricId: String = SessionEnums.SESSION_ACTIVE_QUERY.getId(),
-    override val metricPeriod: MetricPeriod, override val databaseName: String,
+    override val metricPeriod: MetricPeriod,
+    override val databaseName: String,
     val sessionId: Int
 ) : MetricInput()
 

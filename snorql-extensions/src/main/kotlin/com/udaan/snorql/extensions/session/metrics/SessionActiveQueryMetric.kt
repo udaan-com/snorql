@@ -20,7 +20,8 @@ class SessionActiveQueryMetric : IMetric<SessionActiveQueryInput, SessionActiveQ
     ): SessionActiveQueryResult {
         val query =
             metricConfig.queries["main"]
-                ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
+                ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config " +
+                        "[${metricInput.metricId}]")
         val paramMap = mapOf("sessionIdParam" to metricInput.sessionId)
         val result = SqlMetricManager.queryExecutor.execute<SessionActiveQueryDTO>(
             metricInput.databaseName,

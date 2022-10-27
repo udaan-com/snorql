@@ -16,7 +16,8 @@ class SessionLocksMetric : IMetric<SessionLocksInput, SessionLocksResult, IMetri
 
     override fun getMetricResult(metricInput: SessionLocksInput, metricConfig: MetricConfig): SessionLocksResult {
         val query = metricConfig.queries["main"]
-            ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
+            ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config " +
+                    "[${metricInput.metricId}]")
         val paramMap = mapOf("sessionIdParam" to metricInput.sessionId)
         val result = SqlMetricManager.queryExecutor.execute<SessionLocksDTO>(
             databaseName = metricInput.databaseName,
