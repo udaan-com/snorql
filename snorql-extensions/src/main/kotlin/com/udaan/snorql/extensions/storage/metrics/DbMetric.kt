@@ -35,8 +35,8 @@ import com.udaan.snorql.framework.models.MetricOutput
 /**
  * Class which implements Database Statistics Metric
  *
- * The Database Metric fetches' database statistics like total database size, database name, used size, unallocated space,
- * reserved space, data space, index size and unused space.
+ * The Database Metric fetches' database statistics like total database size, database name, used size, unallocated
+ * space, reserved space, data space, index size and unused space.
  *
  * @constructor Create Database Metric
  */
@@ -49,12 +49,18 @@ class DbMetric :
     ): DbResult {
         val query =
             metricConfig.queries["main"]
-                ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
+                ?: throw SQLMonitoringConfigException(
+                    "SQL config query [main] not found under config " +
+                            "[${metricInput.metricId}]"
+                )
 
         val result = SqlMetricManager.queryExecutor.execute<DbDTO>(metricInput.databaseName, query)
         val dbSizeQuery =
             metricConfig.queries["dbSize"]
-                ?: throw SQLMonitoringConfigException("SQL config query [dbSize] not found under config [${metricInput.metricId}]")
+                ?: throw SQLMonitoringConfigException(
+                    "SQL config query [dbSize] not found under config " +
+                            "[${metricInput.metricId}]"
+                )
 
         val paramMap = mapOf("databaseName" to metricInput.dbName)
         val dbSizeResult = SqlMetricManager.queryExecutor.execute<Int>(metricInput.databaseName, dbSizeQuery, paramMap)
