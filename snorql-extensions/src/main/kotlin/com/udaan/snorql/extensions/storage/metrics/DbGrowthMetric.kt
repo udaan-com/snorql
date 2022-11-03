@@ -34,7 +34,7 @@ import com.udaan.snorql.framework.models.MetricOutput
 /**
  * Class which implements Database Growth Metric
  *
- * The database growth metric fetches database growth statistics like the database growth rate.
+ * The database growth metric fetches' database growth statistics like the database growth rate.
  *
  * @constructor Create database growth metric instance
  */
