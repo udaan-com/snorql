@@ -48,7 +48,8 @@ class ComputeUtilizationMetric :
     ): ComputeUtilizationResult {
         val query =
             metricConfig.queries["main"]
-                ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
+                ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config " +
+                        "[${metricInput.metricId}]")
 
         val result = SqlMetricManager.queryExecutor.execute<ComputeUtilizationDTO>(metricInput.databaseName, query)
         return ComputeUtilizationResult(result)
@@ -69,7 +70,6 @@ class ComputeUtilizationMetric :
 
         return responseMetadata
     }
-
 
     override fun saveMetricResult(metricInput: MetricInput, result: IMetricResult) {
         TODO("Not yet implemented")

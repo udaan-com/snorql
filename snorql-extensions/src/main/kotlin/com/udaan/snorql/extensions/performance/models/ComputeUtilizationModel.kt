@@ -70,7 +70,8 @@ data class ComputeUtilizationDTO(
  */
 data class ComputeUtilizationInput(
     override val metricId: String = PerformanceEnums.COMPUTE_UTILIZATION.getId(),
-    override val metricPeriod: MetricPeriod, override val databaseName: String
+    override val metricPeriod: MetricPeriod,
+    override val databaseName: String
 ) : MetricInput()
 
 /**
