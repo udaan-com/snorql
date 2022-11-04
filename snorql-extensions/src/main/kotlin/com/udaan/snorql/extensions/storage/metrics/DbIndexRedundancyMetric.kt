@@ -27,7 +27,10 @@ class DbIndexRedundancyMetric :
     ): DbIndexRedundancyResult {
         val query =
             metricConfig.queries["main"]
-                ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
+                ?: throw SQLMonitoringConfigException(
+                    "SQL config query [main] not found under config " +
+                            "[${metricInput.metricId}]"
+                )
         val primaryResult =
             SqlMetricManager.queryExecutor.execute<DbIndexRedundancyDTO>(metricInput.databaseName, query)
         val secondaryResult = aggregatedSecondaryResult(metricInput.secondaryDatabaseNames, query)
@@ -35,7 +38,10 @@ class DbIndexRedundancyMetric :
             logger.info("[getMetricResult] Secondary List is null.")
             analyseIndexes(primaryResult)
         } else {
-            logger.info("[getMetricResult] Secondary List is not null. Secondary databases: ${metricInput.secondaryDatabaseNames}")
+            logger.info(
+                "[getMetricResult] Secondary List is not null. Secondary databases: "
+                        + metricInput.secondaryDatabaseNames
+            )
             logger.debug("Secondary List: $secondaryResult")
             val mergedMetricResult = mergeIdxRedundancyLists(primaryResult, secondaryResult)
             logger.debug("[getMetricResult] Merged Metric Result: $mergedMetricResult")
@@ -191,7 +197,9 @@ class DbIndexRedundancyMetric :
     }
 
     private fun isSimilar(parentIndex: DbIndexRedundancyDTO, childIndex: DbIndexRedundancyDTO): Boolean {
-        if (parentIndex.indexColumnNrs == childIndex.indexColumnNrs && parentIndex.includeColumnNrs != childIndex.includeColumnNrs)
+        if (parentIndex.indexColumnNrs == childIndex.indexColumnNrs
+            && parentIndex.includeColumnNrs != childIndex.includeColumnNrs
+        )
             return true
         return false
     }
