@@ -17,7 +17,6 @@
  * under the License.
  */
 
-
 package com.udaan.snorql.extensions.performance.models
 
 import com.udaan.snorql.extensions.performance.PerformanceEnums
