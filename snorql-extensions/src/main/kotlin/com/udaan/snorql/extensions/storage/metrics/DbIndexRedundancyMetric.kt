@@ -39,8 +39,8 @@ class DbIndexRedundancyMetric :
             analyseIndexes(primaryResult)
         } else {
             logger.info(
-                "[getMetricResult] Secondary List is not null. Secondary databases: "
-                        + metricInput.secondaryDatabaseNames
+                "[getMetricResult] Secondary List is not null. Secondary databases: " +
+                        metricInput.secondaryDatabaseNames
             )
             logger.debug("Secondary List: $secondaryResult")
             val mergedMetricResult = mergeIdxRedundancyLists(primaryResult, secondaryResult)
@@ -172,8 +172,9 @@ class DbIndexRedundancyMetric :
             "[DbIndexRedundancyMetric][isDuplicate] Parent Include Cols: $parentIncludeCols\n" +
                     "Child Include Cols: $childIncludeCols"
         )
-        if (parentIndex.indexColumnNrs == childIndex.indexColumnNrs && parentIncludeCols == childIncludeCols)
+        if (parentIndex.indexColumnNrs == childIndex.indexColumnNrs && parentIncludeCols == childIncludeCols) {
             return true
+        }
         return false
     }
 
@@ -191,16 +192,18 @@ class DbIndexRedundancyMetric :
                 childIndex.indexColumnNrs
             ) // && (parentIncludeCols subtract childIncludeCols).isEmpty()
             && (childIncludeCols subtract parentIncludeCols).isEmpty()
-        )
+        ) {
             return true
+        }
         return false
     }
 
     private fun isSimilar(parentIndex: DbIndexRedundancyDTO, childIndex: DbIndexRedundancyDTO): Boolean {
         if (parentIndex.indexColumnNrs == childIndex.indexColumnNrs
             && parentIndex.includeColumnNrs != childIndex.includeColumnNrs
-        )
+        ) {
             return true
+        }
         return false
     }
 
@@ -225,7 +228,9 @@ class DbIndexRedundancyMetric :
         val shortArr = shorterString.split(" ")
         if (longerArr.size < shortArr.size) return false
         shortArr.forEachIndexed { index, element ->
-            if (element != longerArr[index]) return false
+            if (element != longerArr[index]) {
+                return false
+            }
         }
         return true
     }

@@ -1,7 +1,6 @@
 package com.udaan.snorql.extensions.storage.models
 
 import com.udaan.snorql.extensions.storage.StorageEnums
-import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
