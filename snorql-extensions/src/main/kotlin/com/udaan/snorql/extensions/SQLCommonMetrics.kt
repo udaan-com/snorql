@@ -25,6 +25,7 @@ import com.udaan.snorql.extensions.performance.PerformanceEnums
 import com.udaan.snorql.extensions.performance.metrics.ActiveDDLMetric
 import com.udaan.snorql.extensions.performance.metrics.ActiveQueriesMetric
 import com.udaan.snorql.extensions.performance.metrics.BlockedQueriesMetric
+import com.udaan.snorql.extensions.performance.metrics.ComputeUtilizationMetric
 import com.udaan.snorql.extensions.performance.metrics.IndexStatsMetric
 import com.udaan.snorql.extensions.performance.metrics.LongRunningQueriesMetric
 import com.udaan.snorql.extensions.storage.StorageEnums
@@ -47,6 +48,7 @@ object SQLCommonMetrics {
         SqlMetricManager.addMetric(PerformanceEnums.LONG_RUNNING_QUERIES.getId(), LongRunningQueriesMetric())
         SqlMetricManager.addMetric(PerformanceEnums.INDEX_STATS.getId(), IndexStatsMetric())
         SqlMetricManager.addMetric(PerformanceEnums.ACTIVE_DDL.getId(), ActiveDDLMetric())
+        SqlMetricManager.addMetric(PerformanceEnums.COMPUTE_UTILIZATION.getId(), ComputeUtilizationMetric())
 
         // register access-control related metric here
         SqlMetricManager.addMetric(AccessControlEnums.USER_ROLE.getId(), UserRoleMetric())

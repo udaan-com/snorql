@@ -64,6 +64,19 @@
     "referenceDoc": [],
     "description": ""
   },
+  "performance_computeUtilization": {
+    "queries": {
+      "main": "SELECT DATETIMEFROMPARTS ( DATEPART(year, end_time), DATEPART(month, end_time), DATEPART(day, end_time), DATEPART(hour, end_time), DATEPART(minute, end_time) / 5 * 5, 00, 00 ) as time_id,\n        MAX(avg_cpu_percent) as max_cpu_percent, MAX(avg_data_io_percent) as max_data_io_percent, MAX(avg_log_write_percent) as max_log_io_percent, MAX(avg_memory_usage_percent) as max_memory_percent,\n        AVG(avg_cpu_percent) as avg_cpu_percent, AVG(avg_data_io_percent) as avg_data_io_percent, AVG(avg_log_write_percent) as avg_log_io_percent, AVG(avg_memory_usage_percent) as avg_memory_percent \n FROM sys.dm_db_resource_stats\nGROUP BY DATETIMEFROMPARTS ( DATEPART(year, end_time), DATEPART(month, end_time), DATEPART(day, end_time), DATEPART(hour, end_time), DATEPART(minute, end_time) / 5 * 5, 00, 00 )\nORDER BY time_id"
+    },
+    "supportsHistorical": true,
+    "persistDataOptions": {
+      "minimumRepeatInterval": 900
+    },
+    "supportsRealTime": true,
+    "isParameterized": false,
+    "referenceDoc": ["https://docs.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-db-resource-stats-azure-sql-database?view=azuresqldb-current"],
+    "description": "Returns CPU, I/O, and memory consumption for an Azure SQL Database."
+  },
   "accessControl_userRole": {
     "queries": {
       "main": "select dp1.name, string_agg(dp2.name,', ') as role, dp1.type as type from sys.database_role_members drm\njoin sys.database_principals dp1 on dp1.principal_id=drm.member_principal_id\njoin sys.database_principals dp2 on dp2.principal_id=drm.role_principal_id\ngroup by dp1.name, dp1.type"
