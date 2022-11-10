@@ -64,6 +64,7 @@ class DbIndexRedundancyMetric :
         null
     }
 
+    @Suppress("LongMethod")
     private fun analyseIndexes(indexList: List<DbIndexRedundancyDTO>): List<DbIndexRedundancyDTO> {
         val analyzedIndexes = mutableListOf<DbIndexRedundancyDTO>()
         val groupedByTable = indexList.groupBy { it.tableName }
@@ -89,7 +90,6 @@ class DbIndexRedundancyMetric :
             indexesToSkip.addAll(uniqueIndexes ?: listOf())
 
             tableIndexes?.forEach { indexInfo ->
-
                 if (indexesToSkip.contains(indexInfo)) return@forEach
 
                 // Add self to analyzed indexes
@@ -152,10 +152,7 @@ class DbIndexRedundancyMetric :
     private fun isDuplicate(parentIndex: DbIndexRedundancyDTO, childIndex: DbIndexRedundancyDTO): Boolean {
         val parentIncludeCols = parentIndex.includeColumnNrs?.split(" ")?.toSet()
         val childIncludeCols = childIndex.includeColumnNrs?.split(" ")?.toSet()
-        if (parentIndex.indexColumnNrs == childIndex.indexColumnNrs && parentIncludeCols == childIncludeCols) {
-            return true
-        }
-        return false
+        return parentIndex.indexColumnNrs == childIndex.indexColumnNrs && parentIncludeCols == childIncludeCols
     }
 
     private fun isOverlapping(parentIndex: DbIndexRedundancyDTO, childIndex: DbIndexRedundancyDTO): Boolean {
@@ -170,8 +167,8 @@ class DbIndexRedundancyMetric :
     }
 
     private fun isSimilar(parentIndex: DbIndexRedundancyDTO, childIndex: DbIndexRedundancyDTO): Boolean =
-        parentIndex.indexColumnNrs == childIndex.indexColumnNrs
-                && parentIndex.includeColumnNrs != childIndex.includeColumnNrs
+        parentIndex.indexColumnNrs == childIndex.indexColumnNrs &&
+                parentIndex.includeColumnNrs != childIndex.includeColumnNrs
 
     override fun getMetricResponseMetadata(
         metricInput: DbIndexRedundancyInput,
