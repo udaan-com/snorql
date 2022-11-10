@@ -185,8 +185,8 @@ class DbIndexRedundancyMetric :
     }
 
     private fun checkStartsWithWord(longerString: String?, shorterString: String?): Boolean {
-        if (longerString == null) return false
-        if (shorterString == null) return true
+        if (longerString.isNullOrEmpty()) return false
+        if (shorterString.isNullOrEmpty()) return true
         val longerArr = longerString.split(" ")
         val shortArr = shorterString.split(" ")
         if (longerArr.size < shortArr.size) return false
