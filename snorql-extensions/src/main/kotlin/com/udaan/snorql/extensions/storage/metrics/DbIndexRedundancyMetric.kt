@@ -16,6 +16,11 @@ import com.udaan.snorql.framework.models.MetricOutput
 
 class DbIndexRedundancyMetric :
     IMetric<DbIndexRedundancyInput, DbIndexRedundancyResult, IMetricRecommendation> {
+
+    object IndexRedundancyConstants {
+        const val MAX_USAGE_IF_UNUSED_INDEX = 10
+    }
+
     override fun saveMetricResult(metricInput: MetricInput, result: IMetricResult) {
         TODO("Not yet implemented")
     }
@@ -75,7 +80,9 @@ class DbIndexRedundancyMetric :
                 ?.sortedByDescending { it.indexColumnNrs?.length }
 
             // Step 1: Classifying Unused Indexes
-            val unusedIndexes = tableIndexes?.filter { (it.indexUsage ?: 0) < 10 && !it.isUnique }
+            val unusedIndexes = tableIndexes?.filter {
+                (it.indexUsage ?: 0) < IndexRedundancyConstants.MAX_USAGE_IF_UNUSED_INDEX && !it.isUnique
+            }
             unusedIndexes?.forEach { unusedIndex ->
                 unusedIndex.reason = RedundantReasonDTO(
                     message = "UNUSED Index", type = RedundantReasons.UNUSED, servingIndex = null
