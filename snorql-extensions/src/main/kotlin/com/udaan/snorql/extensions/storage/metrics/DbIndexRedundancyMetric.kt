@@ -8,7 +8,6 @@ import com.udaan.snorql.extensions.storage.models.RedundantReasons
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
-import com.udaan.snorql.framework.metric.SqlMetricManager.logger
 import com.udaan.snorql.framework.models.IMetricRecommendation
 import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricConfig
@@ -35,19 +34,11 @@ class DbIndexRedundancyMetric :
             SqlMetricManager.queryExecutor.execute<DbIndexRedundancyDTO>(metricInput.databaseName, query)
         val secondaryResult = aggregatedSecondaryResult(metricInput.secondaryDatabaseNames, query)
         val finalResult = if (secondaryResult.isNullOrEmpty()) {
-            logger.info("[getMetricResult] Secondary List is null.")
             analyseIndexes(primaryResult)
         } else {
-            logger.info(
-                "[getMetricResult] Secondary List is not null. Secondary databases: " +
-                        metricInput.secondaryDatabaseNames
-            )
-            logger.debug("Secondary List: $secondaryResult")
             val mergedMetricResult = mergeIdxRedundancyLists(primaryResult, secondaryResult)
-            logger.debug("[getMetricResult] Merged Metric Result: $mergedMetricResult")
             analyseIndexes(mergedMetricResult)
         }
-        logger.debug("Final Result Length: {}", finalResult.size)
         return DbIndexRedundancyResult(finalResult)
     }
 
@@ -96,7 +87,6 @@ class DbIndexRedundancyMetric :
             val uniqueIndexes = tableIndexes?.filter { !indexesToSkip.contains(it) && it.isUnique }
             analyzedTableIndexes.addAll(uniqueIndexes ?: listOf())
             indexesToSkip.addAll(uniqueIndexes ?: listOf())
-            logger.debug("[analyseIndexes] Unique Indexes: $uniqueIndexes")
 
             tableIndexes?.forEach { indexInfo ->
 
@@ -122,8 +112,6 @@ class DbIndexRedundancyMetric :
                     analyzedTableIndexes.add(duplicateIndex)
                 }
                 indexesToSkip.addAll(duplicateIndexes)
-                logger.debug("[analyseIndexes] Duplicate Indexes: $duplicateIndexes")
-                logger.debug("[analyseIndexes] Classified Indexes: $analyzedIndexes")
 
                 // Step 4: Finding overlapping indexes
                 val overlappingIndexes = tableIndexes.filter {
@@ -140,8 +128,6 @@ class DbIndexRedundancyMetric :
                     analyzedTableIndexes.add(overlappingIndex)
                 }
                 indexesToSkip.addAll(overlappingIndexes)
-                logger.debug("[analyseIndexes] Overlapping Indexes: $overlappingIndexes")
-                logger.debug("[analyseIndexes] Classified Indexes: $analyzedIndexes")
 
                 // Step 5: Finding Similar Indexes
                 val similarIndexes = tableIndexes.filter {
@@ -157,8 +143,6 @@ class DbIndexRedundancyMetric :
                     analyzedTableIndexes.add(similarIndex)
                 }
                 indexesToSkip.addAll(similarIndexes)
-                logger.debug("[analyseIndexes] Similar Indexes: $similarIndexes")
-                logger.debug("[analyseIndexes] Classified Indexes: $analyzedIndexes")
             }
             analyzedIndexes.addAll(analyzedTableIndexes)
         }
@@ -168,10 +152,6 @@ class DbIndexRedundancyMetric :
     private fun isDuplicate(parentIndex: DbIndexRedundancyDTO, childIndex: DbIndexRedundancyDTO): Boolean {
         val parentIncludeCols = parentIndex.includeColumnNrs?.split(" ")?.toSet()
         val childIncludeCols = childIndex.includeColumnNrs?.split(" ")?.toSet()
-        logger.debug(
-            "[DbIndexRedundancyMetric][isDuplicate] Parent Include Cols: $parentIncludeCols\n" +
-                    "Child Include Cols: $childIncludeCols"
-        )
         if (parentIndex.indexColumnNrs == childIndex.indexColumnNrs && parentIncludeCols == childIncludeCols) {
             return true
         }
@@ -183,10 +163,6 @@ class DbIndexRedundancyMetric :
             parentIndex.includeColumnNrs?.split(" ")?.filterNot { it.isNullOrBlank() }?.toSet() ?: setOf()
         val childIncludeCols =
             childIndex.includeColumnNrs?.split(" ")?.filterNot { it.isNullOrBlank() }?.toSet() ?: setOf()
-        logger.debug(
-            "[DbIndexRedundancyMetric][isDuplicate] Parent Include Cols: $parentIncludeCols\n" +
-                    "Child Include Cols: $childIncludeCols"
-        )
         return (checkStartsWithWord(
             parentIndex.indexColumnNrs,
             childIndex.indexColumnNrs
@@ -230,14 +206,11 @@ class DbIndexRedundancyMetric :
         secondaryList: List<DbIndexRedundancyDTO>
     ): List<DbIndexRedundancyDTO> {
         if (secondaryList.isEmpty()) return primaryList
-        logger.debug("[mergeIdxRedundancyLists] Secondary Index List: $secondaryList")
         val finalList = mutableListOf<DbIndexRedundancyDTO>()
         primaryList.forEachIndexed() { idx, primaryResult ->
             val idxInfo = secondaryList.find {
                 it.tableName == primaryResult.tableName && it.indexName == primaryResult.indexName
             }
-            logger.debug("[mergeIdxRedundancyLists] Primary Result: $primaryResult")
-            logger.debug("[mergeIdxRedundancyLists] Secondary Rslt: $idxInfo")
             finalList.add(
                 idx,
                 DbIndexRedundancyDTO(
@@ -256,7 +229,6 @@ class DbIndexRedundancyMetric :
                     isUnique = primaryResult.isUnique
                 )
             )
-            logger.debug("[mergeIdxRedundancyLists] Final Rslt: ${finalList[idx]}")
         }
         return finalList
     }
