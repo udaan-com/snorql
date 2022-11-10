@@ -188,19 +188,14 @@ class DbIndexRedundancyMetric :
                     "Child Include Cols: $childIncludeCols"
         )
         return (checkStartsWithWord(
-                parentIndex.indexColumnNrs,
-                childIndex.indexColumnNrs
-            ) && (childIncludeCols subtract parentIncludeCols).isEmpty()) 
+            parentIndex.indexColumnNrs,
+            childIndex.indexColumnNrs
+        ) && (childIncludeCols subtract parentIncludeCols).isEmpty())
     }
 
-    private fun isSimilar(parentIndex: DbIndexRedundancyDTO, childIndex: DbIndexRedundancyDTO): Boolean {
-        if (parentIndex.indexColumnNrs == childIndex.indexColumnNrs
-            && parentIndex.includeColumnNrs != childIndex.includeColumnNrs
-        ) {
-            return true
-        }
-        return false
-    }
+    private fun isSimilar(parentIndex: DbIndexRedundancyDTO, childIndex: DbIndexRedundancyDTO): Boolean =
+        parentIndex.indexColumnNrs == childIndex.indexColumnNrs
+                && parentIndex.includeColumnNrs != childIndex.includeColumnNrs
 
     override fun getMetricResponseMetadata(
         metricInput: DbIndexRedundancyInput,
