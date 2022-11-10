@@ -187,15 +187,10 @@ class DbIndexRedundancyMetric :
             "[DbIndexRedundancyMetric][isDuplicate] Parent Include Cols: $parentIncludeCols\n" +
                     "Child Include Cols: $childIncludeCols"
         )
-        if (checkStartsWithWord(
+        return (checkStartsWithWord(
                 parentIndex.indexColumnNrs,
                 childIndex.indexColumnNrs
-            ) // && (parentIncludeCols subtract childIncludeCols).isEmpty()
-            && (childIncludeCols subtract parentIncludeCols).isEmpty()
-        ) {
-            return true
-        }
-        return false
+            ) && (childIncludeCols subtract parentIncludeCols).isEmpty()) 
     }
 
     private fun isSimilar(parentIndex: DbIndexRedundancyDTO, childIndex: DbIndexRedundancyDTO): Boolean {
