@@ -29,12 +29,10 @@ class DbIndexRedundancyMetric :
         metricInput: DbIndexRedundancyInput,
         metricConfig: MetricConfig
     ): DbIndexRedundancyResult {
-        val query =
-            metricConfig.queries["main"]
-                ?: throw SQLMonitoringConfigException(
-                    "SQL config query [main] not found under config " +
-                            "[${metricInput.metricId}]"
-                )
+        val query = metricConfig.queries["main"] ?: throw SQLMonitoringConfigException(
+            "SQL config query [main] not found under config " +
+                    "[${metricInput.metricId}]"
+        )
         val primaryResult =
             SqlMetricManager.queryExecutor.execute<DbIndexRedundancyDTO>(metricInput.databaseName, query)
         val secondaryResult = aggregatedSecondaryResult(metricInput.secondaryDatabaseNames, query)
