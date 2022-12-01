@@ -17,49 +17,28 @@
  * under the License.
  */
 
-package com.udaan.snorql.extensions.performance
+package com.udaan.snorql.extensions.session
 
 import com.udaan.snorql.framework.IMtericId
 
-/**
- * Performance metric enums
- *
- * @property metricId id of performance metric in context
- * @constructor Create Performance enums
- */
-enum class PerformanceEnums(private val metricId: String) : IMtericId {
+enum class SessionEnums(private val metricId: String) : IMtericId {
 
     /**
-     * Active Queries Metric ID mapping
+     * Session Locks Metric ID mapping
      */
-    ACTIVE_QUERIES("activeQueries"),
+    SESSION_LOCKS("sessionLocks"),
 
     /**
-     * Long Running Queries Metric ID mapping
+     * Session Active Query
      */
-    LONG_RUNNING_QUERIES("longRunningQueries"),
+    SESSION_ACTIVE_QUERY("sessionActiveQuery"),
 
     /**
-     * Blocked Queries Metric ID mapping
+     * Session Latest Executed Query
      */
-    BLOCKED_QUERIES("blockedQueries"),
-
-    /**
-     * Index Stats Metric ID mapping
-     */
-    INDEX_STATS("indexStats"),
-
-    /**
-     * Compute Utilization Metric ID mapping
-     */
-    COMPUTE_UTILIZATION("computeUtilization"),
-
-    /**
-     * Active DDL Queries Metric ID mapping
-     */
-    ACTIVE_DDL("activeDDL");
+    LATEST_EXECUTED_QUERY("latestExecutedQuery");
 
     override fun getId(): String {
-        return "performance_" + this.metricId
+        return "session_" + this.metricId
     }
 }

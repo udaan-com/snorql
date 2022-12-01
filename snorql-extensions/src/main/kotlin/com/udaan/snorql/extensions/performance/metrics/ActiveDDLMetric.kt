@@ -34,8 +34,8 @@ import com.udaan.snorql.framework.models.MetricOutput
 /**
  * ActiveDDLMetric class is an implementation of Active DDL Queries Metric
  *
- * <p>Active DDL Queries metrics returns the active DDL queries in the
- * specified database.</p>
+ * Active DDL Queries metrics returns the active DDL queries in the
+ * specified database.
  *
  * @constructor Create empty Active d d l metric
  */

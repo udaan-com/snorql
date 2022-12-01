@@ -25,8 +25,13 @@ import com.udaan.snorql.extensions.performance.PerformanceEnums
 import com.udaan.snorql.extensions.performance.metrics.ActiveDDLMetric
 import com.udaan.snorql.extensions.performance.metrics.ActiveQueriesMetric
 import com.udaan.snorql.extensions.performance.metrics.BlockedQueriesMetric
+import com.udaan.snorql.extensions.performance.metrics.ComputeUtilizationMetric
 import com.udaan.snorql.extensions.performance.metrics.IndexStatsMetric
 import com.udaan.snorql.extensions.performance.metrics.LongRunningQueriesMetric
+import com.udaan.snorql.extensions.session.SessionEnums
+import com.udaan.snorql.extensions.session.metrics.LatestExecutedQuery
+import com.udaan.snorql.extensions.session.metrics.SessionActiveQueryMetric
+import com.udaan.snorql.extensions.session.metrics.SessionLocksMetric
 import com.udaan.snorql.extensions.storage.StorageEnums
 import com.udaan.snorql.extensions.storage.metrics.DbGrowthMetric
 import com.udaan.snorql.extensions.storage.metrics.DbIndexMetric
@@ -48,6 +53,7 @@ object SQLCommonMetrics {
         SqlMetricManager.addMetric(PerformanceEnums.LONG_RUNNING_QUERIES.getId(), LongRunningQueriesMetric())
         SqlMetricManager.addMetric(PerformanceEnums.INDEX_STATS.getId(), IndexStatsMetric())
         SqlMetricManager.addMetric(PerformanceEnums.ACTIVE_DDL.getId(), ActiveDDLMetric())
+        SqlMetricManager.addMetric(PerformanceEnums.COMPUTE_UTILIZATION.getId(), ComputeUtilizationMetric())
 
         // register access-control related metric here
         SqlMetricManager.addMetric(AccessControlEnums.USER_ROLE.getId(), UserRoleMetric())
@@ -62,5 +68,10 @@ object SQLCommonMetrics {
         SqlMetricManager.addMetric(StorageEnums.PVS.getId(), PVSMetric())
         SqlMetricManager.addMetric(StorageEnums.TABLE_SCHEMA.getId(), TableSchemaMetric())
         SqlMetricManager.addMetric(StorageEnums.DB_INDEX_REDUNDANCY.getId(), DbIndexRedundancyMetric())
+
+        // register session related metrics here
+        SqlMetricManager.addMetric(SessionEnums.SESSION_LOCKS.getId(), SessionLocksMetric())
+        SqlMetricManager.addMetric(SessionEnums.SESSION_ACTIVE_QUERY.getId(), SessionActiveQueryMetric())
+        SqlMetricManager.addMetric(SessionEnums.LATEST_EXECUTED_QUERY.getId(), LatestExecutedQuery())
     }
 }

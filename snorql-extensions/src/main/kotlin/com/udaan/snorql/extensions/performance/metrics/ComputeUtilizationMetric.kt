@@ -17,11 +17,11 @@
  * under the License.
  */
 
-package com.udaan.snorql.extensions.storage.metrics
+package com.udaan.snorql.extensions.performance.metrics
 
-import com.udaan.snorql.extensions.storage.models.DbGrowthDTO
-import com.udaan.snorql.extensions.storage.models.DbGrowthInput
-import com.udaan.snorql.extensions.storage.models.DbGrowthResult
+import com.udaan.snorql.extensions.performance.models.ComputeUtilizationDTO
+import com.udaan.snorql.extensions.performance.models.ComputeUtilizationInput
+import com.udaan.snorql.extensions.performance.models.ComputeUtilizationResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
@@ -32,30 +32,32 @@ import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricOutput
 
 /**
- * Class which implements Database Growth Metric
+ * Class which implements ComputeUtilization metric
  *
- * The database growth metric fetches' database growth statistics like the database growth rate.
+ * The ComputeUtilization metric fetches the cpu,memory & io related data for the
+ * specified database along with other metadata.
  *
- * @constructor Create database growth metric instance
+ * @constructor Create ComputeUtilization metric
  */
-class DbGrowthMetric :
-    IMetric<DbGrowthInput, DbGrowthResult, IMetricRecommendation> {
+class ComputeUtilizationMetric :
+    IMetric<ComputeUtilizationInput, ComputeUtilizationResult, IMetricRecommendation> {
 
     override fun getMetricResult(
-        metricInput: DbGrowthInput,
+        metricInput: ComputeUtilizationInput,
         metricConfig: MetricConfig
-    ): DbGrowthResult {
+    ): ComputeUtilizationResult {
         val query =
             metricConfig.queries["main"]
-                ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
-        val paramMap = mapOf("databaseName" to metricInput.dbNameForGrowth)
-        val result = SqlMetricManager.queryExecutor.execute<DbGrowthDTO>(metricInput.databaseName, query, paramMap)
-        return DbGrowthResult(result)
+                ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config " +
+                        "[${metricInput.metricId}]")
+
+        val result = SqlMetricManager.queryExecutor.execute<ComputeUtilizationDTO>(metricInput.databaseName, query)
+        return ComputeUtilizationResult(result)
     }
 
     override fun getMetricResponseMetadata(
-        metricInput: DbGrowthInput,
-        metricOutput: MetricOutput<DbGrowthResult, IMetricRecommendation>
+        metricInput: ComputeUtilizationInput,
+        metricOutput: MetricOutput<ComputeUtilizationResult, IMetricRecommendation>
     ): Map<String, Any> {
         val responseMetadata = mutableMapOf<String, Any>()
         val metricConfig = getMetricConfig(metricInput.metricId)
@@ -65,9 +67,9 @@ class DbGrowthMetric :
         responseMetadata["description"] = metricConfig.description
         responseMetadata["supportsHistorical"] = metricConfig.supportsHistorical
         responseMetadata["minimumRepeatInterval"] = metricConfig.persistDataOptions?.get("minimumRepeatInterval") ?: ""
+
         return responseMetadata
     }
-
 
     override fun saveMetricResult(metricInput: MetricInput, result: IMetricResult) {
         TODO("Not yet implemented")

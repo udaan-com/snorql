@@ -64,6 +64,19 @@
     "referenceDoc": [],
     "description": ""
   },
+  "performance_computeUtilization": {
+    "queries": {
+      "main": "SELECT DATETIMEFROMPARTS ( DATEPART(year, end_time), DATEPART(month, end_time), DATEPART(day, end_time), DATEPART(hour, end_time), DATEPART(minute, end_time) / 5 * 5, 00, 00 ) as time_id,\n        MAX(avg_cpu_percent) as max_cpu_percent, MAX(avg_data_io_percent) as max_data_io_percent, MAX(avg_log_write_percent) as max_log_io_percent, MAX(avg_memory_usage_percent) as max_memory_percent,\n        AVG(avg_cpu_percent) as avg_cpu_percent, AVG(avg_data_io_percent) as avg_data_io_percent, AVG(avg_log_write_percent) as avg_log_io_percent, AVG(avg_memory_usage_percent) as avg_memory_percent \n FROM sys.dm_db_resource_stats\nGROUP BY DATETIMEFROMPARTS ( DATEPART(year, end_time), DATEPART(month, end_time), DATEPART(day, end_time), DATEPART(hour, end_time), DATEPART(minute, end_time) / 5 * 5, 00, 00 )\nORDER BY time_id"
+    },
+    "supportsHistorical": true,
+    "persistDataOptions": {
+      "minimumRepeatInterval": 900
+    },
+    "supportsRealTime": true,
+    "isParameterized": false,
+    "referenceDoc": ["https://docs.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-db-resource-stats-azure-sql-database?view=azuresqldb-current"],
+    "description": "Returns CPU, I/O, and memory consumption for an Azure SQL Database."
+  },
   "accessControl_userRole": {
     "queries": {
       "main": "select dp1.name, string_agg(dp2.name,', ') as role, dp1.type as type from sys.database_role_members drm\njoin sys.database_principals dp1 on dp1.principal_id=drm.member_principal_id\njoin sys.database_principals dp2 on dp2.principal_id=drm.role_principal_id\ngroup by dp1.name, dp1.type"
@@ -182,5 +195,41 @@
     "isParameterized": false,
     "referenceDoc": [],
     "description": ""
+  },
+  "session_sessionLocks": {
+    "queries": {
+      "main": "SELECT dm_tran_locks.request_session_id,\n       dm_tran_locks.resource_database_id,\n       dm_tran_locks.request_lifetime,\n       DB_NAME(dm_tran_locks.resource_database_id) AS dbname,\n       CASE\n   WHEN resource_type = 'OBJECT'\n       THEN OBJECT_NAME(dm_tran_locks.resource_associated_entity_id)\n   ELSE OBJECT_NAME(partitions.OBJECT_ID)\n   END AS ObjectName,\n       partitions.index_id,\n       indexes.name AS index_name,\n       dm_tran_locks.resource_type,\n       dm_tran_locks.resource_description,\n       dm_tran_locks.resource_associated_entity_id,\n       dm_tran_locks.request_mode,\n       dm_tran_locks.request_status\nFROM sys.dm_tran_locks\n LEFT JOIN sys.partitions ON partitions.hobt_id = dm_tran_locks.resource_associated_entity_id\n LEFT JOIN sys.indexes ON indexes.OBJECT_ID = partitions.OBJECT_ID AND indexes.index_id = partitions.index_id\nWHERE resource_associated_entity_id > 0\n  AND resource_database_id = DB_ID() AND request_session_id = :sessionIdParam \nORDER BY request_session_id, resource_associated_entity_id;"
+    },
+    "supportsHistorical": false,
+    "supportsRealTime": true,
+    "isParameterized": false,
+    "referenceDoc": [
+      "https://docs.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-tran-locks-transact-sql?view=sql-server-ver15"
+    ],
+    "description": "Locks applied by a session"
+  },
+  "session_sessionActiveQuery": {
+    "queries": {
+      "main": "SELECT sessionId=s.session_id,\n       status=r.STATUS,\n       blockedBy=r.blocking_session_id,\n       waitType=r.wait_type,\n       waitResource=r.wait_resource,\n       waitTime=CONVERT(VARCHAR, DATEADD(ms, r.wait_time, 0), 8),\n       cpuTime=r.cpu_time,\n       logicalReads=r.logical_reads,\n    r.reads,\n    r.writes,\n    r.percent_complete as percentComplete,\n       elapsedTime=CONVERT(varchar, (r.total_elapsed_time / 1000 / 86400)) + 'd ' +\n                   CONVERT(VARCHAR, DATEADD(ms, r.total_elapsed_time, 0), 8),\n       queryText=CAST(('<?query --  ' + CHAR(13) + CHAR(13) + Substring(st.TEXT, (r.statement_start_offset / 2) + 1,\n                                                                        ((CASE r.statement_end_offset\n                                                                              WHEN - 1 THEN Datalength(st.TEXT)\n                                                                              ELSE r.statement_end_offset END -\n                                                                          r.statement_start_offset) / 2) + 1) +\n                       CHAR(13) + CHAR(13) + '--?>') AS XML),\n       storedProc=COALESCE(QUOTENAME(DB_NAME(st.dbid)) + N'.' + QUOTENAME(OBJECT_SCHEMA_NAME(st.objectid, st.dbid)) +\n                           N'.' + QUOTENAME(OBJECT_NAME(st.objectid, st.dbid)), ''),\n    qp.query_plan      AS 'xmlPlan',\n    r.command,\n       loginName=s.login_name,\n       hostName=s.host_name,\n       programName=s.program_name,\n       hostProcessId=s.host_process_id,\n       lastRequestEndTime=s.last_request_end_time,\n       loginTime=s.login_time,\n       openTransactionCount=r.open_transaction_count\nFROM sys.dm_exec_sessions AS s\n         INNER JOIN sys.dm_exec_requests AS r ON r.session_id = s.session_id\n         CROSS APPLY sys.dm_exec_sql_text(r.sql_handle) AS st\n         OUTER APPLY sys.dm_exec_query_plan(r.plan_handle) AS qp\nWHERE s.session_id = :sessionIdParam\nORDER BY r.blocking_session_id"
+    },
+    "supportsHistorical": false,
+    "supportsRealTime": true,
+    "isParameterized": false,
+    "referenceDoc": [
+      ""
+    ],
+    "description": "Active query of a session"
+  },
+  "session_latestExecutedQuery": {
+    "queries": {
+      "main": "SELECT con.session_id, t.text  FROM sys.dm_exec_connections con cross apply sys.dm_exec_sql_text (con.most_recent_sql_handle) as t where con.session_id = :sessionIdParam"
+    },
+    "supportsHistorical": false,
+    "supportsRealTime": true,
+    "isParameterized": false,
+    "referenceDoc": [
+      "https://docs.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-exec-input-buffer-transact-sql?view=sql-server-ver15"
+    ],
+    "description": "Last executed query of a session"
   }
 }
