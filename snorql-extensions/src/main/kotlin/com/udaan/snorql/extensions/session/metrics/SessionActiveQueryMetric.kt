@@ -17,11 +17,11 @@
  * under the License.
  */
 
-package com.udaan.snorql.extensions.storage.metrics
+package com.udaan.snorql.extensions.session.metrics
 
-import com.udaan.snorql.extensions.storage.models.DbGrowthDTO
-import com.udaan.snorql.extensions.storage.models.DbGrowthInput
-import com.udaan.snorql.extensions.storage.models.DbGrowthResult
+import com.udaan.snorql.extensions.session.models.SessionActiveQueryDTO
+import com.udaan.snorql.extensions.session.models.SessionActiveQueryInput
+import com.udaan.snorql.extensions.session.models.SessionActiveQueryResult
 import com.udaan.snorql.framework.SQLMonitoringConfigException
 import com.udaan.snorql.framework.metric.IMetric
 import com.udaan.snorql.framework.metric.SqlMetricManager
@@ -31,32 +31,29 @@ import com.udaan.snorql.framework.models.MetricConfig
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricOutput
 
-/**
- * Class which implements Database Growth Metric
- *
- * The database growth metric fetches' database growth statistics like the database growth rate.
- *
- * @constructor Create database growth metric instance
- */
-class DbGrowthMetric :
-    IMetric<DbGrowthInput, DbGrowthResult, IMetricRecommendation> {
+class SessionActiveQueryMetric : IMetric<SessionActiveQueryInput, SessionActiveQueryResult, IMetricRecommendation> {
 
     override fun getMetricResult(
-        metricInput: DbGrowthInput,
+        metricInput: SessionActiveQueryInput,
         metricConfig: MetricConfig
-    ): DbGrowthResult {
+    ): SessionActiveQueryResult {
         val query =
             metricConfig.queries["main"]
-                ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
-        val paramMap = mapOf("databaseName" to metricInput.dbNameForGrowth)
-        val result = SqlMetricManager.queryExecutor.execute<DbGrowthDTO>(metricInput.databaseName, query, paramMap)
-        return DbGrowthResult(result)
+                ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config " +
+                        "[${metricInput.metricId}]")
+        val paramMap = mapOf("sessionIdParam" to metricInput.sessionId)
+        val result = SqlMetricManager.queryExecutor.execute<SessionActiveQueryDTO>(
+            metricInput.databaseName,
+            query,
+            params = paramMap
+        )
+        return SessionActiveQueryResult(result)
     }
 
     override fun getMetricResponseMetadata(
-        metricInput: DbGrowthInput,
-        metricOutput: MetricOutput<DbGrowthResult, IMetricRecommendation>
-    ): Map<String, Any> {
+        metricInput: SessionActiveQueryInput,
+        metricOutput: MetricOutput<SessionActiveQueryResult, IMetricRecommendation>
+    ): Map<String, Any>? {
         val responseMetadata = mutableMapOf<String, Any>()
         val metricConfig = getMetricConfig(metricInput.metricId)
         val query = metricConfig.queries["main"]
@@ -65,9 +62,9 @@ class DbGrowthMetric :
         responseMetadata["description"] = metricConfig.description
         responseMetadata["supportsHistorical"] = metricConfig.supportsHistorical
         responseMetadata["minimumRepeatInterval"] = metricConfig.persistDataOptions?.get("minimumRepeatInterval") ?: ""
+
         return responseMetadata
     }
-
 
     override fun saveMetricResult(metricInput: MetricInput, result: IMetricResult) {
         TODO("Not yet implemented")
