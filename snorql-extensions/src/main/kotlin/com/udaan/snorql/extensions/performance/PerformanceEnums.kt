@@ -50,6 +50,11 @@ enum class PerformanceEnums(private val metricId: String) : IMtericId {
     INDEX_STATS("indexStats"),
 
     /**
+     * Compute Utilization Metric ID mapping
+     */
+    COMPUTE_UTILIZATION("computeUtilization"),
+
+    /**
      * Active DDL Queries Metric ID mapping
      */
     ACTIVE_DDL("activeDDL");
