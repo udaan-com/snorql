@@ -16,13 +16,22 @@ import com.udaan.snorql.framework.models.MetricOutput
 class IndexFragmentationMetric :
     IMetric<IndexFragmentationInput, IndexFragmentationResult, IndexFragmentationRecommendation> {
 
+    companion object {
+        private const val REORGANIZE_IDX_FRAG_PERCENT_LOWER_BOUND = 10.0
+        private const val REORGANIZE_IDX_FRAG_PERCENT_UPPER_BOUND = 30.0
+        private const val REBUILD_IDX_FRAG_PERCENT_UPPER_BOUND = 30
+    }
+
     override fun getMetricResult(
         metricInput: IndexFragmentationInput,
         metricConfig: MetricConfig
     ): IndexFragmentationResult {
         val query =
             metricConfig.queries["main"]
-                ?: throw SQLMonitoringConfigException("SQL config query [main] not found under config [${metricInput.metricId}]")
+                ?: throw SQLMonitoringConfigException(
+                    "SQL config query [main] not found under config " +
+                            "[${metricInput.metricId}]"
+                )
         val paramMap = mapOf("modeParam" to metricInput.mode.name)
         val result =
             SqlMetricManager.queryExecutor.execute<IndexFragmentationDTO>(
@@ -41,7 +50,8 @@ class IndexFragmentationMetric :
             val indexesToReorganise: MutableList<IndexInfo> = mutableListOf()
             val indexesToRebuild: MutableList<IndexInfo> = mutableListOf()
             metricResult.queryList.forEach { idxFrag ->
-                if (idxFrag.avgFragmentationInPercent in 10.0..30.0) {
+                if (idxFrag.avgFragmentationInPercent in
+                    REORGANIZE_IDX_FRAG_PERCENT_LOWER_BOUND..REORGANIZE_IDX_FRAG_PERCENT_UPPER_BOUND) {
                     indexesToReorganise.add(
                         IndexInfo(
                             idxFrag.schemaName,
@@ -51,7 +61,7 @@ class IndexFragmentationMetric :
                             idxFrag.pageCount
                         )
                     )
-                } else if (idxFrag.avgFragmentationInPercent > 30) {
+                } else if (idxFrag.avgFragmentationInPercent > REBUILD_IDX_FRAG_PERCENT_UPPER_BOUND) {
                     indexesToRebuild.add(
                         IndexInfo(
                             idxFrag.schemaName,
