@@ -57,7 +57,12 @@ enum class PerformanceEnums(private val metricId: String) : IMtericId {
     /**
      * Active DDL Queries Metric ID mapping
      */
-    ACTIVE_DDL("activeDDL");
+    ACTIVE_DDL("activeDDL"),
+
+    /**
+     * Geo Replica Lag Metric ID mapping
+     */
+    GEO_REPLICA_LAG("geoReplicaLag");
 
     override fun getId(): String {
         return "performance_" + this.metricId
