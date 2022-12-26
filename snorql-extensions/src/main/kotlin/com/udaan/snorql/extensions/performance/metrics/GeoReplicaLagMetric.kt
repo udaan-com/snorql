@@ -41,6 +41,10 @@ import com.udaan.snorql.framework.models.MetricOutput
 class GeoReplicaLagMetric :
     IMetric<GeoReplicaLagInput, GeoReplicaLagResult, GeoReplicaLagRecommendation> {
 
+    companion object {
+        private const val OK_REPLICATION_LAG_THRESHOLD = 120
+    }
+
     override fun getMetricResult(
         metricInput: GeoReplicaLagInput,
         metricConfig: MetricConfig
@@ -81,19 +85,20 @@ class GeoReplicaLagMetric :
     ): GeoReplicaLagRecommendation? {
         if (metricInput.recommendationRequired) {
             val geoReplicaLagDTO = metricResult.queryList[0]
-            return if (geoReplicaLagDTO.replicationLagSec <= 120)
+            return if (geoReplicaLagDTO.replicationLagSec <= OK_REPLICATION_LAG_THRESHOLD) {
                 GeoReplicaLagRecommendation(
                     "No significant replication lag. No action required.",
                     false
                 )
-            else GeoReplicaLagRecommendation(
-                "Replication lag is more than 120s. Please check any long running queries which might cause this.",
-                false
-            )
+            } else {
+                GeoReplicaLagRecommendation(
+                    "Replication lag is more than 120s. Please check any long running queries which might cause this.",
+                    false
+                )
+            }
         }
         return null
     }
-
 
     override fun saveMetricResult(metricInput: MetricInput, result: IMetricResult) {
         TODO("Not yet implemented")

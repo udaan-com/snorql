@@ -17,7 +17,6 @@
  * under the License.
  */
 
-
 package com.udaan.snorql.extensions.performance.models
 
 import com.udaan.snorql.extensions.performance.PerformanceEnums
@@ -26,7 +25,6 @@ import com.udaan.snorql.framework.models.IMetricResult
 import com.udaan.snorql.framework.models.MetricInput
 import com.udaan.snorql.framework.models.MetricPeriod
 import org.jdbi.v3.core.mapper.reflect.ColumnName
-
 
 /**
  * Wrapper class to hold individual attributes for Read Replication lag Metric
