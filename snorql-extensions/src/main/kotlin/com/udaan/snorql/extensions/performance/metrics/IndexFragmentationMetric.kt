@@ -19,7 +19,7 @@ class IndexFragmentationMetric :
     companion object {
         private const val REORGANIZE_IDX_FRAG_PERCENT_LOWER_BOUND = 10.0
         private const val REORGANIZE_IDX_FRAG_PERCENT_UPPER_BOUND = 30.0
-        private const val REBUILD_IDX_FRAG_PERCENT_UPPER_BOUND = 30
+        private const val REBUILD_IDX_FRAG_PERCENT_LOWER_BOUND = 30
     }
 
     override fun getMetricResult(
@@ -61,7 +61,7 @@ class IndexFragmentationMetric :
                             idxFrag.pageCount
                         )
                     )
-                } else if (idxFrag.avgFragmentationInPercent > REBUILD_IDX_FRAG_PERCENT_UPPER_BOUND) {
+                } else if (idxFrag.avgFragmentationInPercent > REBUILD_IDX_FRAG_PERCENT_LOWER_BOUND) {
                     indexesToRebuild.add(
                         IndexInfo(
                             idxFrag.schemaName,
