@@ -189,6 +189,7 @@ class DbIndexRedundancyMetric :
         return responseMetadata
     }
 
+    @Suppress("ReturnCount")
     private fun checkStartsWithWord(longerString: String?, shorterString: String?): Boolean {
         if (longerString.isNullOrEmpty()) return false
         if (shorterString.isNullOrEmpty()) return true
