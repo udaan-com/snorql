@@ -67,7 +67,12 @@ enum class StorageEnums(private val metricId: String) : IMtericId {
     /**
      * Table schema metric id
      */
-    TABLE_SCHEMA("tableSchema");
+    TABLE_SCHEMA("tableSchema"),
+
+    /**
+     * Database Index Columns Summary metric id
+     */
+    DB_INDEX_REDUNDANCY("dbIndexRedundancy");
 
     override fun getId(): String {
         return "storage_" + this.metricId

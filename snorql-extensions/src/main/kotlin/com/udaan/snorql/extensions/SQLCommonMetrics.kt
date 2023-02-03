@@ -35,6 +35,7 @@ import com.udaan.snorql.extensions.session.metrics.SessionLocksMetric
 import com.udaan.snorql.extensions.storage.StorageEnums
 import com.udaan.snorql.extensions.storage.metrics.DbGrowthMetric
 import com.udaan.snorql.extensions.storage.metrics.DbIndexMetric
+import com.udaan.snorql.extensions.storage.metrics.DbIndexRedundancyMetric
 import com.udaan.snorql.extensions.storage.metrics.DbMetric
 import com.udaan.snorql.extensions.storage.metrics.DbTableMetric
 import com.udaan.snorql.extensions.storage.metrics.PVSMetric
@@ -66,6 +67,7 @@ object SQLCommonMetrics {
         SqlMetricManager.addMetric(StorageEnums.TABLE_UNUSED_INDEX.getId(), TableUnusedIndexMetric())
         SqlMetricManager.addMetric(StorageEnums.PVS.getId(), PVSMetric())
         SqlMetricManager.addMetric(StorageEnums.TABLE_SCHEMA.getId(), TableSchemaMetric())
+        SqlMetricManager.addMetric(StorageEnums.DB_INDEX_REDUNDANCY.getId(), DbIndexRedundancyMetric())
 
         // register session related metrics here
         SqlMetricManager.addMetric(SessionEnums.SESSION_LOCKS.getId(), SessionLocksMetric())
