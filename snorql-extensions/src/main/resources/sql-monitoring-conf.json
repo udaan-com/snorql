@@ -64,6 +64,18 @@
     "referenceDoc": [],
     "description": ""
   },
+  "performance_indexFragmentation": {
+    "queries": {
+      "main": "SELECT Object_schema_name(ips.object_id) AS schema_name, Object_name(ips.object_id) AS object_name,i.NAME AS index_name,i.type_desc AS index_type, sum(ips.avg_fragmentation_in_percent * ips.page_count)/sum(ips.page_count) as avg_fragmentation_in_percent, SUM(ips.avg_page_space_used_in_percent * ips.page_count)/sum(ips.page_count) as avg_page_space_used_in_percent,  SUM(ips.page_count) as page_count, ips.alloc_unit_type_desc as alloc_unit_type_desc, STRING_AGG(ips.partition_number, ',') as partitions FROM sys.Dm_db_index_physical_stats(Db_id(), DEFAULT, DEFAULT, DEFAULT,:modeParam) AS ips  INNER JOIN sys.indexes AS i  ON ips.object_id = i.object_id AND ips.index_id = i.index_id WHERE  page_count > 1000 AND i.NAME IS NOT NULL GROUP BY Object_schema_name(ips.object_id), Object_name(ips.object_id), i.NAME, i.type_desc, ips.alloc_unit_type_desc ORDER  BY sum(ips.avg_fragmentation_in_percent * ips.page_count)/sum(ips.page_count) DESC"
+    },
+    "supportsHistorical": false,
+    "supportsRealTime": true,
+    "isParameterized": true,
+    "referenceDoc": [
+      "https://docs.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-db-index-physical-stats-transact-sql?view=azuresqldb-current"
+    ],
+    "description": ""
+  },
   "performance_computeUtilization": {
     "queries": {
       "main": "SELECT DATETIMEFROMPARTS ( DATEPART(year, end_time), DATEPART(month, end_time), DATEPART(day, end_time), DATEPART(hour, end_time), DATEPART(minute, end_time) / 5 * 5, 00, 00 ) as time_id,\n        MAX(avg_cpu_percent) as max_cpu_percent, MAX(avg_data_io_percent) as max_data_io_percent, MAX(avg_log_write_percent) as max_log_io_percent, MAX(avg_memory_usage_percent) as max_memory_percent,\n        AVG(avg_cpu_percent) as avg_cpu_percent, AVG(avg_data_io_percent) as avg_data_io_percent, AVG(avg_log_write_percent) as avg_log_io_percent, AVG(avg_memory_usage_percent) as avg_memory_percent \n FROM sys.dm_db_resource_stats\nGROUP BY DATETIMEFROMPARTS ( DATEPART(year, end_time), DATEPART(month, end_time), DATEPART(day, end_time), DATEPART(hour, end_time), DATEPART(minute, end_time) / 5 * 5, 00, 00 )\nORDER BY time_id"
@@ -74,7 +86,9 @@
     },
     "supportsRealTime": true,
     "isParameterized": false,
-    "referenceDoc": ["https://docs.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-db-resource-stats-azure-sql-database?view=azuresqldb-current"],
+    "referenceDoc": [
+      "https://docs.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-db-resource-stats-azure-sql-database?view=azuresqldb-current"
+    ],
     "description": "Returns CPU, I/O, and memory consumption for an Azure SQL Database."
   },
   "accessControl_userRole": {
