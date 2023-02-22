@@ -50,6 +50,11 @@ enum class PerformanceEnums(private val metricId: String) : IMtericId {
     INDEX_STATS("indexStats"),
 
     /**
+     * Index Fragmentation Metric ID mapping
+     */
+    INDEX_FRAGMENTATION("indexFragmentation"),
+
+    /**
      * Compute Utilization Metric ID mapping
      */
     COMPUTE_UTILIZATION("computeUtilization"),

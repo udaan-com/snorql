@@ -27,6 +27,7 @@ import com.udaan.snorql.extensions.performance.metrics.ActiveQueriesMetric
 import com.udaan.snorql.extensions.performance.metrics.BlockedQueriesMetric
 import com.udaan.snorql.extensions.performance.metrics.ComputeUtilizationMetric
 import com.udaan.snorql.extensions.performance.metrics.GeoReplicaLagMetric
+import com.udaan.snorql.extensions.performance.metrics.IndexFragmentationMetric
 import com.udaan.snorql.extensions.performance.metrics.IndexStatsMetric
 import com.udaan.snorql.extensions.performance.metrics.LongRunningQueriesMetric
 import com.udaan.snorql.extensions.session.SessionEnums
@@ -36,6 +37,7 @@ import com.udaan.snorql.extensions.session.metrics.SessionLocksMetric
 import com.udaan.snorql.extensions.storage.StorageEnums
 import com.udaan.snorql.extensions.storage.metrics.DbGrowthMetric
 import com.udaan.snorql.extensions.storage.metrics.DbIndexMetric
+import com.udaan.snorql.extensions.storage.metrics.DbIndexRedundancyMetric
 import com.udaan.snorql.extensions.storage.metrics.DbMetric
 import com.udaan.snorql.extensions.storage.metrics.DbTableMetric
 import com.udaan.snorql.extensions.storage.metrics.PVSMetric
@@ -55,6 +57,7 @@ object SQLCommonMetrics {
         SqlMetricManager.addMetric(PerformanceEnums.ACTIVE_DDL.getId(), ActiveDDLMetric())
         SqlMetricManager.addMetric(PerformanceEnums.COMPUTE_UTILIZATION.getId(), ComputeUtilizationMetric())
         SqlMetricManager.addMetric(PerformanceEnums.GEO_REPLICA_LAG.getId(), GeoReplicaLagMetric())
+        SqlMetricManager.addMetric(PerformanceEnums.INDEX_FRAGMENTATION.getId(), IndexFragmentationMetric())
 
         // register access-control related metric here
         SqlMetricManager.addMetric(AccessControlEnums.USER_ROLE.getId(), UserRoleMetric())
@@ -68,6 +71,7 @@ object SQLCommonMetrics {
         SqlMetricManager.addMetric(StorageEnums.TABLE_UNUSED_INDEX.getId(), TableUnusedIndexMetric())
         SqlMetricManager.addMetric(StorageEnums.PVS.getId(), PVSMetric())
         SqlMetricManager.addMetric(StorageEnums.TABLE_SCHEMA.getId(), TableSchemaMetric())
+        SqlMetricManager.addMetric(StorageEnums.DB_INDEX_REDUNDANCY.getId(), DbIndexRedundancyMetric())
 
         // register session related metrics here
         SqlMetricManager.addMetric(SessionEnums.SESSION_LOCKS.getId(), SessionLocksMetric())

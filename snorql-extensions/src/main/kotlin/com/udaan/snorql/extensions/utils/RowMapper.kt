@@ -58,9 +58,7 @@ fun <T> ResultSet.rowMapper(mapClass: Class<T>): List<T> {
  * Also looks for [SnorqlColumnName] annotation to extract and use the name provided by the client
  */
 private fun <T> getAllColsInOrder(mapClass: Class<T>): List<Pair<String, Class<*>>> {
-    return mapClass
-        .declaredFields
-        .map {
+    return mapClass.declaredFields.map {
             val mappingName = it.getAnnotation(SnorqlColumnName::class.java)?.colName ?: it.name
             val type = it.type
             mappingName to type

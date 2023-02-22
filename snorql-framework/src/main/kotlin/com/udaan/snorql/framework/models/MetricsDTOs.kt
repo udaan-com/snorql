@@ -33,7 +33,7 @@ abstract class MetricInput {
     abstract val databaseName: String
     val from: Timestamp? = null
     val to: Timestamp? = null
-    val recommendationRequired: Boolean = false
+    open val recommendationRequired: Boolean = false
 }
 
 /**
