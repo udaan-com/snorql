@@ -51,6 +51,24 @@
     "referenceDoc": [],
     "description": ""
   },
+  "performance_geoReplicaLag": {
+    "queries": {
+      "main": "select partner_server, partner_database, replication_state, replication_state_desc, role_desc, secondary_allow_connections_desc, last_replication, replication_lag_sec from sys.dm_geo_replication_link_status"
+    },
+    "supportsHistorical": false,
+    "supportsRealTime": true,
+    "isParameterized": false,
+    "supportsAlert": true,
+    "alertingOptions": {
+      "supportedAlerts": [
+        "alert_geoReplicaLag"
+      ]
+    },
+    "referenceDoc": [
+      "https://docs.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-geo-replication-link-status-azure-sql-database?view=azuresqldb-current"
+    ],
+    "description": "Contains a row for each replication link between primary and secondary databases in a geo-replication partnership."
+  },
   "performance_activeDDL": {
     "queries": {
       "main": "WITH agg AS\n         (\n SELECT max(qp.session_id) as sid, SUM(qp.[row_count]) AS [RowsProcessed],\n     SUM(qp.[estimate_row_count]) AS [TotalRows],\n            MAX(qp.last_active_time) - MIN(qp.first_active_time) AS [ElapsedMS],\n                    MAX(IIF(qp.[close_time] = 0 AND qp.[first_row_time] > 0,\n                            [physical_operator_name],\n                            [physical_operator_name])) AS [CurrentStep]\n\n             FROM sys.dm_exec_query_profiles qp\n             WHERE qp.[physical_operator_name] IN (N'Table Scan', N'Clustered Index Scan',\n                                                   N'Index Scan',  N'Sort')\n               AND   qp.[session_id] IN (SELECT session_id from sys.dm_exec_requests \n\t\t\t   where command IN ( 'CREATE INDEX','ALTER INDEX','ALTER TABLE', 'update statistics')\n\t\t\t   or command like '%dbcc%')\n         ), comp AS\n         (\n             SELECT *,\n                    ([TotalRows] - [RowsProcessed]) AS [RowsLeft],\n                    ([ElapsedMS] / 1000.0) AS [ElapsedSeconds]\n             FROM   agg\n         )\nSELECT \nqueryText=CAST((\n         '<?query --  ' + CHAR(13) + CHAR(13) + Substring(st.TEXT, (r.statement_start_offset / 2) + 1, (\n  (\n CASE r.statement_end_offset\n WHEN - 1\n THEN Datalength(st.TEXT)\n  ELSE r.statement_end_offset\n END - r.statement_start_offset\n) / 2\n) + 1) + CHAR(13) + CHAR(13) + '--?>'\n ) AS XML),\n\n\n[CurrentStep],\n       [TotalRows],\n       [RowsProcessed],\n       [RowsLeft],\n       CONVERT(DECIMAL(5, 2),\n                   (([RowsProcessed] * 1.0) / [TotalRows]) * 100) AS [PercentComplete],\n       [ElapsedSeconds],\n       (([ElapsedSeconds] / [RowsProcessed]) * [RowsLeft]) AS [EstimatedSecondsLeft],\n       DATEADD(SECOND,\n               (([ElapsedSeconds] / [RowsProcessed]) * [RowsLeft]),\n               GETDATE()) AS [EstimatedCompletionTime]\nFROM   comp join \nsys.dm_exec_sessions AS s\non s.session_id = comp.sid\n INNER JOIN sys.dm_exec_requests AS r \n ON r.session_id = s.session_id\n CROSS APPLY sys.dm_exec_sql_text(r.sql_handle) AS st\n;"

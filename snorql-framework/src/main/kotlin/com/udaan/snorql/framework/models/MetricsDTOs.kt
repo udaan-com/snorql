@@ -41,7 +41,10 @@ abstract class MetricInput {
  *
  * @property queries metric query string
  * @property supportsHistorical supports historical metrics
+ * @property persistDataOptions data persistence config
  * @property supportsRealTime supports real time metrics
+ * @property supportsAlert supports alert for the metric
+ * @property alertingOptions alerting config
  * @property isParameterized has parameters flag
  * @property referenceDoc link to metric documentation
  * @property description metric description
@@ -52,6 +55,8 @@ data class MetricConfig(
     val supportsHistorical: Boolean,
     val persistDataOptions: Map<String, String>?,
     val supportsRealTime: Boolean,
+    val supportsAlert: Boolean = false,
+    val alertingOptions: Map<String, *>?,
     val isParameterized: Boolean,
     val referenceDoc: List<String>,
     val description: String
